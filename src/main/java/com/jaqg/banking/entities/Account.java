@@ -1,12 +1,15 @@
 package com.jaqg.banking.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 public class Account {
+    @Id
     private long number;
     private String name;
     private BigDecimal balance;
