@@ -1,8 +1,8 @@
 package com.jaqg.banking.repos;
-
-import org.hibernate.Transaction;
+import com.jaqg.banking.entities.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TransactionRepo extends JpaRepository<Transaction, Long> {
-
 }
