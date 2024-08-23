@@ -1,0 +1,23 @@
+logging:
+  level:
+    ROOT: INFO
+    com.jaqg.banking: INFO
+
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        boot:
+          allow_jdbc_metadata_access: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/bank
+    username: user
+    password: 1010
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+server:
+  port: 8081
