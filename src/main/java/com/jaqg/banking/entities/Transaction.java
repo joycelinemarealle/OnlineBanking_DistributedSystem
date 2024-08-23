@@ -12,22 +12,22 @@ import java.time.LocalDate;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY) // This helps auto-generate primry keys
-    private long id;
+    @GeneratedValue
+    private Long id;
     private LocalDate dateTime;
     private BigDecimal transVal;
-    private OperationType transType; // Transaction type can be withdraw, deposit, ect...
-    private Account recipient; // to account
+    private String transType; // Transaction type can be withdraw, deposit, ect...
+    private String recipient; // to account
     // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 
-
-    public Transaction(long id, LocalDate dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
+    public Transaction(Long id, LocalDate dateTime, BigDecimal transVal, String transType, String recipient) {
         this.id = id;
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
         this.recipient = recipient;
     }
+
     public Transaction(){}
 
     public long getId() {
@@ -54,19 +54,30 @@ public class Transaction {
         this.transVal = transVal;
     }
 
-    public OperationType getTransType() {
+    public String getTransType() {
         return transType;
     }
 
-    public void setTransType(OperationType transType) {
+    public void setTransType(String transType) {
         this.transType = transType;
     }
 
-    public Account getRecipient() {
+    public String getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(Account recipient) {
+    public void String(String recipient) {
         this.recipient = recipient;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", dateTime=" + dateTime +
+                ", transVal=" + transVal +
+                ", transType=" + transType +
+                ", recipient=" + recipient +
+                '}';
     }
 }
