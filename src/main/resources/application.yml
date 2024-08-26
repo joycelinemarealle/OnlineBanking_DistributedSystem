@@ -6,11 +6,12 @@ spring:
     # Otherwise, it will be filled in by gradle when building the JAR file
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
 #    active: '@spring.profiles.active@'
-    active: dev
+    active: prod
 
   jpa:
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+#      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy

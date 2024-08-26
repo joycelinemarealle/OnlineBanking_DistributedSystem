@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.3.2"
 	id("io.spring.dependency-management") version "1.1.6"
+	id("com.google.cloud.tools.jib") version "3.3.2"
 }
 
 group = "com.jaqg"
@@ -32,3 +33,35 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+jib {
+	from {
+		image = "eclipse-temurin:17-jre-focal"
+	}
+}
+
+//
+//jib {
+//	from {
+//		image = "eclipse-temurin:17-jre-focal"
+//	}
+//	to {
+//		image = "invoiceconverter:latest"
+//	}
+//	container {
+//		entrypoint = listOf("bash", "-c", "/entrypoint.sh")
+//		ports = listOf("8081")
+//		environment = mapOf(
+//			"SPRING_OUTPUT_ANSI_ENABLED" to "ALWAYS",
+//			"JHIPSTER_SLEEP" to "0"
+//		)
+//		creationTime = "USE_CURRENT_TIMESTAMP"
+//		user = "1000"
+//	}
+//	extraDirectories {
+//		paths = file("src/main/docker/jib")
+//		permissions = mapOf(
+//			"/entrypoint.sh" to "755"
+//		)
+//	}
+//}

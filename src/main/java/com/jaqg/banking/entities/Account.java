@@ -1,28 +1,36 @@
 package com.jaqg.banking.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "accounts")
 public class Account {
+
     @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long number;
+    @Column(length = 200)
     private String name;
     private BigDecimal balance;
-    private List<Transaction> transactions;
+
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="recipient")
+    private List<Transaction> transactions = new ArrayList<>();
+
     private int sortCode;
 
-    public Account(long number, String name, BigDecimal balance, List<Transaction> transactions, int sortCode) {
-        this.number = number;
-        this.name = name;
-        this.balance = balance;
-        this.transactions = transactions;
-        this.sortCode = sortCode;
-    }
+//    public Account(long number, String name, BigDecimal balance, List<Transaction> transactions, int sortCode) {
+//        this.number = number;
+//        this.name = name;
+//        this.balance = balance;
+//        this.transactions = transactions;
+//        this.sortCode = sortCode;
+//    }
 
     public Account (){}
 
