@@ -1,4 +1,6 @@
 package com.jaqg.banking.entities;
 
-public class OperationType {
+public enum OperationType {
+    One,
+    Two
 }

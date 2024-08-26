@@ -20,4 +20,4 @@ spring:
       poolName: Hikari
       auto-commit: true
 server:
-  port: 8081
+  port: 8080
