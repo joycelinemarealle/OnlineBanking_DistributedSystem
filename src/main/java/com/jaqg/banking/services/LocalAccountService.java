@@ -45,9 +45,7 @@ public class LocalAccountService implements AccountService{
 
             //mark account as closed
             account.setClosed(true);
-            accountRepository.save(account);
-
-            //accountRepository.delete(account);
+            accountRepository.save(account); // or accountRepository.delete(account) if we do not want keep a/c info in database;
 
             return balance;
 
@@ -57,11 +55,10 @@ public class LocalAccountService implements AccountService{
         }
         return null;
     }
-    public Account findAccountByNumber(long number){
-       return accountRepository.findAccountByNumber(number);
-    }
+
 
     public void deleteAccount(long number){
+
         accountRepository.deleteById(number);
     }
 
