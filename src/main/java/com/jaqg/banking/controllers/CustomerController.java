@@ -12,11 +12,11 @@ import java.util.Scanner;
 
 @RestController
 public class CustomerController {
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
 
-    public CustomerController(final CustomerRepo customerService) {
-        this.customerService = (CustomerService) customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping("/customer")
