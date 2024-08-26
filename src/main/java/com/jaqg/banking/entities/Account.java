@@ -2,6 +2,7 @@ package com.jaqg.banking.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ public class Account {
     private long number;
     private String name;
     private BigDecimal balance;
+    @Transient
     private List<Transaction> transactions;
     private int sortCode;
 

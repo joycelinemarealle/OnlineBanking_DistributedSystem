@@ -17,7 +17,7 @@ public class Customer {
     @Column(name = "ID")
     private long ID;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Account> accounts = new ArrayList<Account>();
+    private List<Account> accounts = new ArrayList<>();
 
     private boolean isRemoved = false;
 
