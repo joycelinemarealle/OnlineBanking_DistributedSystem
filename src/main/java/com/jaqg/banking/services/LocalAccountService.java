@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocalAccountService implements AccountService{
@@ -25,6 +26,13 @@ public class LocalAccountService implements AccountService{
 
     }
 
+    @Override
+    public List<Account> retrieveAllAccounts() {
+        logger.info("Getting accounts from Account Repository");
+        return accountRepository.getAllAccounts();
+    }
+
+    @Override
     public Account createAccount(Customer customer, String name, BigDecimal openingBalance){
         Account account = new Account();
         account.setCustomer(customer);
@@ -33,32 +41,34 @@ public class LocalAccountService implements AccountService{
         account.setBalance(openingBalance);
 
         //save account to database
-        return accountRepository.save(account);
+        accountRepository.saveAccount(account);
+        return account;
     }
 
+    @Override
     public BigDecimal closeAccount(long number) throws AccountNotFoundException{
-        try{ Account account = accountRepository.findAccountByNumber(number);
+        Optional<Account> optionalAccount = accountRepository.findById(number);
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
             BigDecimal balance = account.getBalance();
-
-            //Return balance to the customer in cash
             account.setBalance(BigDecimal.ZERO);
-
-            //mark account as closed
             account.setClosed(true);
-            accountRepository.save(account); // or accountRepository.delete(account) if we do not want keep a/c info in database;
-
+            accountRepository.saveAccount(account);
             return balance;
 
-        } catch(Exception e ){
-            e = new AccountNotFoundException("Account not found");
-
         }
-        return null;
+        else{
+            throw new AccountNotFoundException("Account not found with number" +
+                    + + number);
+        }
     }
 
+    @Override
+    public Account findAccountByNumber(long number){
+        return accountRepository.findAccountByNumber(number);
 
+    }
     public void deleteAccount(long number){
-
         accountRepository.deleteById(number);
     }
 
@@ -66,9 +76,5 @@ public class LocalAccountService implements AccountService{
         //Logic to generate sortCode
         return 1234; //placeholder for now
     }
-    @Override
-    public List<Account> retrieveAllAccounts() {
-        logger.info("Getting accounts from Account Repository");
-        return accountRepository.getAllAccounts();
-    }
+
 }
