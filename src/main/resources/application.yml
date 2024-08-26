@@ -9,8 +9,9 @@ spring:
     active: dev
 
   jpa:
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+#      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy

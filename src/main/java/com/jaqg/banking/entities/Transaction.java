@@ -1,9 +1,6 @@
 package com.jaqg.banking.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,22 +9,22 @@ import java.time.LocalDate;
 public class Transaction {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy =  GenerationType.IDENTITY) // This helps auto-generate primry keys
+    private long id;
     private LocalDate dateTime;
     private BigDecimal transVal;
-    private String transType; // Transaction type can be withdraw, deposit, ect...
-    private String recipient; // to account
+    private OperationType transType; // Transaction type can be withdraw, deposit, ect...
+    private Account recipient; // to account
     // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 
-    public Transaction(Long id, LocalDate dateTime, BigDecimal transVal, String transType, String recipient) {
+
+    public Transaction(long id, LocalDate dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
         this.id = id;
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
         this.recipient = recipient;
     }
-
     public Transaction(){}
 
     public long getId() {
@@ -54,19 +51,19 @@ public class Transaction {
         this.transVal = transVal;
     }
 
-    public String getTransType() {
+    public OperationType getTransType() {
         return transType;
     }
 
-    public void setTransType(String transType) {
+    public void setTransType(OperationType transType) {
         this.transType = transType;
     }
 
-    public String getRecipient() {
+    public Account getRecipient() {
         return recipient;
     }
 
-    public void String(String recipient) {
+    public void setRecipient(Account recipient) {
         this.recipient = recipient;
     }
 
