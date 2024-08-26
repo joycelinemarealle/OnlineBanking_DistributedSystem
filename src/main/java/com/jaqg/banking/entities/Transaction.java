@@ -15,6 +15,7 @@ public class Transaction {
     private BigDecimal transVal;
     @Transient
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...
+    @Transient
     private Account recipient; // to account
     // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 

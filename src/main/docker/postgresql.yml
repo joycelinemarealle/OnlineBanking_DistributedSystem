@@ -12,14 +12,12 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=1010
       - POSTGRES_HOST_AUTH_METHOD=trust
-#      - POSTGRES_DB=bank
+    #  - POSTGRES_DB=bank
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
       interval: 5s
       timeout: 5s
       retries: 10
-    command:
-      -
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
     ports:
