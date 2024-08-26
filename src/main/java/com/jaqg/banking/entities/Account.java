@@ -1,7 +1,6 @@
 package com.jaqg.banking.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
@@ -9,11 +8,18 @@ import java.util.List;
 
 @Entity
 public class Account {
+
     @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private long number;
+    @Column(length = 200)
     private String name;
     private BigDecimal balance;
+
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="recipient_id")
     private List<Transaction> transactions;
+
     private int sortCode;
 
     public Account(long number, String name, BigDecimal balance, List<Transaction> transactions, int sortCode) {
