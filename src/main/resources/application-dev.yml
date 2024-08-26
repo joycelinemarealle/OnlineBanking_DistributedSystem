@@ -15,10 +15,10 @@ spring:
     password:
     hikari:
       poolName: Hikari
-      auto-commit: false
+      auto-commit: true
   h2:
     console:
       enabled: false
 
 server:
-  port: 8081
+  port: 8080

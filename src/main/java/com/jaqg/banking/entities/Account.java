@@ -10,19 +10,10 @@ import java.util.List;
 @Entity
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long number;
     private String name;
     private BigDecimal openingBalance;
     private BigDecimal balance;
-    private boolean isClosed = false;
-
-    @ManyToOne
-    @JoinColumn(name= "customer_id", nullable = false)
-    private Customer customer;
-
-    @OneToMany(mappedBy = "account", cascade=CascadeType.ALL)
-    //account does not own the relationship but transcation does
     private List<Transaction> transactions;
     private int sortCode;
 

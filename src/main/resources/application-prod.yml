@@ -13,11 +13,11 @@ spring:
           allow_jdbc_metadata_access: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/bank
+    url: jdbc:postgresql://localhost:5432/postgres
     username: user
     password: 1010
     hikari:
       poolName: Hikari
-      auto-commit: false
+      auto-commit: true
 server:
-  port: 8081
+  port: 8080
