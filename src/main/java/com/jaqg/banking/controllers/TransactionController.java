@@ -45,12 +45,12 @@ public class TransactionController {
         switch(request.getType()) {
             case "WITHDRAW":
                 return transactionService.withdraw(request);
-            break;
             case "DEPOSIT":
-                break;
+                return transactionService.deposit(request);
             case "TRANSFER":
                 return transactionService.executeTransfer(request);
-            break;
+            default:
+                throw new IllegalArgumentException("Invalid transaction type" + request.getType());
         }
     }
 }
