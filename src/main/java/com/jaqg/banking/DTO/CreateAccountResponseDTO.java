@@ -1,19 +1,25 @@
 package com.jaqg.banking.DTO;
 
+import com.jaqg.banking.entities.Transaction;
+
+import java.util.List;
+
 public class CreateAccountResponseDTO {
     private Long number;
     private Long sortCode;
     private double openingBalance;
-    private Integer [] transcations;
-    private Integer customer;
+    private List< Transaction> transcations;
+    private Long customer;
 
-    public CreateAccountResponseDTO(Long number, Long sortCode, double openingBalance, Integer[] transcations, Integer customer) {
+    public CreateAccountResponseDTO(Long number, Long sortCode, List<Transaction> transcations, double openingBalance, Long customer) {
         this.number = number;
         this.sortCode = sortCode;
-        this.openingBalance = openingBalance;
         this.transcations = transcations;
+        this.openingBalance = openingBalance;
         this.customer = customer;
     }
+
+
 
     public Long getNumber() {
         return number;
