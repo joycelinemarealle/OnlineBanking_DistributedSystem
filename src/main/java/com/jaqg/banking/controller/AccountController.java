@@ -28,10 +28,10 @@ public class AccountController {
             return accountService.findAccountByNumber(number);
         }
 
-    @PostMapping("/account")
-    public Account createAccount(@RequestBody Account account){
-       return accountService.createAccount();
-    }
+//    @PostMapping("/account")
+//    public Account createAccount(@RequestBody Account account){
+//       return accountService.createAccount();
+//    }
 
     @DeleteMapping("accounts/{number}")
     public BigDecimal closeAccount(@PathVariable long number) throws AccountNotFoundException {
