@@ -22,7 +22,7 @@ public class Account {
     private Customer customer;
 
     @OneToMany(mappedBy = "account", cascade=CascadeType.ALL)
-    //account does not own the relationship but transacation does
+    //account does not own the relationship but transcation does
     private List<Transaction> transactions;
     private int sortCode;
 
