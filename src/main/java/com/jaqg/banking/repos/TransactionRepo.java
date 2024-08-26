@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepo extends JpaRepository<Transaction, Long> {
-    List<Account> findTransactionById();
+    //List<Account> findTransactionById();
 
-    Account getAccount(int fromAccount, int fromAccountSortCode);
+    //Account getAccount(int fromAccount, int fromAccountSortCode);
 }
