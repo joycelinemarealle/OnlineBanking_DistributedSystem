@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public record TransactionRequest (
      String type,
-     int fromAcount,
-     int fromAcountSortCode,
-     int toAcount,
-     int toAcountSortCode,
+     Long fromAcount,
+     Long fromAcountSortCode,
+     Long toAcount,
+     Long toAcountSortCode,
      BigDecimal amount){}
