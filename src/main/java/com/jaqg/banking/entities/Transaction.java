@@ -15,7 +15,7 @@ public class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primry keys
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
     private LocalDate dateTime;
     private BigDecimal transVal;
@@ -34,9 +34,7 @@ public class Transaction implements Serializable {
         this.transType = transType;
         this.recipient = recipient;
     }
-
-    public Transaction() {
-    }
+    public Transaction(){}
 
     public long getId() {
         return id;
@@ -76,17 +74,5 @@ public class Transaction implements Serializable {
 
     public void setRecipient(Account recipient) {
         this.recipient = recipient;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Transaction that)) return false;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }
