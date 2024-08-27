@@ -2,18 +2,25 @@ package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
-public class Transaction {
+public class Transaction implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY) // This helps auto-generate primry keys
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primry keys
     private long id;
     private LocalDate dateTime;
     private BigDecimal transVal;
-    @Transient
+
+    @Enumerated(EnumType.ORDINAL)
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...
     @Transient
     private Account recipient; // to account
@@ -27,7 +34,9 @@ public class Transaction {
         this.transType = transType;
         this.recipient = recipient;
     }
-    public Transaction(){}
+
+    public Transaction() {
+    }
 
     public long getId() {
         return id;
@@ -67,5 +76,17 @@ public class Transaction {
 
     public void setRecipient(Account recipient) {
         this.recipient = recipient;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaction that)) return false;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
