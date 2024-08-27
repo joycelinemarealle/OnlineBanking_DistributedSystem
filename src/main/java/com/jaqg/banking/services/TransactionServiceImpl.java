@@ -20,12 +20,12 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionResponse transfer(int fromAccount, int fromAccountSortCode, int toAccount, int toAccountSortCode, double amount) {
          Account from = accountRepository.findAccountByNumber(fromAccount);
          Account to = accountRepository.findAccountByNumber(toAccount);
-//         if(from.getBalance() >= amount) {
-//             from.withdraw(amount);
-//              to.deposit(amount);
-//              transactionRepo.save(from);
-//              transactionRepo.save(to);
-//         }
+         if (from.getBalance() >= amount) {
+              from.withdraw(amount);
+              to.deposit(amount);
+              transactionRepo.save(from);
+              transactionRepo.save(to);
+         }
          //return new TransactionResponse(..........);
         return null;
     }
