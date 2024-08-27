@@ -1,5 +1,5 @@
 package com.jaqg.banking.services;
-import com.jaqg.banking.DTO.*;
+import com.jaqg.banking.dto.*;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.CustomerRepo;
 import jakarta.transaction.Transactional;
@@ -16,7 +16,7 @@ public class CustomerService {
 
     //Repo injection
     @Autowired
-    private static CustomerRepo customerRepo;
+    private CustomerRepo customerRepo;
 
     // Implementing Get Request DTO
 
@@ -47,7 +47,7 @@ public class CustomerService {
         }
     }
 
-    public static Optional<Customer> getCustomer(Long ID){
+    public Optional<Customer> getCustomer(Long ID){
 
         return customerRepo.findById(ID);
     }
