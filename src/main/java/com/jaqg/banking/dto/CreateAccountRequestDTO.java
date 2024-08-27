@@ -1,4 +1,4 @@
-package com.jaqg.banking.DTO;
+package com.jaqg.banking.dto;
 
 public record CreateAccountRequestDTO(
       Long customerId,

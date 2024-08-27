@@ -23,7 +23,8 @@ public class Account {
     @JoinColumn(name= "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToMany(mappedBy = "account", cascade=CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name= "account_id")
     //account does not own the relationship but transcation does
     private List<Transaction> transactions = new ArrayList<>();
     private Integer sortCode;

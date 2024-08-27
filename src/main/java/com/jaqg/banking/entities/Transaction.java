@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -28,8 +29,7 @@ public class Transaction implements Serializable {
     // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 
 
-    public Transaction(long id, LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
-        this.id = id;
+    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
