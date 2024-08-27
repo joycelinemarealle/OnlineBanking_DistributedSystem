@@ -1,5 +1,8 @@
 package com.jaqg.banking.services;
 
+import com.jaqg.banking.DTO.CreateAccountResponseDTO;
+import com.jaqg.banking.DTO.DeleteAccountRequestDTO;
+import com.jaqg.banking.DTO.GetAccountResponseDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.AccountRepository;
@@ -27,9 +30,9 @@ public class LocalAccountService implements AccountService{
     }
 
     @Override
-    public List<Account> retrieveAllAccounts() {
+    public List<GetAccountResponseDTO> retrieveAllAccounts() {
         logger.info("Getting accounts from Account Repository");
-        return accountRepository.getAllAccounts();
+        return accountRepository.findAll();
     }
 
     @Override
@@ -41,20 +44,22 @@ public class LocalAccountService implements AccountService{
         account.setBalance(openingBalance);
 
         //save account to database
-        accountRepository.saveAccount(account);
+        accountRepository.save(account);
         return account;
     }
 
     @Override
-    public BigDecimal closeAccount(long number) throws AccountNotFoundException{
+    public DeleteAccountRequestDTO closeAccount(long number) throws AccountNotFoundException{
         Optional<Account> optionalAccount = accountRepository.findById(number);
         if(optionalAccount.isPresent()){
             Account account = optionalAccount.get();
+
+           // return new DeleteAccountRequestDTO()
             BigDecimal balance = account.getBalance();
             account.setBalance(BigDecimal.ZERO);
             account.setClosed(true);
-            accountRepository.saveAccount(account);
-            return balance;
+            accountRepository.save(account);
+            return DeleteAccountRequestDTO();
 
         }
         else{
@@ -64,8 +69,25 @@ public class LocalAccountService implements AccountService{
     }
 
     @Override
-    public Account findAccountByNumber(long number){
-        return accountRepository.findAccountByNumber(number);
+    public GetAccountResponseDTO findAccountByNumber(long number) throws AccountNotFoundException {
+        Optional<Account> optionalAccount = accountRepository.findById(number);
+
+        if(optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            return new GetAccountResponseDTO(
+                    account.getNumber(),
+                    account.getSortCode(),
+                    account.getName(),
+                    account.getBalance(),
+                    account.getTransactions(),
+                    account.getBalance(),
+                    account.getCustomer().getUniqueID()
+
+                    );
+
+        } else{
+            throw new AccountNotFoundException("Account not found with number" + number);
+        }
 
     }
     public void deleteAccount(long number){

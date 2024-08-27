@@ -24,9 +24,9 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade=CascadeType.ALL)
     //account does not own the relationship but transcation does
     private List<Transaction> transactions;
-    private int sortCode;
+    private Integer sortCode;
 
-    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, List<Transaction> transactions, int sortCode) {
+    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, List<Transaction> transactions, Integer sortCode) {
         this.number = number;
         this.name = name;
         this.openingBalance = openingBalance;
@@ -88,7 +88,7 @@ public class Account {
         this.transactions = transactions;
     }
 
-    public int getSortCode() {
+    public Integer getSortCode() {
         return sortCode;
     }
 
