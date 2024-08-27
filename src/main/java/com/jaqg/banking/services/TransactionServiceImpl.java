@@ -49,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account);
         account.getTransactions().add(new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account));
         accountRepository.saveAccount(account);
-        return transactionToTransactionRecponse(transaction);
+        return transactionToTransactionResponse(transaction);
 //        return new TransactionResponse(
 //                transaction.getDateTime(),
 //                OperationType.TRANSFER.name(),
@@ -72,13 +72,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<TransactionResponse> getAllTransactions() {
         List<Transaction> transactions = transactionRepo.findAll();
-        return transactions.stream().map(this::transactionToTransactionRecponse).toList();
+        return transactions.stream().map(this::transactionToTransactionResponse).toList();
 
     }
 
 
     //this will go on the mapper for reusability and it will be public
-    private TransactionResponse transactionToTransactionRecponse(Transaction transaction) {
+    private TransactionResponse transactionToTransactionResponse(Transaction transaction) {
         return new TransactionResponse(
                 transaction.getDateTime(),
                 OperationType.TRANSFER.name(),
