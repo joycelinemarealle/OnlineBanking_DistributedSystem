@@ -10,7 +10,7 @@ public record GetAccountResponseDTO(
         Integer sortCode,
         String name,
         BigDecimal openingBalance,
-        List<Transaction> transactions,
+        List<com.jaqg.banking.dto.TransactionResponse> transactions,
         BigDecimal balance,
         Long customerId) {
 }

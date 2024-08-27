@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    Account findAccountByNumber(long number);
-    void batchInsert(List<Account> accounts);
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,16 +25,15 @@ public class Account {
 
     @OneToMany(mappedBy = "account", cascade=CascadeType.ALL)
     //account does not own the relationship but transcation does
-    private List<Transaction> transactions;
+    private List<Transaction> transactions = new ArrayList<>();
     private Integer sortCode;
 
-    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, List<Transaction> transactions, Integer sortCode) {
+    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer,  Integer sortCode) {
         this.number = number;
         this.name = name;
         this.openingBalance = openingBalance;
         this.balance = balance;
         this.customer = customer;
-        this.transactions = transactions;
         this.sortCode = sortCode;
     }
 
@@ -85,8 +85,8 @@ public class Account {
         return transactions;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public void addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
     }
 
     public Integer getSortCode() {

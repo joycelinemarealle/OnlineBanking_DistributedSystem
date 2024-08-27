@@ -1,13 +1,10 @@
 package com.jaqg.banking.services;
-
 import com.jaqg.banking.DTO.CreateAccountResponseDTO;
 import com.jaqg.banking.DTO.DeleteAccountRequestDTO;
 import com.jaqg.banking.DTO.GetAccountResponseDTO;
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.exceptions.AccountNotFoundException;
 import org.springframework.stereotype.Service;
-
-import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 

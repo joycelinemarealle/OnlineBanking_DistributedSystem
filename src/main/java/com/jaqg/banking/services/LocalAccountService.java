@@ -10,15 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import com.jaqg.banking.exceptions.AccountNotFoundException ;
 
 @Service
 public class LocalAccountService implements AccountService{
-
     private final AccountRepository accountRepository;
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
@@ -32,11 +30,25 @@ public class LocalAccountService implements AccountService{
     @Override
     public List<GetAccountResponseDTO> retrieveAllAccounts() {
         logger.info("Getting accounts from Account Repository");
-        return accountRepository.findAll();
+
+        //Retrieve all accounts from the repository
+       List<Account> accounts = accountRepository.findAll();
+
+       //Convert each Account Entity to a GetAccountResponseDTO
+        return accounts.stream()
+                .map(account -> new GetAccountResponseDTO(
+                        account.getNumber(),
+                        account.getSortCode(),
+                        account.getName(),
+                        account.getOpeningBalance(),
+                        account.getTransactions(), // convert to DTO,
+                        account.getBalance(),
+                        account.getCustomer().getUniqueID()))
+                .toList(); //collect to a list
     }
 
     @Override
-    public Account createAccount(Customer customer, String name, BigDecimal openingBalance){
+    public CreateAccountResponseDTO createAccount(Customer customer, String name, BigDecimal openingBalance){
         Account account = new Account();
         account.setCustomer(customer);
         account.setName(name);
@@ -45,22 +57,28 @@ public class LocalAccountService implements AccountService{
 
         //save account to database
         accountRepository.save(account);
-        return account;
+
+        return new CreateAccountResponseDTO(
+                account.getNumber(),
+                account.getSortCode(),
+                account.getName(),
+                account.getOpeningBalance(),
+                account.getTransactions(), // convert to DTO,
+                account.getBalance(),
+                account.getCustomer().getUniqueID()
+        );
     }
 
     @Override
-    public DeleteAccountRequestDTO closeAccount(long number) throws AccountNotFoundException{
+    public DeleteAccountRequestDTO closeAccount(long number) throws AccountNotFoundException {
         Optional<Account> optionalAccount = accountRepository.findById(number);
         if(optionalAccount.isPresent()){
-            Account account = optionalAccount.get();
-
-           // return new DeleteAccountRequestDTO()
+            Account account = optionalAccount.get(); //unwrap
             BigDecimal balance = account.getBalance();
             account.setBalance(BigDecimal.ZERO);
             account.setClosed(true);
             accountRepository.save(account);
-            return DeleteAccountRequestDTO();
-
+            return new DeleteAccountRequestDTO(account.getNumber());
         }
         else{
             throw new AccountNotFoundException("Account not found with number" +
@@ -78,8 +96,8 @@ public class LocalAccountService implements AccountService{
                     account.getNumber(),
                     account.getSortCode(),
                     account.getName(),
-                    account.getBalance(),
-                    account.getTransactions(), // convert to dto loop t
+                    account.getOpeningBalance(),
+                    account.getTransactions(), // convert entity to dto loop through or use streams
                     account.getBalance(),
                     account.getCustomer().getUniqueID()
 
