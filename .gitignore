@@ -37,3 +37,4 @@ out/
 .vscode/
 
 src/main/docker/postgresql/
+.DS_Store

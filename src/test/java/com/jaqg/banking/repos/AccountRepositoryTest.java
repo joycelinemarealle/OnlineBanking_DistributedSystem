@@ -2,12 +2,15 @@ package com.jaqg.banking.repos;
 
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.entities.OperationType;
+import com.jaqg.banking.entities.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,15 +80,44 @@ class AccountRepositoryTest {
         account.setBalance(BigDecimal.TEN);
         account.setSortCode(1234);
 
-        final Account storedAccount = entityManager.persist(account);
+        final Long accountNumber = entityManager.persistAndGetId(account, Long.class);
 
         account.setName(expectedName);
         account.setBalance(expectedBalance);
         account = accountRepository.save(account);
 
-        assertThat(account.getNumber()).isEqualTo(storedAccount.getNumber());
+        assertThat(account.getNumber()).isEqualTo(accountNumber);
         assertThat(account.getName()).isEqualTo(expectedName);
         assertThat(account.getBalance()).isEqualTo(expectedBalance);
+    }
+
+    @Test
+    void testFindAccountByIdWithTransaction() {
+        Account account = new Account();
+        account.setName("Checking");
+        account.setBalance(BigDecimal.ONE);
+        account.setSortCode(1235);
+
+        Transaction transaction1 = new Transaction();
+        transaction1.setRecipient(new Account());
+        transaction1.setTransType(OperationType.DEPOSIT);
+        transaction1.setTransVal(BigDecimal.TEN);
+        transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
+
+        account.addTransaction(transaction1);
+
+        Account storedAccount = entityManager.persist(account);
+
+//        entityManager.`
+
+        Optional<Account> optionalAccount = accountRepository.findById(storedAccount.getNumber());
+        assertThat(optionalAccount).isPresent();
+        account = optionalAccount.get();
+        assertThat(account.getNumber()).isEqualTo(storedAccount.getNumber());
+        assertThat(account.getName()).isEqualTo(storedAccount.getName());
+        assertThat(account.getBalance()).isEqualTo(storedAccount.getBalance());
+        assertThat(account.getSortCode()).isEqualTo(storedAccount.getSortCode());
+        assertThat(account.getTransactions()).isEmpty();
     }
 
 }
