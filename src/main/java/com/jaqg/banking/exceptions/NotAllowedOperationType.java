@@ -1,4 +1,4 @@
-package com.jaqg.banking.exeptions;
+package com.jaqg.banking.exceptions;
 
 public class NotAllowedOperationType extends RuntimeException {
     public NotAllowedOperationType() {

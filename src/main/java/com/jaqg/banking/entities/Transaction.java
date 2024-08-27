@@ -22,18 +22,29 @@ public class Transaction implements Serializable {
     private BigDecimal transVal;
 
     @Enumerated(EnumType.ORDINAL)
-    private OperationType transType; // Transaction type can be withdraw, deposit, ect...
-    @Transient
+    private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
     private Account recipient; // to account
+    private Account sender;
     // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 
 
-    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
+    public Transaction(long id, LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
+        this.id = id;
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
         this.recipient = recipient;
+        this.sender = sender;
     }
+
+    public Account getSender() {
+        return sender;
+    }
+
+    public void setSender(Account sender) {
+        this.sender = sender;
+    }
+
     public Transaction(){}
 
     public long getId() {
