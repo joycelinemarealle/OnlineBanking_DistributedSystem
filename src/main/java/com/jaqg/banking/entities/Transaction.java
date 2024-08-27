@@ -6,6 +6,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -17,18 +19,18 @@ public class Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
-    private LocalDate dateTime;
+    private LocalDateTime dateTime;
     private BigDecimal transVal;
 
     @Enumerated(EnumType.ORDINAL)
-    private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
+    private OperationType transType; // Transaction type can be withdraw, deposit, ect...
+    @Transient
     private Account recipient; // to account
     private Account sender;
     // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 
 
-    public Transaction(long id, LocalDate dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
-        this.id = id;
+    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
@@ -54,11 +56,11 @@ public class Transaction implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDate dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
