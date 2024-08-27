@@ -1,4 +1,4 @@
-package com.jaqg.banking.controller;
+package com.jaqg.banking.controllers;
 
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.services.AccountService;
