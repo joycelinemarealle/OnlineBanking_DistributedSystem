@@ -24,50 +24,6 @@ public class LocalAccountService implements AccountService{
     public List<Account> retrieveAllAccounts() {
         logger.info("Getting accounts from Account Repository");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return accountRepository.getAllAccounts();
+        return accountRepository.findAll();
     }
 }

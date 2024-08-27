@@ -4,7 +4,7 @@ import com.jaqg.banking.dto.TransactionRequest;
 import com.jaqg.banking.dto.TransactionResponse;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.repos.AccountRepository;
-import com.jaqg.banking.repos.TransactionRepo;
+import com.jaqg.banking.repos.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
-    private TransactionRepo transactionRepo;
+    private TransactionRepository transactionRepo;
 
     @Autowired
     private AccountRepository accountRepository;
 
     public TransactionResponse transfer(int fromAccount, int fromAccountSortCode, int toAccount, int toAccountSortCode, double amount) {
-         Account from = accountRepository.findAccountByNumber(fromAccount);
-         Account to = accountRepository.findAccountByNumber(toAccount);
-         if (from.getBalance() >= amount) {
-              from.withdraw(amount);
-              to.deposit(amount);
-              transactionRepo.save(from);
-              transactionRepo.save(to);
-         }
+//         Account from = accountRepository.findById(fromAccount);
+//         Account to = accountRepository.findById(toAccount);
+//         if (from.getBalance() >= amount) {
+//              from.withdraw(amount);
+//              to.deposit(amount);
+//              transactionRepo.save(from);
+//              transactionRepo.save(to);
+//         }
          //return new TransactionResponse(..........);
         return null;
     }

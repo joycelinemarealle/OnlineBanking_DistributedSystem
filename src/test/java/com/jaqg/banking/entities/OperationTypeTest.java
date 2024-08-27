@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OperationTypeTest {
 
-
     @ParameterizedTest
     @EnumSource(OperationType.class)
     void testValueOf(OperationType type) {

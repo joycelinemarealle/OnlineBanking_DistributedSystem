@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,15 +19,14 @@ public class Account {
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="recipient_id")
-    private List<Transaction> transactions;
+    private List<Transaction> transactions = new ArrayList<>();
 
     private int sortCode;
 
-    public Account(long number, String name, BigDecimal balance, List<Transaction> transactions, int sortCode) {
+    public Account(long number, String name, BigDecimal balance, int sortCode) {
         this.number = number;
         this.name = name;
         this.balance = balance;
-        this.transactions = transactions;
         this.sortCode = sortCode;
     }
 
@@ -60,8 +60,8 @@ public class Account {
         return transactions;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public void addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
     }
 
     public int getSortCode() {
