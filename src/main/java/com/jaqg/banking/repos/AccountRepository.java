@@ -6,6 +6,6 @@ import java.util.List;
 public interface AccountRepository {
     List<Account> getAllAccounts();
     Account findAccountByNumber(long number);
-    void saveAccount(Account account);
+    // saveAccount(Account account);
     void batchInsert(List<Account> accounts);
 }

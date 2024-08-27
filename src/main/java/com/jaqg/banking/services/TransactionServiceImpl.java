@@ -48,7 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
         Account account = accountRepository.findAccountByNumber(request.toAcount());
         Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account);
         account.getTransactions().add(new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account));
-        accountRepository.saveAccount(account);
+        accountRepository.sa;
         return transactionToTransactionResponse(transaction);
 //        return new TransactionResponse(
 //                transaction.getDateTime(),
