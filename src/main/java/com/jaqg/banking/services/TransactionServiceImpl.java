@@ -38,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
                 transaction.getDateTime(),
                 OperationType.WITHDRAWAL.name(),
                 (long)request.fromAcount(),
-                request.fromAcountSortCode(),
+                (long)request.fromAccountSortCode(),
                 account.getNumber(),
                 account.getSortCode(),
                 transaction.getTransVal());

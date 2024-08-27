@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public record TransactionRequest (
      String type,
      Long fromAcount,
-     Long fromAcountSortCode,
+     Long fromAccountSortCode,
      Long toAcount,
      Long toAcountSortCode,
      BigDecimal amount){}
