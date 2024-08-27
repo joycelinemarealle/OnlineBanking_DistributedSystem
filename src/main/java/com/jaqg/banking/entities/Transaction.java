@@ -15,7 +15,7 @@ public class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primry keys
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
     private LocalDate dateTime;
     private BigDecimal transVal;
