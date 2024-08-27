@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Account {
@@ -105,7 +106,18 @@ public class Account {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return number == account.number;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(number);
+    }
 
     @Override
     public String toString() {

@@ -9,15 +9,7 @@ public record CreateAccountResponseDTO(
         Integer sortCode,
         String name,
         double openingBalance,
-        List<Transaction> transactions,
+        List<TransactionResponse> transactions,
         Double balance,
         Long customerId) {
-
-    public Integer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Integer customer) {
-        this.customer = customer;
-    }
 }

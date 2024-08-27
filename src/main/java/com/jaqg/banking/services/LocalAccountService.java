@@ -79,7 +79,7 @@ public class LocalAccountService implements AccountService{
                     account.getSortCode(),
                     account.getName(),
                     account.getBalance(),
-                    account.getTransactions(),
+                    account.getTransactions(), // convert to dto loop t
                     account.getBalance(),
                     account.getCustomer().getUniqueID()
 
