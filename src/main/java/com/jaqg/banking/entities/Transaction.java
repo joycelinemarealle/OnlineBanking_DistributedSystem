@@ -2,31 +2,45 @@ package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-public class Transaction {
+public class Transaction implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY) // This helps auto-generate primry keys
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
-    private LocalDate dateTime;
+    private LocalDateTime dateTime;
     private BigDecimal transVal;
-    @Transient
-    private OperationType transType; // Transaction type can be withdraw, deposit, ect...
-    @Transient
+
+    @Enumerated(EnumType.ORDINAL)
+    private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
     private Account recipient; // to account
-    // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
+    private Account sender;
 
 
-    public Transaction(long id, LocalDate dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
-        this.id = id;
+    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
         this.recipient = recipient;
+        this.sender = sender;
     }
+
+    public Account getSender() {
+        return sender;
+    }
+
+    public void setSender(Account sender) {
+        this.sender = sender;
+    }
+
     public Transaction(){}
 
     public long getId() {
@@ -37,11 +51,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public LocalDate getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDate dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
