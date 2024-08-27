@@ -13,4 +13,11 @@ public record CreateAccountResponseDTO(
         Double balance,
         Long customerId) {
 
+    public Integer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Integer customer) {
+        this.customer = customer;
+    }
 }
