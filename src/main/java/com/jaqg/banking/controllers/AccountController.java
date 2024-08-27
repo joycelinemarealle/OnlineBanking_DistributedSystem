@@ -1,6 +1,6 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @GetMapping("/account")
-    public List<Account> getAllAccounts(){
+    @GetMapping
+    public List<AccountResponseDTO> getAllAccounts(){
         return accountService.retrieveAllAccounts();
     }
 
-    @GetMapping("/account/{number}")
-        public Account findAccountByNumber(@PathVariable Long number){
+    @GetMapping("/{number}")
+        public AccountResponseDTO findAccountByNumber(@PathVariable Long number){
             return accountService.findAccountByNumber(number);
         }
 
@@ -33,7 +33,7 @@ public class AccountController {
 //       return accountService.createAccount();
 //    }
 
-    @DeleteMapping("accounts/{number}")
+    @DeleteMapping("/{number}")
     public BigDecimal closeAccount(@PathVariable long number) throws AccountNotFoundException {
       return  accountService.closeAccount(number);
     }

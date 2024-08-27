@@ -2,7 +2,7 @@ package com.jaqg.banking.dto;
 
 import java.time.LocalDate;
 
-public class TransactionResponse extends TransactionRequest{
+public class TransactionResponse {
     private LocalDate time;
     private String type;
     private int fromAccount;
@@ -11,12 +11,12 @@ public class TransactionResponse extends TransactionRequest{
     private int toAccountSortCode;
     private double amount;
 
-    @Override
+    
     public String getType() {
         return type;
     }
 
-    @Override
+    
     public void setType(String type) {
         this.type = type;
     }
@@ -53,12 +53,12 @@ public class TransactionResponse extends TransactionRequest{
         this.toAccountSortCode = toAccountSortCode;
     }
 
-    @Override
+    
     public double getAmount() {
         return amount;
     }
 
-    @Override
+    
     public void setAmount(double amount) {
         this.amount = amount;
     }

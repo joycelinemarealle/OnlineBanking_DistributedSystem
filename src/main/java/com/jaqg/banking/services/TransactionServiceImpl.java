@@ -2,7 +2,6 @@ package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.TransactionRequest;
 import com.jaqg.banking.dto.TransactionResponse;
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +17,15 @@ public class TransactionServiceImpl implements TransactionService {
     private AccountRepository accountRepository;
 
     public TransactionResponse transfer(int fromAccount, int fromAccountSortCode, int toAccount, int toAccountSortCode, double amount) {
-         Account from = accountRepository.findAccountByNumber(fromAccount);
-         Account to = accountRepository.findAccountByNumber(toAccount);
-         if (from.getBalance() >= amount) {
-              from.withdraw(amount);
-              to.deposit(amount);
-              transactionRepo.save(from);
-              transactionRepo.save(to);
-         }
-         //return new TransactionResponse(..........);
+//         Account from = accountRepository.findAccountByNumber(fromAccount);
+//         Account to = accountRepository.findAccountByNumber(toAccount);
+//         if (from.getBalance() >= amount) {
+//              from.withdraw(amount);
+//              to.deposit(amount);
+//              transactionRepo.save(from);
+//              transactionRepo.save(to);
+//         }
+//         //return new TransactionResponse(..........);
         return null;
     }
 
