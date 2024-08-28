@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/account")
 @CrossOrigin
+
 public class AccountController {
     private AccountService accountService;
 

@@ -37,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionResponse withdraw(TransactionRequest request) {
-        Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
+        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account);
@@ -50,7 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public TransactionResponse executeTransfer(TransactionRequest request) {
-        Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
+        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account);
@@ -63,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public TransactionResponse deposit(TransactionRequest request) {
-        Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
+        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account);
