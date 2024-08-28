@@ -1,44 +1,62 @@
 package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-
-import javax.annotation.processing.Generated;
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Entity
-public class Account {
+public class Account implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long number;
+
+    @Column(length = 50, nullable = false)
+    @NotBlank(message = "Name is mandatory")
     private String name;
+
+    @Column(precision=16, scale=2, nullable = false)
     private BigDecimal openingBalance;
+
+    @Column(precision=16, scale=2, nullable = false)
     private BigDecimal balance;
+
     private boolean isClosed = false;
 
     @ManyToOne
-    @JoinColumn(name= "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name= "account_id")
-    private List<Transaction> transactions = new ArrayList<>();
     private Integer sortCode;
 
-    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer,  Integer sortCode) {
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final List<Transaction> depositTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final List<Transaction> creditTransactions = new ArrayList<>();
+
+    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, Integer sortCode) {
         this.number = number;
-        this.sortCode = sortCode;
         this.name = name;
         this.openingBalance = openingBalance;
         this.balance = balance;
         this.customer = customer;
+        this.sortCode = sortCode;
     }
 
 
-    public Account (){}
+    public Account() {
+    }
 
     public long getNumber() {
         return number;
@@ -82,11 +100,15 @@ public class Account {
     }
 
     public List<Transaction> getTransactions() {
-        return transactions;
+        return Stream.concat(depositTransactions.stream(), creditTransactions.stream()).toList();
     }
 
-    public void addTransaction(Transaction transaction) {
-        this.transactions.add(transaction);
+    public void addDebitTransaction(Transaction transaction) {
+        depositTransactions.add(transaction);
+    }
+
+    public void addCreditTransaction(Transaction transaction) {
+        creditTransactions.add(transaction);
     }
 
     public Integer getSortCode() {
@@ -97,11 +119,11 @@ public class Account {
         this.sortCode = sortCode;
     }
 
-    public boolean isClosed(){
+    public boolean isClosed() {
         return this.isClosed;
     }
 
-    public void setClosed(boolean closed){
+    public void setClosed(boolean closed) {
         isClosed = closed;
 
     }
@@ -125,7 +147,6 @@ public class Account {
                 "number=" + number +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
-                ", transactions=" + transactions +
                 ", sortCode=" + sortCode +
                 '}';
     }

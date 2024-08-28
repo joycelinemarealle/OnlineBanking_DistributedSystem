@@ -1,35 +1,39 @@
 package com.jaqg.banking.entities;
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Customers")
-public class Customer {
+public class Customer implements Serializable {
 
-    @Column(name = "full_Name")
-    private String fullName;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
-    private long ID;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Account> accounts = new ArrayList<>();
+    private long id;
+
+    @Column(length = 150, nullable = false)
+    @NotBlank(message = "Name is mandatory")
+    private String fullName;
 
     private boolean isRemoved = false;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final List<Account> accounts = new ArrayList<>();
 
     public Customer(String fullName) {
         this.fullName = fullName;
     }
 
-    public Customer(){
+    public Customer() {
 
-    }
-
-    public Customer(Long id, String name, List<Account> accounts) {
     }
 
     public String getFullName() {
@@ -40,12 +44,12 @@ public class Customer {
         this.fullName = fullName;
     }
 
-    public long getUniqueID() {
-        return ID;
+    public long getId() {
+        return id;
     }
 
-    public void setUniqueID(int uniqueID) {
-        this.ID = uniqueID;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public boolean isRemoved() {
@@ -60,5 +64,24 @@ public class Customer {
         return accounts;
     }
 
+    public void addAccount(Account account) {
+        accounts.add(account);
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer customer)) return false;
+        return id == customer.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return fullName;
+    }
 }

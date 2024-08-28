@@ -1,6 +1,6 @@
 package com.jaqg.banking.dto;
 
-import com.jaqg.banking.entities.OperationType;
+import com.jaqg.banking.enums.OperationType;
 
 import java.math.BigDecimal;
 
