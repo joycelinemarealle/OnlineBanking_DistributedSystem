@@ -1,11 +1,11 @@
 package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.AccountResponseDTO;
+import com.jaqg.banking.dto.CreateAccountRequestDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.AccountRepository;
-import mappers.AccountMapper;
-import mappers.TransactionsMapper;
+import com.jaqg.banking.repos.CustomerRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +17,19 @@ import java.util.Optional;
 
 import com.jaqg.banking.exceptions.AccountNotFoundException;
 
-import static mappers.AccountMapper.accountMapper;
+import static com.jaqg.banking.mapper.AccountMapper.accountMapper;
 
 @Service
 public class LocalAccountService implements AccountService {
     private final AccountRepository accountRepository;
+    private final CustomerRepo customerRepo;
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
     //inject repo
     @Autowired
-    public LocalAccountService(AccountRepository accountRepository) {
+    public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
         this.accountRepository = accountRepository;
+        this.customerRepo = customerRepo;
 
     }
 
@@ -45,12 +47,15 @@ public class LocalAccountService implements AccountService {
     }
 
     @Override
-    public AccountResponseDTO createAccount(Customer customer, String name, BigDecimal openingBalance) {
+    public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) {
         Account account = new Account();
-        account.setCustomer(customer);
-        account.setName(name);
-        account.setOpeningBalance(openingBalance);
-        account.setBalance(openingBalance);
+
+        //find customer by id
+        Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
+        account.setCustomer(optionalCustomer.get()); //unwrap optional
+        account.setName(createAccountRequestDTO.accountName());
+        account.setOpeningBalance(createAccountRequestDTO.openingBalance());
+        account.setBalance(createAccountRequestDTO.openingBalance());
 
         //save account to database
         accountRepository.save(account);
@@ -85,6 +90,7 @@ public class LocalAccountService implements AccountService {
     }
 
     public void deleteAccount(long number) {
+
         accountRepository.deleteById(number);
     }
 
