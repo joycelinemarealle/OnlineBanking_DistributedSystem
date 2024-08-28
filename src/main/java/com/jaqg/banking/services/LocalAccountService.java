@@ -6,8 +6,6 @@ import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.CustomerRepo;
-import mappers.AccountMapper;
-import mappers.TransactionsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,7 @@ import java.util.Optional;
 
 import com.jaqg.banking.exceptions.AccountNotFoundException;
 
-import static mappers.AccountMapper.accountMapper;
+import static com.jaqg.banking.mapper.AccountMapper.accountMapper;
 
 @Service
 public class LocalAccountService implements AccountService {
@@ -54,7 +52,7 @@ public class LocalAccountService implements AccountService {
 
         //find customer by id
         Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
-        account.setCustomer(optionalCustomer.get());
+        account.setCustomer(optionalCustomer.get()); //unwrap optional
         account.setName(createAccountRequestDTO.accountName());
         account.setOpeningBalance(createAccountRequestDTO.openingBalance());
         account.setBalance(createAccountRequestDTO.openingBalance());
@@ -92,6 +90,7 @@ public class LocalAccountService implements AccountService {
     }
 
     public void deleteAccount(long number) {
+
         accountRepository.deleteById(number);
     }
 
