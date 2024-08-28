@@ -1,9 +1,9 @@
-package mappers;
+package com.jaqg.banking.mapper;
 
 import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.entities.Account;
+import static com.jaqg.banking.mapper.TransactionsMapper.transactionListMapper;
 
-import static mappers.TransactionsMapper.transactionListMapper;
 
 //Convert Account Entity to AccountResponseDTO
 public class AccountMapper {
@@ -13,7 +13,7 @@ public class AccountMapper {
                 account.getSortCode(),
                 account.getName(),
                 account.getOpeningBalance(),
-                transactionListMapper(account.getTransactions()), // convert to DTO,
+               transactionListMapper(account.getTransactions()), // convert to DTO,
                 account.getBalance(),
                 account.getCustomer().getId());
 

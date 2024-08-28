@@ -1,11 +1,9 @@
-package mappers;
+package com.jaqg.banking.mapper;
 
 import com.jaqg.banking.entities.Transaction;
 
 import java.util.List;
 import com.jaqg.banking.dto.TransactionResponse;
-
-import static java.util.stream.Collectors.toList;
 
 public class TransactionsMapper {
 
@@ -18,7 +16,7 @@ public class TransactionsMapper {
     }
 
     public static TransactionResponse transactionMapper(Transaction transaction){
-        return new TransactionResponse(
+        return new com.jaqg.banking.dto.TransactionResponse(
                 transaction.getDateTime(),
                 transaction.getTransType(),
                 transaction.getSender().getNumber(),

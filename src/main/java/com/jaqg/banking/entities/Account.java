@@ -40,11 +40,9 @@ public class Account implements Serializable {
     private Integer sortCode;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    //account does not own the relationship but transcation does
     private final List<Transaction> depositTransactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    //account does not own the relationship but transcation does
     private final List<Transaction> creditTransactions = new ArrayList<>();
 
     public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, Integer sortCode) {

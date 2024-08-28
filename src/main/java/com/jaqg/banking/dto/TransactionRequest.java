@@ -6,8 +6,8 @@ import java.math.BigDecimal;
 
 public record TransactionRequest (
         OperationType type,
-        Long fromAcount,
-        Long fromAcountSortCode,
-        Long toAcount,
-        Long toAcountSortCode,
+        Long fromAccount,
+        Long fromAccountSortCode,
+        Long toAccount,
+        Long toAccountSortCode,
         BigDecimal amount){}
