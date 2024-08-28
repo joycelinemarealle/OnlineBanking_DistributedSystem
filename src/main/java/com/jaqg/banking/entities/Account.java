@@ -25,8 +25,6 @@ public class Account {
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name= "account_id")
-    //account does not own the relationship but transcation does
-
     private List<Transaction> transactions = new ArrayList<>();
     private Integer sortCode;
 
