@@ -36,10 +36,10 @@ public class AccountController {
 
     @PostMapping("/account")
     public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody Account account){
-        Customer customer = account.getCustomer();
+        Customer customerId = account.getCustomer();
         String name = account.getName();
         BigDecimal openingBalance = account.getOpeningBalance();
-        AccountResponseDTO accountResponseDTO = accountService.createAccount(customer, name, openingBalance);
+        AccountResponseDTO accountResponseDTO = accountService.createAccount(customerId, name, openingBalance);
        return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 
