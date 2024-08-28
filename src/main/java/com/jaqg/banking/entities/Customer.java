@@ -1,12 +1,13 @@
 package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Customer implements Serializable {
@@ -19,6 +20,7 @@ public class Customer implements Serializable {
     private long id;
 
     @Column(length = 150, nullable = false)
+    @NotBlank(message = "Name is mandatory")
     private String fullName;
 
     private boolean isRemoved = false;
@@ -46,7 +48,7 @@ public class Customer implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -62,4 +64,24 @@ public class Customer implements Serializable {
         return accounts;
     }
 
+    public void addAccount(Account account) {
+        accounts.add(account);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer customer)) return false;
+        return id == customer.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return fullName;
+    }
 }

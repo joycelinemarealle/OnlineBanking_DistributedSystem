@@ -39,9 +39,8 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
-            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account);
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
-            account.addTransaction(transaction);
+            account.addDebitTransaction(transaction);
             accountRepository.save(account);
             return transactionMapper.transactionToTransactionResponse(transaction);
         } else {
@@ -54,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
-            account.addTransaction(transaction);
+            account.addDebitTransaction(transaction);
             accountRepository.save(account);
             return transactionMapper.transactionToTransactionResponse(transaction);
         } else {
@@ -67,7 +66,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
-            account.addTransaction(transaction);
+            account.addDebitTransaction(transaction);
             accountRepository.save(account);
             return transactionMapper.transactionToTransactionResponse(transaction);
         } else {

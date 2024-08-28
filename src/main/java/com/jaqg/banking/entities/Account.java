@@ -1,6 +1,7 @@
 package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Entity
 public class Account implements Serializable {
@@ -20,6 +22,7 @@ public class Account implements Serializable {
     private long number;
 
     @Column(length = 50, nullable = false)
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
     @Column(precision=16, scale=2, nullable = false)
@@ -36,9 +39,13 @@ public class Account implements Serializable {
 
     private Integer sortCode;
 
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     //account does not own the relationship but transcation does
-    private final List<Transaction> transactions = new ArrayList<>();
+    private final List<Transaction> depositTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    //account does not own the relationship but transcation does
+    private final List<Transaction> creditTransactions = new ArrayList<>();
 
     public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, Integer sortCode) {
         this.number = number;
@@ -95,11 +102,15 @@ public class Account implements Serializable {
     }
 
     public List<Transaction> getTransactions() {
-        return transactions;
+        return Stream.concat(depositTransactions.stream(), creditTransactions.stream()).toList();
     }
 
-    public void addTransaction(Transaction transaction) {
-        this.transactions.add(transaction);
+    public void addDebitTransaction(Transaction transaction) {
+        depositTransactions.add(transaction);
+    }
+
+    public void addCreditTransaction(Transaction transaction) {
+        creditTransactions.add(transaction);
     }
 
     public Integer getSortCode() {
@@ -138,7 +149,6 @@ public class Account implements Serializable {
                 "number=" + number +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
-                ", transactions=" + transactions +
                 ", sortCode=" + sortCode +
                 '}';
     }

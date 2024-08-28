@@ -1,8 +1,8 @@
 package com.jaqg.banking.repos;
 
 import com.jaqg.banking.entities.Account;
-import com.jaqg.banking.enums.OperationType;
 import com.jaqg.banking.entities.Transaction;
+import com.jaqg.banking.enums.OperationType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -76,9 +76,9 @@ class TransactionRepositoryTest {
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         Transaction transaction2 = new Transaction();
-        transaction1.setRecipient(new Account());
-        transaction1.setTransType(OperationType.WITHDRAWAL);
-        transaction1.setTransVal(BigDecimal.ONE);
+        transaction2.setRecipient(new Account());
+        transaction2.setTransType(OperationType.WITHDRAWAL);
+        transaction2.setTransVal(BigDecimal.ONE);
         transaction2.setDateTime(LocalDateTime.now());
 
         entityManager.persist(transaction1);

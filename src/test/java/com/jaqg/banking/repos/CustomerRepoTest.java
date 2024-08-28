@@ -51,6 +51,7 @@ class CustomerRepoTest {
         Customer customer = optionalCustomer.get();
         assertThat(customer.getId()).isEqualTo(storedCustomer.getId());
         assertThat(customer.getFullName()).isEqualTo(storedCustomer.getFullName());
+        assertThat(customer.isRemoved()).isEqualTo(false);
         assertThat(customer.getAccounts()).isEmpty();
     }
 
@@ -58,16 +59,30 @@ class CustomerRepoTest {
     void testSaveCustomer() {
         final String expectedName = "Jason Jackson";
 
+        Customer expectedCustomer = new Customer();
+        expectedCustomer.setFullName(expectedName);
+
+        Customer customer = customerRepo.save(expectedCustomer);
+
+        assertThat(customer.getId()).isEqualTo(expectedCustomer.getId());
+        assertThat(customer.getFullName()).isEqualTo(expectedCustomer.getFullName());
+    }
+
+    @Test
+    void testMarkCustomerForDeletion() {
+        final String expectedName = "Josh Smith";
+
         Customer customer = new Customer();
-        customer.setFullName("Josh Smith");
+        customer.setFullName(expectedName);
 
         final Customer storedCustomer = entityManager.persist(customer);
 
-        customer.setFullName(expectedName);
+        customer.setRemoved(true);
         customer = customerRepo.save(customer);
 
         assertThat(customer.getId()).isEqualTo(storedCustomer.getId());
         assertThat(customer.getFullName()).isEqualTo(expectedName);
+        assertThat(customer.isRemoved()).isEqualTo(true);
     }
 
 }
