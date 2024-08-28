@@ -10,24 +10,22 @@ import static java.util.stream.Collectors.toList;
 public class TransactionsMapper {
 
     //Convert List of Transaction Entity to List of TransactionResponseDTO
-
     public static List <TransactionResponse>  transactionListMapper(List<Transaction> transactions){
        return  transactions.stream()
-               .map(transaction -> TransactionsMapper.transactionMapper(transaction)
+               .map(transaction -> transactionMapper(transaction)
                )
                .toList(); //collect to a list
     }
 
     public static TransactionResponse transactionMapper(Transaction transaction){
-        return null;
-//        return new TransactionResponse(
-//                transaction.getDateTime(),
-//                transaction.getTransType(),
-//                transaction.getSender().getNumber(),
-//                transaction.getSender().getSortCode(),
-//                transaction.getRecipient().getNumber(),
-//                transaction.getRecipient().getSortCode(),
-//                transaction.getTransVal())
+        return new TransactionResponse(
+                transaction.getDateTime(),
+                transaction.getTransType().toString(),
+                transaction.getSender().getNumber(),
+                transaction.getSender().getSortCode(),
+                transaction.getRecipient().getNumber(),
+                transaction.getRecipient().getSortCode(),
+                transaction.getTransVal());
 
     }
 }
