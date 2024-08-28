@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/account")
 @CrossOrigin
-
 public class AccountController {
 
     //inject service
@@ -24,9 +23,9 @@ public class AccountController {
     }
 
     @GetMapping("/{number}")
-        public AccountResponseDTO findAccountByNumber(@PathVariable Long number){
-            return accountService.findAccountByNumber(number);
-        }
+    public AccountResponseDTO findAccountByNumber(@PathVariable Long number){
+        return accountService.findAccountByNumber(number);
+    }
 
 //    @PostMapping("/account")
 //    public Account createAccount(@RequestBody Account account){
