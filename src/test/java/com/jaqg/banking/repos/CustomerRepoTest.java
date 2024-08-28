@@ -46,10 +46,10 @@ class CustomerRepoTest {
         entityManager.persist(customer1);
         Customer storedCustomer = entityManager.persist(customer2);
 
-        Optional<Customer> optionalCustomer = customerRepo.findById(storedCustomer.getUniqueID());
+        Optional<Customer> optionalCustomer = customerRepo.findById(storedCustomer.getId());
         assertThat(optionalCustomer).isPresent();
         Customer customer = optionalCustomer.get();
-        assertThat(customer.getUniqueID()).isEqualTo(storedCustomer.getUniqueID());
+        assertThat(customer.getId()).isEqualTo(storedCustomer.getId());
         assertThat(customer.getFullName()).isEqualTo(storedCustomer.getFullName());
         assertThat(customer.getAccounts()).isEmpty();
     }
@@ -66,7 +66,7 @@ class CustomerRepoTest {
         customer.setFullName(expectedName);
         customer = customerRepo.save(customer);
 
-        assertThat(customer.getUniqueID()).isEqualTo(storedCustomer.getUniqueID());
+        assertThat(customer.getId()).isEqualTo(storedCustomer.getId());
         assertThat(customer.getFullName()).isEqualTo(expectedName);
     }
 

@@ -100,7 +100,7 @@ public class LocalAccountService implements AccountService{
                 account.getOpeningBalance(),
                 TransactionsMapper.transactionListMapper(account.getTransactions()), // convert to DTO,
                 account.getBalance(),
-                account.getCustomer().getUniqueID());
+                account.getCustomer().getId());
 
     }
 }

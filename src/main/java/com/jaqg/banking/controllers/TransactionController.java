@@ -7,8 +7,11 @@ import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.services.TransactionService;
 import com.jaqg.banking.services.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin
@@ -25,16 +28,32 @@ public class TransactionController {
 
     @PostMapping
     public TransactionResponse create(@RequestBody TransactionRequest request){
-        switch(request.type()) {
-            case "WITHDRAW":
-                return transactionService.withdraw(request);
-            case "DEPOSIT":
-                return transactionService.deposit(request);
-            case "TRANSFER":
-                return transactionService.executeTransfer(request);
-            default:
-                throw new IllegalArgumentException("Invalid transaction type" + request.type());
-        }
+//        LocalDateTime time,
+//        String type,
+//        Long fromAccount,
+//        Integer fromAccountSortCode,
+//        Long toAccount,
+//        Integer toAccountSortCode,
+//        BigDecimal amount
+        return new TransactionResponse(
+                LocalDateTime.now(),
+                request.type(),
+                request.fromAcount(),
+                request.fromAcountSortCode().intValue(),
+                request.toAcount(),
+                request.toAcountSortCode().intValue(),
+                request.amount()
+        );
+//        switch(request.type()) {
+//            case "WITHDRAW":
+//                return transactionService.withdraw(request);
+//            case "DEPOSIT":
+//                return transactionService.deposit(request);
+//            case "TRANSFER":
+//                return transactionService.executeTransfer(request);
+//            default:
+//                throw new IllegalArgumentException("Invalid transaction type" + request.type());
+//        }
     }
     //app.post('/account', (res, req) => {
     //    if(req.body.type == 'withdraw') {

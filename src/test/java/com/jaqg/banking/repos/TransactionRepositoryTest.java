@@ -1,7 +1,7 @@
 package com.jaqg.banking.repos;
 
 import com.jaqg.banking.entities.Account;
-import com.jaqg.banking.entities.OperationType;
+import com.jaqg.banking.enums.OperationType;
 import com.jaqg.banking.entities.Transaction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

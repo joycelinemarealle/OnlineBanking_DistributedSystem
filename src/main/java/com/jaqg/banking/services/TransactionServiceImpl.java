@@ -3,7 +3,6 @@ package com.jaqg.banking.services;
 import com.jaqg.banking.dto.TransactionRequest;
 import com.jaqg.banking.dto.TransactionResponse;
 import com.jaqg.banking.entities.Account;
-import com.jaqg.banking.entities.OperationType;
 import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.exceptions.TransactionNotFoundException;
 import com.jaqg.banking.repos.AccountRepository;
@@ -40,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
-            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account);
+            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
             account.addTransaction(transaction);
             accountRepository.save(account);
             return transactionMapper.transactionToTransactionResponse(transaction);
@@ -53,7 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
-            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account);
+            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
             account.addTransaction(transaction);
             accountRepository.save(account);
             return transactionMapper.transactionToTransactionResponse(transaction);
@@ -66,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
-            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), OperationType.valueOf(request.type()), account);
+            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
             account.addTransaction(transaction);
             accountRepository.save(account);
             return transactionMapper.transactionToTransactionResponse(transaction);

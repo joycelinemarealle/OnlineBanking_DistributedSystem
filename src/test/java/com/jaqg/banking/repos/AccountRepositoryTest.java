@@ -2,7 +2,7 @@ package com.jaqg.banking.repos;
 
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
-import com.jaqg.banking.entities.OperationType;
+import com.jaqg.banking.enums.OperationType;
 import com.jaqg.banking.entities.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AccountRepositoryTest {
@@ -79,6 +78,7 @@ class AccountRepositoryTest {
         account.setName("Savings");
         account.setBalance(BigDecimal.TEN);
         account.setSortCode(1234);
+        account.setCustomer(new Customer());
 
         final Long accountNumber = entityManager.persistAndGetId(account, Long.class);
 

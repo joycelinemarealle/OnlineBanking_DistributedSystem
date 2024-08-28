@@ -2,34 +2,45 @@ package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
 
-
-import javax.annotation.processing.Generated;
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Account {
+public class Account implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long number;
+
+    @Column(length = 50, nullable = false)
     private String name;
+
+    @Column(precision=16, scale=2)
     private BigDecimal openingBalance;
+
+    @Column(precision=16, scale=2)
     private BigDecimal balance;
+
     private boolean isClosed = false;
 
     @ManyToOne
-    @JoinColumn(name= "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name= "account_id")
-    //account does not own the relationship but transcation does
-    private List<Transaction> transactions = new ArrayList<>();
     private Integer sortCode;
 
-    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer,  Integer sortCode) {
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //account does not own the relationship but transcation does
+    private final List<Transaction> transactions = new ArrayList<>();
+
+    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, Integer sortCode) {
         this.number = number;
         this.name = name;
         this.openingBalance = openingBalance;
@@ -39,7 +50,8 @@ public class Account {
     }
 
 
-    public Account (){}
+    public Account() {
+    }
 
     public long getNumber() {
         return number;
@@ -98,11 +110,11 @@ public class Account {
         this.sortCode = sortCode;
     }
 
-    public boolean isClosed(){
+    public boolean isClosed() {
         return this.isClosed;
     }
 
-    public void setClosed(boolean closed){
+    public void setClosed(boolean closed) {
         isClosed = closed;
 
     }
