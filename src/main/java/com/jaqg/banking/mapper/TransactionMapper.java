@@ -10,7 +10,7 @@ public class TransactionMapper {
     public TransactionResponse transactionToTransactionResponse(Transaction transaction) {
         return new TransactionResponse(
                 transaction.getDateTime(),
-                OperationType.TRANSFER.name(),
+                OperationType.TRANSFER,
                 transaction.getRecipient().getNumber(),
                 transaction.getRecipient().getSortCode(),
                 transaction.getSender().getNumber(),//sender

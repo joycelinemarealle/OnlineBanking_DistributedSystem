@@ -20,7 +20,7 @@ public class TransactionsMapper {
     public static TransactionResponse transactionMapper(Transaction transaction){
         return new TransactionResponse(
                 transaction.getDateTime(),
-                transaction.getTransType().toString(),
+                transaction.getTransType(),
                 transaction.getSender().getNumber(),
                 transaction.getSender().getSortCode(),
                 transaction.getRecipient().getNumber(),
