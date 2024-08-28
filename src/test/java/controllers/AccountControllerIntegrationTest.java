@@ -125,37 +125,39 @@ public class AccountControllerIntegrationTest {
         }
 
 @Test
-        void createAccount(){
+        void createAccount() {
             when(accountService.createAccount(accountRequest)).thenReturn(accountResponse1);
 
             //Create request
-        RequestBuilder request = MockMvcRequestBuilders
-                .get("/account")
-                .accept(MediaType.APPLICATION_JSON);
+            RequestBuilder request = MockMvcRequestBuilders
+                    .get("/account")
+                    .accept(MediaType.APPLICATION_JSON);
 
-        //Perform request
-        MvcResult result;
+            //Perform request
+            MvcResult result;
 
-        try{
-            result = mockMvc.perform(request)
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
+            try {
+                result = mockMvc.perform(request)
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andReturn();
 
-            //Verify Response
-            String expectedResponse ="[{\"accountNumber\":1234," +
-                    "\"sortCode\":1111," +
-                    "\"name\":\"Savings\", " +
-                    "\"balance\":100, \"transactions\":[]" +
-                    ", \"openingBalance\":100," +
-                    "\"customer\": 1}]";
+                //Verify Response
+                String expectedResponse = "[{\"accountNumber\":1234," +
+                        "\"sortCode\":1111," +
+                        "\"name\":\"Savings\", " +
+                        "\"balance\":100, \"transactions\":[]" +
+                        ", \"openingBalance\":100," +
+                        "\"customer\": 1}]";
 
-            assertEquals(expectedResponse, result.getResponse().getContentAsString());
+                assertEquals(expectedResponse, result.getResponse().getContentAsString());
 
-        } catch (Exception e){
-            throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
 
+            }
         }
+    }}
 
 //@Test
 //        void closeAccount(){
