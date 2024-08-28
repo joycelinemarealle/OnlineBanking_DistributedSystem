@@ -21,7 +21,6 @@ public class Transaction implements Serializable {
 
     @Enumerated(EnumType.ORDINAL)
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
-
     @Transient
     private Account recipient; // to account
     @Transient
