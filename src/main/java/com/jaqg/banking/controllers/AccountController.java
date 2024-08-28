@@ -3,12 +3,13 @@ package com.jaqg.banking.controllers;
 import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.repos.CustomerRepo;
 import com.jaqg.banking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.jaqg.banking.dto.CreateAccountRequestDTO
+import com.jaqg.banking.dto.CreateAccountRequestDTO;
 import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,10 +17,12 @@ import java.util.List;
 @RequestMapping("/account")
 @CrossOrigin
 public class AccountController {
+    private AccountService accountService;
 
-    //inject service
-    @Autowired
-    AccountService accountService;
+    //constructor injection
+    public AccountController(AccountService accountService){
+        this.accountService = accountService;
+    }
 
     @GetMapping
     public ResponseEntity<List<AccountResponseDTO>> getAllAccounts(){
@@ -34,11 +37,14 @@ public class AccountController {
         }
 
     @PostMapping("/account")
-    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountResponseDTO DTO){
+    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody CreateAccountRequestDTO createAccountDTO){
+
 //        Customer customer = account.getCustomer();
 //        String name = account.getName();
 //        BigDecimal openingBalance = account.getOpeningBalance();
-        AccountResponseDTO accountResponseDTO = accountService.createAccount(com.jaqg.banking.dto.CreateAccountRequestDTO);
+//        accountDTO.openingBalance(),
+//                accountDTO.name(),
+        AccountResponseDTO accountResponseDTO = accountService.createAccount(createAccountDTO );
        return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 

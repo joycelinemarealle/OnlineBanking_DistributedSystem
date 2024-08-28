@@ -1,9 +1,11 @@
 package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.AccountResponseDTO;
+import com.jaqg.banking.dto.CreateAccountRequestDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.AccountRepository;
+import com.jaqg.banking.repos.CustomerRepo;
 import mappers.AccountMapper;
 import mappers.TransactionsMapper;
 import org.slf4j.Logger;
@@ -22,12 +24,14 @@ import static mappers.AccountMapper.accountMapper;
 @Service
 public class LocalAccountService implements AccountService {
     private final AccountRepository accountRepository;
+    private final CustomerRepo customerRepo;
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
     //inject repo
     @Autowired
-    public LocalAccountService(AccountRepository accountRepository) {
+    public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
         this.accountRepository = accountRepository;
+        this.customerRepo = customerRepo;
 
     }
 
@@ -45,12 +49,15 @@ public class LocalAccountService implements AccountService {
     }
 
     @Override
-    public AccountResponseDTO createAccount(Customer customer, String name, BigDecimal openingBalance) {
+    public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) {
         Account account = new Account();
-        account.setCustomer(customer);
-        account.setName(name);
-        account.setOpeningBalance(openingBalance);
-        account.setBalance(openingBalance);
+
+        //find customer by id
+        Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
+        account.setCustomer(optionalCustomer.get());
+        account.setName(createAccountRequestDTO.accountName());
+        account.setOpeningBalance(createAccountRequestDTO.openingBalance());
+        account.setBalance(createAccountRequestDTO.openingBalance());
 
         //save account to database
         accountRepository.save(account);
