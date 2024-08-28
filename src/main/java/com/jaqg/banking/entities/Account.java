@@ -32,11 +32,11 @@ public class Account {
 
     public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer,  Integer sortCode) {
         this.number = number;
+        this.sortCode = sortCode;
         this.name = name;
         this.openingBalance = openingBalance;
         this.balance = balance;
         this.customer = customer;
-        this.sortCode = sortCode;
     }
 
 

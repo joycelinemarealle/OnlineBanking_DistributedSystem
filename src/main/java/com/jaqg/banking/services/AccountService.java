@@ -9,8 +9,7 @@ import java.util.List;
 @Service
 public interface AccountService {
    List < AccountResponseDTO>  retrieveAllAccounts();
-   AccountResponseDTO createAccount(Customer customer, String name, BigDecimal openingBalance);
+   AccountResponseDTO createAccount(Customer customerId, String accountName, BigDecimal openingBalance);
    BigDecimal closeAccount(long number) throws AccountNotFoundException;
    AccountResponseDTO findAccountByNumber(long number) throws AccountNotFoundException;
-
 }
