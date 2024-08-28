@@ -2,6 +2,7 @@ package com.jaqg.banking.controllers;
 
 import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,9 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping
-    public List<AccountResponseDTO> getAllAccounts(){
-        return accountService.retrieveAllAccounts();
+    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts(){
+        List<AccountResponseDTO> accountResponseDTOList = accountService.retrieveAllAccounts();
+        return new ResponseEntity<>(accountResponseDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/{number}")
@@ -33,14 +35,18 @@ public class AccountController {
         }
 
     @PostMapping("/account")
-    public ResponseEntity< AccountResponseDTO> createAccount(@RequestBody Account account){
-        AccountResponseDTO accountResponseDTO = accountService.createAccount()
-       return new ResponseEntity<>(accountResponseDTO, HttpStatus.)
+    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody Account account){
+        Customer customer = account.getCustomer();
+        String name = account.getName();
+        BigDecimal openingBalance = account.getOpeningBalance();
+        AccountResponseDTO accountResponseDTO = accountService.createAccount(customer, name, openingBalance);
+       return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{number}")
-    public BigDecimal closeAccount(@PathVariable long number) throws AccountNotFoundException {
-      return  accountService.closeAccount(number);
+    public ResponseEntity<BigDecimal> closeAccount(@PathVariable long number) throws AccountNotFoundException {
+      BigDecimal balance = accountService.closeAccount(number);
+        return new ResponseEntity<>( balance, HttpStatus.OK);
     }
 
 }
