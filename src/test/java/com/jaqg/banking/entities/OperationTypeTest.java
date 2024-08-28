@@ -1,6 +1,6 @@
 package com.jaqg.banking.entities;
 
-import com.jaqg.banking.exeptions.NotAllowedOperationType;
+import com.jaqg.banking.exceptions.NotAllowedOperationType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

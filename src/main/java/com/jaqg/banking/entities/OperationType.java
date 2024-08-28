@@ -1,6 +1,6 @@
 package com.jaqg.banking.entities;
 
-import com.jaqg.banking.exeptions.NotAllowedOperationType;
+import com.jaqg.banking.exceptions.NotAllowedOperationType;
 
 public enum OperationType {
     TRANSFER(0),

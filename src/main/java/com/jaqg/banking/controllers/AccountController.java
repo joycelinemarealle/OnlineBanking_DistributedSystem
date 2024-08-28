@@ -1,12 +1,15 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.AccountNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/account")
 @CrossOrigin
 
 public class AccountController {
@@ -16,13 +19,24 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping
-    List<Account> getAllAccounts(){
+    public List<AccountResponseDTO> getAllAccounts(){
         return accountService.retrieveAllAccounts();
     }
 
-    @PostMapping
-    public void statusResponse(Account account){
-        accountService.retrieveAllAccounts().add(account);
+    @GetMapping("/{number}")
+        public AccountResponseDTO findAccountByNumber(@PathVariable Long number){
+            return accountService.findAccountByNumber(number);
+        }
+
+//    @PostMapping("/account")
+//    public Account createAccount(@RequestBody Account account){
+//       return accountService.createAccount();
+//    }
+
+    @DeleteMapping("/{number}")
+    public BigDecimal closeAccount(@PathVariable long number) throws AccountNotFoundException {
+      return  accountService.closeAccount(number);
     }
 
 }
+
