@@ -9,7 +9,7 @@ public class CustomerPostRequestMapper {
     }
 
     public static Customer toCustomer(CustomerPostRequest customerPostRequest) {
-        return new Customer(customerPostRequest.ID(),
-                customerPostRequest.name(), customerPostRequest.accounts());
+        return new Customer(customerPostRequest.id(),
+                customerPostRequest.fullName(), customerPostRequest.accounts());
     }
 }

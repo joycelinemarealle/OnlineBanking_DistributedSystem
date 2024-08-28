@@ -19,7 +19,7 @@ public class TransactionsMapper {
     public static com.jaqg.banking.dto.TransactionResponse transactionMapper(Transaction transaction){
         return new com.jaqg.banking.dto.TransactionResponse(
                 transaction.getDateTime(),
-                transaction.getTransType().toString(),
+                transaction.getTransType(),
                 transaction.getSender().getNumber(),
                 transaction.getSender().getSortCode(),
                 transaction.getRecipient().getNumber(),
