@@ -1,8 +1,8 @@
 package com.jaqg.banking.controllers;
-import com.jaqg.banking.DTO.CustomerDeleteRequest;
-import com.jaqg.banking.DTO.CustomerGetRequest;
-import com.jaqg.banking.DTO.CustomerGetRequestMapper;
-import com.jaqg.banking.DTO.CustomerPostRequest;
+import com.jaqg.banking.dto.CustomerDeleteRequest;
+import com.jaqg.banking.dto.CustomerGetRequest;
+import com.jaqg.banking.dto.CustomerGetRequestMapper;
+import com.jaqg.banking.dto.CustomerPostRequest;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.CustomerRepo;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 @RestController
+@CrossOrigin
 public class CustomerController {
 
     private final CustomerService customerService;
