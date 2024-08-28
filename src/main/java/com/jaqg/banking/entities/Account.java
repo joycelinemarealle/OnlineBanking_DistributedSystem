@@ -22,10 +22,10 @@ public class Account implements Serializable {
     @Column(length = 50, nullable = false)
     private String name;
 
-    @Column(precision=16, scale=2)
+    @Column(precision=16, scale=2, nullable = false)
     private BigDecimal openingBalance;
 
-    @Column(precision=16, scale=2)
+    @Column(precision=16, scale=2, nullable = false)
     private BigDecimal balance;
 
     private boolean isClosed = false;

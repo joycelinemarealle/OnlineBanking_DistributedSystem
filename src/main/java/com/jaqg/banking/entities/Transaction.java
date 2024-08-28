@@ -20,11 +20,11 @@ public class Transaction implements Serializable {
 
     private LocalDateTime dateTime;
 
-    @Column(precision=16, scale=2)
+    @Column(precision=16, scale=2, nullable = false)
     private BigDecimal transVal;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
 
     @ManyToOne
