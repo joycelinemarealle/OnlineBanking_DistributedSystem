@@ -13,7 +13,7 @@ public class AccountMapper {
                 account.getSortCode(),
                 account.getName(),
                 account.getOpeningBalance(),
-                transactionListMapper(account.getTransactions()), // convert to DTO,
+               transactionListMapper(account.getTransactions()), // convert to DTO,
                 account.getBalance(),
                 account.getCustomer().getUniqueID());
 

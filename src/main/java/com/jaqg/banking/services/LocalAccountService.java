@@ -34,8 +34,10 @@ public class LocalAccountService implements AccountService {
     @Override
     public List<AccountResponseDTO> retrieveAllAccounts() {
         logger.info("Getting accounts from Account Repository");
+
         //Retrieve all accounts from the repository
         List<Account> accounts = accountRepository.findAll();
+
         //Convert each Account Entity to a AccountResponseDTO
         return accounts.stream()
                 .map(account -> accountMapper(account))
@@ -49,6 +51,7 @@ public class LocalAccountService implements AccountService {
         account.setName(name);
         account.setOpeningBalance(openingBalance);
         account.setBalance(openingBalance);
+
         //save account to database
         accountRepository.save(account);
         return accountMapper(account);
@@ -65,7 +68,7 @@ public class LocalAccountService implements AccountService {
             accountRepository.save(account);
             return balance;
         } else {
-            throw new AccountNotFoundException("Account not found with number" +number);
+            throw new AccountNotFoundException("Account not found with number" + number);
         }
     }
 
