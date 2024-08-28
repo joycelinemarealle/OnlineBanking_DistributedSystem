@@ -26,11 +26,11 @@ public class TransactionController {
     @PostMapping
     public TransactionResponse create(@RequestBody TransactionRequest request){
         switch(request.type()) {
-            case "WITHDRAW":
+            case WITHDRAWAL:
                 return transactionService.withdraw(request);
-            case "DEPOSIT":
+            case DEPOSIT:
                 return transactionService.deposit(request);
-            case "TRANSFER":
+            case TRANSFER:
                 return transactionService.executeTransfer(request);
             default:
                 throw new IllegalArgumentException("Invalid transaction type" + request.type());
