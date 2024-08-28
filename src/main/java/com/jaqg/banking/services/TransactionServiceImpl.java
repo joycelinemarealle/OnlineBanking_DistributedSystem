@@ -39,6 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Account> optionalAccount = accountRepository.findById(request.toAcount());
         if (optionalAccount.isPresent()){
             Account account = optionalAccount.get();
+            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account);
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
             account.addTransaction(transaction);
             accountRepository.save(account);

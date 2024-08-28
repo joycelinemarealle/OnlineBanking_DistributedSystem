@@ -1,7 +1,5 @@
 package com.jaqg.banking.dto;
 
-import com.jaqg.banking.enums.OperationType;
-
 import java.math.BigDecimal;
 
 public record TransactionRequest (

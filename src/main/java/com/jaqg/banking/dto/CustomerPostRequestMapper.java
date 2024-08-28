@@ -8,8 +8,8 @@ public class CustomerPostRequestMapper {
                 customer.getFullName(), customer.getAccounts());
     }
 
-//    public static Customer toCustomer(CustomerPostRequest customerPostRequest) {
-//        return new Customer(customerPostRequest.ID(),
-//                customerPostRequest.name(), customerPostRequest.accounts());
-//    }
+    public static Customer toCustomer(CustomerPostRequest customerPostRequest) {
+        return new Customer(customerPostRequest.id(),
+                customerPostRequest.fullName(), customerPostRequest.accounts());
+    }
 }
