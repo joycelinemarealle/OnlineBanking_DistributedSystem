@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.jaqg.banking.dto.CreateAccountRequestDTO
 import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,11 +35,11 @@ public class AccountController {
         }
 
     @PostMapping("/account")
-    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody Account account){
-        Customer customer = account.getCustomer();
-        String name = account.getName();
-        BigDecimal openingBalance = account.getOpeningBalance();
-        AccountResponseDTO accountResponseDTO = accountService.createAccount(customer, name, openingBalance);
+    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountResponseDTO DTO){
+//        Customer customer = account.getCustomer();
+//        String name = account.getName();
+//        BigDecimal openingBalance = account.getOpeningBalance();
+        AccountResponseDTO accountResponseDTO = accountService.createAccount(com.jaqg.banking.dto.CreateAccountRequestDTO);
        return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 

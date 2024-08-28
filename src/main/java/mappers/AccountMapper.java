@@ -5,6 +5,7 @@ import com.jaqg.banking.entities.Account;
 
 import static mappers.TransactionsMapper.transactionListMapper;
 
+
 //Convert Account Entity to AccountResponseDTO
 public class AccountMapper {
     public static AccountResponseDTO accountMapper(Account account) {
