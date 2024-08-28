@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 public class Transaction implements Serializable {
@@ -27,10 +25,9 @@ public class Transaction implements Serializable {
     private Account recipient; // to account
     @Transient
     private Account sender;
-    // from account (TBD because it's implied that the account handling the transaction is the account where the transaction is coming from
 
 
-    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
+    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;

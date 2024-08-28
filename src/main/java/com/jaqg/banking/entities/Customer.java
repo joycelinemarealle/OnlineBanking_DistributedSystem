@@ -21,14 +21,17 @@ public class Customer {
 
     private boolean isRemoved = false;
 
-    public Customer(String fullName, long ID) {
+    public Customer(String fullName) {
         this.fullName = fullName;
-        this.ID = ID;
     }
 
     public Customer(){
 
     }
+
+    public Customer(Long id, String name, List<Account> accounts) {
+    }
+
     public String getFullName() {
         return fullName;
     }
