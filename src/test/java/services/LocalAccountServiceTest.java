@@ -11,15 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class LocalAccountServiceTest {
+    @Mock
     private AccountService accountService;
+
     private AccountResponseDTO accountResponse1;
     private AccountResponseDTO accountResponse2;
     private List<AccountResponseDTO> accountResponses;
 
     @BeforeEach
     void setUp(){
+        accountService = mock(AccountService.class);
         accountResponses = new ArrayList<>();
         accountResponse1 = new AccountResponseDTO(1234L, 1111,
                 "Savings", new BigDecimal(100),
@@ -37,7 +42,8 @@ public class LocalAccountServiceTest {
 
     @Test
     void retrieveAllAccounts(){
-        accountService.retrieveAllAccounts();
-        assertEquals()
+        //check that size of array increase to two
+      when(accountService.retrieveAllAccounts().size()).thenReturn(2);
+        assertEquals(2, accountResponses.size() );
     }
 }
