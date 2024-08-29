@@ -24,7 +24,6 @@ public class LocalAccountService implements AccountService {
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
     //inject repo
-    @Autowired
     public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
         this.accountRepository = accountRepository;
         this.customerRepo = customerRepo;
