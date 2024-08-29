@@ -37,4 +37,10 @@
 //
 //    }
 //
+//    @Test
+//    public void savedCustomer() {
+//        Customer savedCustomer = CustomerRepo.findById(testCustomer.getUniqueID());
+//
+//    }
+//
 //}
