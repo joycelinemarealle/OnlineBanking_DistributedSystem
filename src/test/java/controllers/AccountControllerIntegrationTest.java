@@ -1,5 +1,7 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaqg.banking.controllers.AccountController;
 import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.dto.CreateAccountRequestDTO;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.print.attribute.standard.Media;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +39,13 @@ public class AccountControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+   private  ObjectMapper objectMapper;
+
     @MockBean
     private AccountService accountService;
+
+
     private List<AccountResponseDTO> accountResponses;
     private AccountResponseDTO accountResponse1;
     private AccountResponseDTO accountResponse2;
@@ -64,11 +72,11 @@ public class AccountControllerIntegrationTest {
 
     @Test
     void retrieveAllAccountsTest() {
-        //Mock the service method
+        //Mock the service
         when(accountService.retrieveAllAccounts())
                 .thenReturn(accountResponses); //returns list of AccountResponsweDTO
 
-        //Create request
+        //Create GET request
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/account")
                 .accept(MediaType.APPLICATION_JSON);
@@ -94,10 +102,12 @@ public class AccountControllerIntegrationTest {
     }
 
     @Test
-    void findAccountByNumber(){
+    void findAccountByNumber() throws Exception {
+
+        //Mock Service
         when(accountService.findAccountByNumber(accountResponse1.number())).thenReturn(accountResponse1);
 
-        //Create Request
+        //Create GET Request
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/account/{number}")
                 .accept(MediaType.APPLICATION_JSON);
@@ -123,45 +133,73 @@ public class AccountControllerIntegrationTest {
             throw new RuntimeException(e);
 
         }
+    }
 
 @Test
-        void createAccount() {
-            when(accountService.createAccount(accountRequest)).thenReturn(accountResponse1);
+        void createAccount() throws Exception {
+        //Mock Service
+    when(accountService.createAccount(accountRequest)).thenReturn(accountResponse1);
 
-            //Create request
+            //Convert DTO to JSON
+       String  accountRequestJson = objectMapper.writeValueAsString(accountRequest);
+
+            //Create POST request
             RequestBuilder request = MockMvcRequestBuilders
-                    .get("/account")
-                    .accept(MediaType.APPLICATION_JSON);
+                    .post("/account")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(accountRequestJson);
 
-            //Perform request
+            //Perform request and get response
             MvcResult result;
 
             try {
                 result = mockMvc.perform(request)
                         .andDo(print())
-                        .andExpect(status().isOk())
+                        .andExpect(status().isCreated()) //expect 201 created
                         .andReturn();
 
                 //Verify Response
-                String expectedResponse = "[{\"accountNumber\":1234," +
-                        "\"sortCode\":1111," +
-                        "\"name\":\"Savings\", " +
-                        "\"balance\":100, \"transactions\":[]" +
-                        ", \"openingBalance\":100," +
-                        "\"customer\": 1}]";
-
-                assertEquals(expectedResponse, result.getResponse().getContentAsString());
+                assertEquals(accountRequestJson, result.getResponse().getContentAsString());
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
 
             }
         }
-    }}
 
-//@Test
-//        void closeAccount(){
-//
-//        }
-//    }
-//}
+
+    @Test
+    void closeAccount() throws Exception {
+        Long accountNumber = accountResponse1.number();
+        BigDecimal balance = accountResponse1.balance();
+
+        //Mock Service
+        when(accountService.closeAccount(accountNumber)).thenReturn(balance);
+
+        //Create DELETE Request
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/account/{number}", accountNumber)
+                .accept(MediaType.APPLICATION_JSON);
+
+        //Perform request and get response
+        MvcResult result;
+
+        try { result = mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk()) //200 OK Status
+                .andReturn();
+
+        } catch(Exception e){
+            throw new RuntimeException();
+        }
+
+        //Verify Response
+        String expectedBalance = balance.toString();
+        assertEquals(expectedBalance, result.getResponse().getContentAsString());
+
+       }
+
+}
+
+
+
