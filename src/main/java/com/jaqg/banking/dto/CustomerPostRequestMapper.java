@@ -5,7 +5,7 @@ import com.jaqg.banking.entities.Customer;
 public class CustomerPostRequestMapper {
     public static CustomerPostRequest toDTO(Customer customer) {
         return new CustomerPostRequest(customer.getId(),
-                customer.getFullName(), customer.getAccounts());
+                customer.getFullName(), customer.getAccounts().stream().map(e -> e.getNumber()).toList());
     }
 
 //    public static Customer toCustomer(CustomerPostRequest customerPostRequest) {
