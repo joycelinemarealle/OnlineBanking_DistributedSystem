@@ -50,7 +50,7 @@ public class LocalAccountService implements AccountService {
     public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) {
         Account account = new Account();
 
-        //find customer by id
+        //find customer by id then create Account
         Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
         account.setCustomer(optionalCustomer.get()); //unwrap optional
         account.setName(createAccountRequestDTO.accountName());
@@ -90,7 +90,6 @@ public class LocalAccountService implements AccountService {
     }
 
     public void deleteAccount(long number) {
-
         accountRepository.deleteById(number);
     }
 
