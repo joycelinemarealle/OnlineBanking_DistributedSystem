@@ -47,6 +47,8 @@ public class LocalAccountServiceTest {
 //        customerRepo = mock (CustomerRepo.class);
         //create customer
         customer = new Customer("Joyceline Marealle");
+        customer.setId(1L);
+
 
         //Create accounts
         accounts = new ArrayList<>();
@@ -63,7 +65,7 @@ public class LocalAccountServiceTest {
         accountResponse2 = new AccountResponseDTO(5678L, 2222,
                 "Checkings", new BigDecimal(200),
                 new ArrayList<>(), new BigDecimal(200),
-                2L);
+                1L);
 
         //Create accountRequest DTO
         accountRequest1 = new CreateAccountRequestDTO(1L,"Savings",new BigDecimal(200));
@@ -78,10 +80,13 @@ public class LocalAccountServiceTest {
     void retrieveAllAccounts(){
         //Test the size and elements of List
         when(accountRepository.findAll()).thenReturn(accounts);
+
+        //Execute service method
         List<AccountResponseDTO> accountResponseDTOList = accountService.retrieveAllAccounts();
+
+        //Assertions
         assertThat(accountResponseDTOList).hasSize(2);
-        assertThat(accountResponseDTOList).contains(accountResponse1);
-        assertThat(accountResponseDTOList).contains(accountResponse2);
+        assertThat(accountResponseDTOList).containsExactly(accountResponse1, accountResponse2);
 
         //Test for each attribute of account
         assertEquals(accountResponse1.number(), accountResponseDTOList.get(0).number());
@@ -91,7 +96,7 @@ public class LocalAccountServiceTest {
         assertEquals(accountResponse1.sortCode(), accountResponseDTOList.get(0).sortCode());
 
         //Verify mock if method called
-        verify(accountRepository.findAll());
+        verify(accountRepository).findAll();
     }
 
     @Test
@@ -102,17 +107,17 @@ public class LocalAccountServiceTest {
         //Mock findById()
         when(accountRepository.findById(accountNumber)).thenReturn(optionalAccount);
 
+        //Execute service method
+        AccountResponseDTO account = accountService.findAccountByNumber(accountNumber);
+
         //Asserts results
-        AccountResponseDTO accountByNumber = accountService.findAccountByNumber(accountNumber);
-        assertThat(optionalAccount.get()).isEqualTo(account1);
-        assertThat(optionalAccount.get().getNumber()).isEqualTo(accountByNumber);
-        assertThat(optionalAccount.get().getName()).isEqualTo(account1.getName());
-        assertThat(optionalAccount.get().getOpeningBalance()).isEqualTo(account1.getOpeningBalance());
-        assertThat(optionalAccount.get().getBalance()).isEqualTo(account1.getBalance());
-        assertThat(optionalAccount.get().getSortCode()).isEqualTo(account1.getSortCode());
+         assertThat(account1.getNumber()).isEqualTo(account.number());
+         assertThat(account1.getOpeningBalance()).isEqualTo(account.openingBalance());
+         assertThat(account1.getBalance()).isEqualTo(account.balance());
+         assertThat(account1.getSortCode()).isEqualTo(account.sortCode());
 
         //Verify Mock
-        verify(accountRepository.findById(accountNumber));
+        verify(accountRepository).findById(accountNumber);
 
     }
 
@@ -122,13 +127,24 @@ public class LocalAccountServiceTest {
         Optional<Account> optionalAccount = Optional.ofNullable(account1);
 
         //Mock findById()
-        when (accountRepository.findById(accountNumber)).thenReturn(optionalAccount);
+        when ((accountRepository).findById(accountNumber)).thenReturn(optionalAccount);
 
-        //Assert results
+        //Capture original balance
+        BigDecimal originalBalance = account1.getBalance();
+
+        //Call service method
         BigDecimal closingBalance = accountService.closeAccount(accountNumber);
 
+        //Assert results
         //closing balance equals to original account1 balance
-        assertThat(account1.getBalance()).isEqualTo(closingBalance);
+        assertThat(originalBalance).isEqualTo(closingBalance);
+
+        //closed account balance is zero
+        assertThat(account1.getBalance()).isEqualTo(BigDecimal.ZERO);
+
+        //Verify mock used
+        verify(accountRepository).findById(accountNumber);
+        verify(accountRepository).save(account1);
 
 
 
@@ -146,6 +162,9 @@ public class LocalAccountServiceTest {
 
         assertThat(accountResponse.name()).isEqualTo(accountRequest1.accountName());
         assertThat(accountResponse.openingBalance()).isEqualTo(accountRequest1.openingBalance());
+
+        //Verify
+        verify(customerRepo).findById(customerId);
 
     }
 }
