@@ -9,6 +9,9 @@ import com.jaqg.banking.repos.CustomerRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,15 +21,16 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+@SpringBootTest
 public class LocalAccountServiceTest {
-    @Mock
+    @MockBean
     private AccountRepository accountRepository;
 
-    @Mock
+    @MockBean
     private CustomerRepo customerRepo;
-
+    @Autowired
     private AccountService accountService;
+
     private Account account1;
     private Account account2;
     private List<Account> accounts;
@@ -39,9 +43,8 @@ public class LocalAccountServiceTest {
     @BeforeEach
     void setUp(){
         //Create accounts
-        accountRepository = mock(AccountRepository.class);
-        customerRepo = mock (CustomerRepo.class);
-
+//        accountRepository = mock(AccountRepository.class);
+//        customerRepo = mock (CustomerRepo.class);
         //create customer
         customer = new Customer("Joyceline Marealle");
 
@@ -74,7 +77,7 @@ public class LocalAccountServiceTest {
     @Test
     void retrieveAllAccounts(){
         //Test the size and elements of List
-      when(accountRepository.findAll()).thenReturn(accounts);
+        when(accountRepository.findAll()).thenReturn(accounts);
         List<AccountResponseDTO> accountResponseDTOList = accountService.retrieveAllAccounts();
         assertThat(accountResponseDTOList).hasSize(2);
         assertThat(accountResponseDTOList).contains(accountResponse1);
@@ -101,7 +104,7 @@ public class LocalAccountServiceTest {
 
         //Asserts results
         AccountResponseDTO accountByNumber = accountService.findAccountByNumber(accountNumber);
-
+        assertThat(optionalAccount.get()).isEqualTo(account1);
         assertThat(optionalAccount.get().getNumber()).isEqualTo(accountByNumber);
         assertThat(optionalAccount.get().getName()).isEqualTo(account1.getName());
         assertThat(optionalAccount.get().getOpeningBalance()).isEqualTo(account1.getOpeningBalance());
