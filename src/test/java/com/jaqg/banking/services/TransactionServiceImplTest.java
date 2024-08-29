@@ -3,15 +3,13 @@ package com.jaqg.banking.services;
 import com.jaqg.banking.dto.TransactionRequest;
 import com.jaqg.banking.dto.TransactionResponse;
 import com.jaqg.banking.entities.Account;
-import com.jaqg.banking.entities.OperationType;
-import com.jaqg.banking.mapper.TransactionMapper;
+import com.jaqg.banking.enums.OperationType;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
@@ -29,9 +27,6 @@ class TransactionServiceImplTest {
 
     @Mock
     TransactionRepository transactionRepository;
-
-    @Autowired
-    TransactionMapper transactionMapper;
 
     @InjectMocks
     TransactionServiceImpl transactionServiceImpl;
