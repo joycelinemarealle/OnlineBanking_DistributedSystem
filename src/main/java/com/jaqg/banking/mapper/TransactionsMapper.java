@@ -10,7 +10,7 @@ public class TransactionsMapper {
     //Convert List of Transaction Entity to List of TransactionResponseDTO
     public static List <TransactionResponse>  transactionListMapper(List<Transaction> transactions){
        return  transactions.stream()
-               .map(transaction -> transactionMapper(transaction)
+               .map(TransactionsMapper::transactionMapper
                )
                .toList(); //collect to a list
     }
