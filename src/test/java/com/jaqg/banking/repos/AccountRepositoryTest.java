@@ -114,6 +114,29 @@ class AccountRepositoryTest {
     }
 
     @Test
+    void testFindAccountByIdWithDebitTransaction_withJpaSaveMethod() {
+        Transaction transaction1 = new Transaction();
+        transaction1.setRecipient(new Account());
+        transaction1.setTransType(OperationType.DEPOSIT);
+        transaction1.setTransVal(BigDecimal.TEN);
+        transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
+
+        account.addDebitTransaction(transaction1);
+
+        var savedAccount = accountRepository.save(account);
+
+        assertThat(savedAccount.getNumber()).isEqualTo(account.getNumber());
+        assertThat(savedAccount.getName()).isEqualTo(account.getName());
+        assertThat(savedAccount.getBalance()).isEqualTo(account.getBalance());
+        assertThat(savedAccount.getSortCode()).isEqualTo(account.getSortCode());
+
+        List<Transaction> transactions = savedAccount.getTransactions();
+
+        assertThat(transactions).hasSize(1);
+        assertThat(transactions.get(0).getTransVal()).isEqualTo(BigDecimal.TEN);
+    }
+
+    @Test
     void testFindAccountByIdWithCreditTransaction() {
         Transaction transaction1 = new Transaction();
         transaction1.setRecipient(new Account());
