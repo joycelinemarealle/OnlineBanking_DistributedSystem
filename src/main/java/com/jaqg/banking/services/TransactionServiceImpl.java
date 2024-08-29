@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class TransactionServiceImpl implements TransactionService {
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
             account.addDebitTransaction(transaction);
+            account.setBalance(account.getBalance().subtract(request.amount()));
             accountRepository.save(account);
             return TransactionsMapper.transactionMapper(transaction);
         } else {
@@ -43,16 +45,20 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public TransactionResponse executeTransfer(TransactionRequest request) {
-        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
-        if (optionalAccount.isPresent()){
-            Account account = optionalAccount.get();
-            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
-            account.addDebitTransaction(transaction);
-            accountRepository.save(account);
-            return TransactionsMapper.transactionMapper(transaction);
-        } else {
-            throw new TransactionNotFoundException("Transaction could not be found");
-        }
+        deposit(request);
+        return withdraw(request);
+
+//        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
+//        if (optionalAccount.isPresent()){
+//            Account account = optionalAccount.get();
+//            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
+//            account.addDebitTransaction(transaction);
+//            //account.setBalance(account.getBalance().add(request.amount()));
+//            accountRepository.save(account);
+//            return TransactionsMapper.transactionMapper(transaction);
+//        } else {
+//            throw new TransactionNotFoundException("Transaction could not be found");
+//        }
     }
 
     public TransactionResponse deposit(TransactionRequest request) {
@@ -61,6 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
             Account account = optionalAccount.get();
             Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
             account.addDebitTransaction(transaction);
+            account.setBalance(account.getBalance().add(request.amount()));
             accountRepository.save(account);
             return TransactionsMapper.transactionMapper(transaction);
         } else {
