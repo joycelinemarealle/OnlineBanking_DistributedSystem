@@ -1,69 +1,25 @@
 package com.jaqg.banking.services;
 import com.jaqg.banking.dto.*;
 import com.jaqg.banking.entities.Customer;
-import com.jaqg.banking.repos.CustomerRepo;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+public interface CustomerService {
 
-@Service
-@Transactional
-public class CustomerService {
+    CustomerGetRequest customerGetRequest(Long ID);
 
-    //Repo injection
-    @Autowired
-    private CustomerRepo customerRepo;
+    CustomerPostRequest customerPostRequest(String fullName);
 
-    // Implementing Get Request DTO
+    BigDecimal customerDeleteRequest(Long id);
 
-    public CustomerGetRequest customerGetRequest(Long ID) {
-        Optional<Customer> customer =  customerRepo.findById(ID);
-        return CustomerGetRequestMapper.toDTO(customer.orElse(null));
-    }
-    // Implementing Post Request DTO
+    Optional<Customer> getCustomer(Long ID);
 
-    public CustomerPostRequest customerPostRequest(String fullName) {
-        Customer customer = new Customer(fullName);
-//        Customer customer = CustomerPostRequestMapper.toCustomer(customer);
-        Customer savedCustomer = customerRepo.save(customer);
-        return CustomerPostRequestMapper.toDTO(savedCustomer);
-    }
+    List<CustomerGetRequest> findAll();
 
-    // Implementing Delete Request DTO
-    public CustomerDeleteRequest customerDeleteRequest(Long id) {
-
-        Optional<Customer> optionalCustomer =  customerRepo.findById(id);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            customer.setRemoved(true);
-            customer = customerRepo.save(customer);
-            return CustomerDeleteRequestMapper.toDelete(customer) ;
-        } else {
-            return null;
-        }
-    }
-
-    public Optional<Customer> getCustomer(Long ID){
-
-        return customerRepo.findById(ID);
-    }
-
-    public List<Customer> findAll() {
-        return customerRepo.findAll();
-    }
-
-    public Customer addNewCustomer(Customer customer){
-        return customerRepo.save(customer);
-    }
-
-
-
-
-    }
+    Customer addNewCustomer(Customer customer);
+}
 
 
 

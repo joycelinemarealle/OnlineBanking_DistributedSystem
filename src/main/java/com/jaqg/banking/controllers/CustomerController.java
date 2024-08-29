@@ -1,14 +1,13 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.dto.CustomerDeleteRequest;
 import com.jaqg.banking.dto.CustomerGetRequest;
 import com.jaqg.banking.dto.CustomerPostRequest;
-import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -17,15 +16,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @GetMapping("/customer")
-    public List<Customer> retrieveAllCustomers(){
-
-
+    public List<CustomerGetRequest> retrieveAllCustomers(){
         return this.customerService.findAll();
     }
 
@@ -37,7 +33,7 @@ public class CustomerController {
 
     @PostMapping("/customer")
     public ResponseEntity<CustomerPostRequest> addNewCustomer (@RequestBody String fullName){
-        CustomerPostRequest customerPostRequest1 = customerService.customerPostRequest(fullName);
+         CustomerPostRequest customerPostRequest1 = customerService.customerPostRequest(fullName);
         if (customerPostRequest1 == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -45,12 +41,12 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customer/{id}")
-    public ResponseEntity<CustomerDeleteRequest> deleteCustomer (@PathVariable("id") Long ID) {
-        CustomerDeleteRequest customerDeleteRequest = customerService.customerDeleteRequest(ID);
-        if (customerDeleteRequest == null) {
+    public ResponseEntity<BigDecimal> deleteCustomer (@PathVariable("id") Long ID) {
+        BigDecimal value = customerService.customerDeleteRequest(ID);
+        if (value == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(customerDeleteRequest, HttpStatus.CREATED);
+        return new ResponseEntity<>(value, HttpStatus.OK);
 
     }
 

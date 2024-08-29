@@ -18,7 +18,7 @@ spring:
       auto-commit: true
   h2:
     console:
-      enabled: false
+      enabled: true
 
 server:
-  port: 8080
+  port: 8081

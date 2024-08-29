@@ -1,5 +1,6 @@
 package com.jaqg.banking.entities;
 
+import com.jaqg.banking.enums.OperationType;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -16,23 +17,34 @@ public class Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
+
     private LocalDateTime dateTime;
+
+    @Column(precision=16, scale=2, nullable = false)
     private BigDecimal transVal;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
-    @Transient
+
+    @ManyToOne
+    @JoinColumn(name = "recipient_id")
     private Account recipient; // to account
-    @Transient
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
     private Account sender;
 
 
-    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient) {
+    public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
         this.recipient = recipient;
         this.sender = sender;
+    }
+
+    public Transaction() {
     }
 
     public Account getSender() {
@@ -42,8 +54,6 @@ public class Transaction implements Serializable {
     public void setSender(Account sender) {
         this.sender = sender;
     }
-
-    public Transaction(){}
 
     public long getId() {
         return id;

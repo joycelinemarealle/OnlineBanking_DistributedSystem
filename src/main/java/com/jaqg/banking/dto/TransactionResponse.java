@@ -1,11 +1,8 @@
 package com.jaqg.banking.dto;
 
-import com.jaqg.banking.entities.OperationType;
-import org.springframework.expression.Operation;
-import org.springframework.expression.spel.ast.OpAnd;
+import com.jaqg.banking.enums.OperationType;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record TransactionResponse(
@@ -15,4 +12,4 @@ public record TransactionResponse(
         Integer fromAccountSortCode,
         Long toAccount,
         Integer toAccountSortCode,
-        BigDecimal amount) {}
+        BigDecimal amount){}
