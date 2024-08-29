@@ -39,7 +39,7 @@ public class Account implements Serializable {
 
     private Integer sortCode;
 
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final List<Transaction> depositTransactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
