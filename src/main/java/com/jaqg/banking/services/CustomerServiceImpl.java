@@ -39,7 +39,6 @@ public class CustomerServiceImpl implements CustomerService {
     // Implementing Delete Request DTO
     @Override
     public BigDecimal customerDeleteRequest(Long id) {
-
         Optional<Customer> optionalCustomer =  customerRepo.findById(id);
         if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
@@ -66,11 +65,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer addNewCustomer(Customer customer){
         return customerRepo.save(customer);
     }
-
-
-
-
-    }
+}
 
 
 

@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -20,18 +21,18 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/customer")
+    @GetMapping
     public List<CustomerGetRequest> retrieveAllCustomers(){
         return this.customerService.findAll();
     }
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CustomerGetRequest> getCustomerByID (@PathVariable Long id){
         CustomerGetRequest customerGetRequest = customerService.customerGetRequest(id);
         return new ResponseEntity<>(customerGetRequest, HttpStatus.OK);
     }
 
-    @PostMapping("/customer")
+    @PostMapping
     public ResponseEntity<CustomerPostRequest> addNewCustomer (@RequestBody String fullName){
          CustomerPostRequest customerPostRequest1 = customerService.customerPostRequest(fullName);
         if (customerPostRequest1 == null) {
@@ -40,7 +41,7 @@ public class CustomerController {
         return new ResponseEntity<>(customerPostRequest1, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/customer/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<BigDecimal> deleteCustomer (@PathVariable("id") Long ID) {
         BigDecimal value = customerService.customerDeleteRequest(ID);
         if (value == null) {
