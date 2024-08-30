@@ -1,5 +1,6 @@
-package com.jaqg.banking.dto;
+package com.jaqg.banking.mapper;
 
+import com.jaqg.banking.dto.CustomerGetRequest;
 import com.jaqg.banking.entities.Customer;
 
 public class CustomerGetRequestMapper {

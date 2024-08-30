@@ -1,9 +1,12 @@
 package com.jaqg.banking.services;
-import com.jaqg.banking.dto.*;
+
+import com.jaqg.banking.dto.CustomerGetRequest;
+import com.jaqg.banking.dto.CustomerPostRequest;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.mapper.CustomerGetRequestMapper;
+import com.jaqg.banking.mapper.CustomerPostRequestMapper;
 import com.jaqg.banking.repos.CustomerRepo;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,9 +18,11 @@ import java.util.Optional;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    //Repo injection
-    @Autowired
-    private CustomerRepo customerRepo;
+    private final CustomerRepo customerRepo;
+
+    public CustomerServiceImpl(CustomerRepo customerRepo) {
+        this.customerRepo = customerRepo;
+    }
 
     // Implementing Get Request DTO
 
