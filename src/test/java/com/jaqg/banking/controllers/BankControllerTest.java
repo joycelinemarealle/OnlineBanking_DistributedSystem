@@ -1,26 +1,21 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.dto.CustomerGetRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BankController.class)
+@TestPropertySource(properties = {"sortCode=4354"})
 class BankControllerTest {
 
     @Autowired
@@ -29,8 +24,8 @@ class BankControllerTest {
     @Test
     void getSourceCode() {
         try {
-            mockMvc.perform(get("/sourceCode").accept(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$").value(135513))
+            mockMvc.perform(get("/sortCode").accept(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$").value(4354))
                     .andExpect(status().isOk());
         } catch (Exception e) {
             throw new RuntimeException(e);

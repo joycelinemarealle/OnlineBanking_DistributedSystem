@@ -1,31 +1,25 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.dto.AccountResponseDTO;
-import com.jaqg.banking.dto.CreateAccountRequestDTO;
-import com.jaqg.banking.services.AccountService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.security.auth.login.AccountNotFoundException;
-import java.math.BigDecimal;
-import java.util.List;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/sortCode")
 @CrossOrigin
 public class BankController {
 
-    private Integer sourceCode;
+    private final Integer sortCode;
 
-    public BankController(@Value("${sourcecode}") Integer sourceCode) {
-        this.sourceCode = sourceCode;
+    public BankController(@Value("${sortcode}") Integer sortCode) {
+        this.sortCode = sortCode;
     }
 
     @GetMapping
-    public Integer getSourceCode(){
-       return sourceCode;
+    public Integer getSortCode() {
+        return sortCode;
     }
 }
 
