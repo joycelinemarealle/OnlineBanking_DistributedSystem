@@ -6,16 +6,20 @@ import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.CustomerRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
     @Mock
     CustomerRepo customerRepo;
@@ -45,10 +49,10 @@ public class CustomerServiceTest {
     @Test
     public void addNewCustomerTest(){
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
-        given(customerRepo.save(testCustomer)).willReturn((testCustomer));
+        given(customerRepo.save(any(Customer.class))).willReturn((testCustomer));
         CustomerPostRequest testCustomer = customerService.customerPostRequest("Dan Jones");
         Customer customer = new Customer(testCustomer.fullName());
-        assertThat(customer.getFullName()).equals("Dan Jones");
+        assertThat(customer.getFullName()).isEqualTo("Dan Jones");
     }
 
     @Test
@@ -56,7 +60,7 @@ public class CustomerServiceTest {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         given(customerRepo.findById(2L)).willReturn(Optional.of(testCustomer));
         var testCustomer = customerService.customerDeleteRequest(2L);
-        assertThat(testCustomer).isNotIn();
+        assertThat(testCustomer).isEqualTo();
     }
 
     @Test

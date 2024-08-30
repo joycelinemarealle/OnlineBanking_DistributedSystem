@@ -49,6 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
             Customer customer = optionalCustomer.get();
             customer.setRemoved(true);
             customer = customerRepo.save(customer);
+            //return funds from all accounts, and summarize all balances
             return new BigDecimal("50.55");
         } else {
             return null;
