@@ -22,9 +22,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @ExtendWith(SpringExtension.class)
 @Import(AccountController.class)
@@ -38,7 +40,6 @@ public class AccountControllerTest {
 
     @MockBean
     private AccountService accountService;
-
 
     private List<AccountResponseDTO> accountResponses;
     private AccountResponseDTO accountResponse1;
@@ -68,7 +69,7 @@ public class AccountControllerTest {
     void retrieveAllAccountsTest() {
         //Mock the service
         when(accountService.retrieveAllAccounts())
-                .thenReturn(accountResponses); //returns list of AccountResponsweDTO
+                .thenReturn(accountResponses); //returns list of AccountResponseDTO
 
         //Create GET request
         RequestBuilder request = MockMvcRequestBuilders
@@ -76,20 +77,19 @@ public class AccountControllerTest {
                 .accept(MediaType.APPLICATION_JSON);
 
        //Perform the GET request and get result
-        MvcResult result;
+
         try {
-            result = mockMvc.perform(request)
-                    .andDo(print())
+            mockMvc.perform(request)
+                    .andExpect(jsonPath("$", hasSize(2)))
+//                    .andExpect(jsonPath("$[0].accounts").isArray())
+                    .andExpect(jsonPath("$[0].number").value(accountResponse1.number()))
+                    .andExpect(jsonPath("$[0].sortCode").value(accountResponse1.sortCode()))
+                    .andExpect(jsonPath("$[0].name").value(accountResponse1.name()))
+                    .andExpect(jsonPath("$[0].balance").value(accountResponse1.balance()))
+                    .andExpect(jsonPath("$[0].openingbalance").value(accountResponse1.openingBalance()))
+                    .andExpect(jsonPath("$[0].customer").value(accountResponse1))
                     .andExpect(status().isOk())
                     .andReturn();
-            //Verify the Response
-            String expectedResponse = "[{\"accountNumber\":1234," +
-                    "\"sortCode\":1111," +
-                    "\"name\":\"Savings\"," +
-                    " \"balance\":100, \"transactions\":[]," +
-                    " \"openingBalance\":100," +
-                    "\"customer\": 1}]";
-            assertEquals (expectedResponse, result.getResponse().getContentAsString());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
