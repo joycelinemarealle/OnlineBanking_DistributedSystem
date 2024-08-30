@@ -4,9 +4,10 @@ import axios from "axios";
 
 const RegisterForm = () => {
     const [formData, setFormData] = useState({
-        fullName: "",
-        CustomerID: "",
+        fullName: ""
     });
+
+  const navigate = useNavigate(); //initializing useNavigation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,12 +23,11 @@ const RegisterForm = () => {
       );
       console.log("User Created:", response.data);
       setFormData({
-        fullName: "",
-        CustomerID: "",
+        fullName: ""
       });
-      navigate("")
+      navigate("/login")
     } catch (error) {
-      console.error("Something went wrog:", error);
+      console.error("Something went wrong:", error);
     }
   };
 
