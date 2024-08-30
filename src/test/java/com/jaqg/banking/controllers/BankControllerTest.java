@@ -22,7 +22,7 @@ class BankControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void getSourceCode() {
+    void getsortcode() {
         try {
             mockMvc.perform(get("/sortCode").accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$").value(4354))

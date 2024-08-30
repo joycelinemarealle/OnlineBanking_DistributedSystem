@@ -24,8 +24,8 @@ public class LocalAccountService implements AccountService {
     private final CustomerRepo customerRepo;
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
-    @Value("${sourcecode}")
-    private Integer sourceCode;
+    @Value("${sortcode}")
+    private Integer sortcode;
 
     //inject repo
     public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
@@ -57,7 +57,7 @@ public class LocalAccountService implements AccountService {
         account.setName(createAccountRequestDTO.accountName());
         account.setOpeningBalance(createAccountRequestDTO.openingBalance());
         account.setBalance(createAccountRequestDTO.openingBalance());
-        account.setSortCode(sourceCode);
+        account.setSortCode(sortcode);
 
         //save account to database
         accountRepository.save(account);

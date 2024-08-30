@@ -1,6 +1,4 @@
 spring:
-  jackson:
-    date-format: dd-MM-yyyy HH:mm:ss
   application:
     name: JAQG bank
   profiles:
@@ -19,4 +17,4 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
 
 
-sortCode: 135513
+sortcode: 135513
