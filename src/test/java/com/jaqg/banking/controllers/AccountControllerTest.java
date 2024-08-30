@@ -68,8 +68,7 @@ public class AccountControllerTest {
     @Test
     void retrieveAllAccountsTest() {
         //Mock the service
-        when(accountService.retrieveAllAccounts())
-                .thenReturn(accountResponses); //returns list of AccountResponseDTO
+        when(accountService.retrieveAllAccounts()).thenReturn(accountResponses); //returns list of AccountResponseDTO
 
         //Create GET request
         RequestBuilder request = MockMvcRequestBuilders
@@ -77,7 +76,6 @@ public class AccountControllerTest {
                 .accept(MediaType.APPLICATION_JSON);
 
        //Perform the GET request and get result
-
         try {
             mockMvc.perform(request)
                     .andExpect(jsonPath("$", hasSize(2)))
@@ -86,8 +84,9 @@ public class AccountControllerTest {
                     .andExpect(jsonPath("$[0].sortCode").value(accountResponse1.sortCode()))
                     .andExpect(jsonPath("$[0].name").value(accountResponse1.name()))
                     .andExpect(jsonPath("$[0].balance").value(accountResponse1.balance()))
-                    .andExpect(jsonPath("$[0].openingbalance").value(accountResponse1.openingBalance()))
-                    .andExpect(jsonPath("$[0].customer").value(accountResponse1))
+                    .andExpect(jsonPath("$[0].transactions").value(accountResponse1.transactions()))
+                    .andExpect(jsonPath("$[0].openingBalance").value(accountResponse1.openingBalance()))
+                    .andExpect(jsonPath("$[0].customer").value(accountResponse1.customer()))
                     .andExpect(status().isOk())
                     .andReturn();
         } catch (Exception e) {
@@ -103,25 +102,22 @@ public class AccountControllerTest {
 
         //Create GET Request
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/account/{number}")
+                .get("/account/{number}", accountResponse1.number())
                 .accept(MediaType.APPLICATION_JSON);
 
         //Perform Request
-        MvcResult result;
+
         try{
-            result = mockMvc.perform(request)
-                    .andDo(print())
+            mockMvc.perform(request)
+                    .andExpect(jsonPath("number").value(accountResponse1.number()))
+                    .andExpect(jsonPath("sortCode").value(accountResponse1.sortCode()))
+                    .andExpect(jsonPath("name").value(accountResponse1.name()))
+                    .andExpect(jsonPath("balance").value(accountResponse1.balance()))
+                    .andExpect(jsonPath("transactions").value(accountResponse1.transactions()))
+                    .andExpect(jsonPath("openingBalance").value(accountResponse1.openingBalance()))
+                    .andExpect(jsonPath("customer").value(accountResponse1.customer()))
                     .andExpect(status().isOk())
                     .andReturn();
-           // Verify Response
-            String expectedResponse ="[{\"accountNumber\":1234," +
-                    "\"sortCode\":1111," +
-                    "\"name\":\"Savings\", " +
-                    "\"balance\":100, \"transactions\":[]" +
-                    ", \"openingBalance\":100," +
-                    "\"customer\": 1}]";
-
-                    assertEquals(expectedResponse, result.getResponse().getContentAsString());
 
         } catch (Exception e){
             throw new RuntimeException(e);
@@ -141,19 +137,21 @@ public class AccountControllerTest {
             RequestBuilder request = MockMvcRequestBuilders
                     .post("/account")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(accountRequestJson);
+                    .content(accountRequestJson)
+                    .accept(MediaType.APPLICATION_JSON);
 
             //Perform request and get response
-            MvcResult result;
-
             try {
-                result = mockMvc.perform(request)
-                        .andDo(print())
+                mockMvc.perform(request)
+                        .andExpect(jsonPath("number").value(accountResponse1.number()))
+                        .andExpect(jsonPath("sortCode").value(accountResponse1.sortCode()))
+                        .andExpect(jsonPath("name").value(accountResponse1.name()))
+                        .andExpect(jsonPath("balance").value(accountResponse1.balance()))
+                        .andExpect(jsonPath("transactions").value(accountResponse1.transactions()))
+                        .andExpect(jsonPath("openingBalance").value(accountResponse1.openingBalance()))
+                        .andExpect(jsonPath("customer").value(accountResponse1.customer()))
                         .andExpect(status().isCreated()) //expect 201 created
                         .andReturn();
-
-                //Verify Response
-                assertEquals(accountRequestJson, result.getResponse().getContentAsString());
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -176,20 +174,15 @@ public class AccountControllerTest {
                 .accept(MediaType.APPLICATION_JSON);
 
         //Perform request and get response
-        MvcResult result;
 
-        try { result = mockMvc.perform(request)
-                .andDo(print())
+        try {  mockMvc.perform(request)
+                .andExpect(jsonPath("$").value(balance))
                 .andExpect(status().isOk()) //200 OK Status
                 .andReturn();
 
         } catch(Exception e){
             throw new RuntimeException();
         }
-
-        //Verify Response
-        String expectedBalance = balance.toString();
-        assertEquals(expectedBalance, result.getResponse().getContentAsString());
 
        }
 
