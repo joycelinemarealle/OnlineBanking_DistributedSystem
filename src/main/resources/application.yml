@@ -1,4 +1,6 @@
 spring:
+  jackson:
+    date-format: dd-MM-yyyy HH:mm:ss
   application:
     name: JAQG bank
   profiles:
@@ -6,7 +8,7 @@ spring:
     # Otherwise, it will be filled in by gradle when building the JAR file
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
     # active: '@spring.profiles.active@'
-    active: dev
+    active: prod
 
   jpa:
     generate-ddl: true

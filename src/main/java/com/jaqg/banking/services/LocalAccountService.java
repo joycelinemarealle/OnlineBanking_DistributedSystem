@@ -9,6 +9,7 @@ import com.jaqg.banking.repos.CustomerRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,6 +23,9 @@ public class LocalAccountService implements AccountService {
     private final AccountRepository accountRepository;
     private final CustomerRepo customerRepo;
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
+
+    @Value("${sourcecode}")
+    private Integer sourceCode;
 
     //inject repo
     public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
@@ -53,6 +57,7 @@ public class LocalAccountService implements AccountService {
         account.setName(createAccountRequestDTO.accountName());
         account.setOpeningBalance(createAccountRequestDTO.openingBalance());
         account.setBalance(createAccountRequestDTO.openingBalance());
+        account.setSortCode(sourceCode);
 
         //save account to database
         accountRepository.save(account);
@@ -70,7 +75,7 @@ public class LocalAccountService implements AccountService {
             accountRepository.save(account);
             return balance;
         } else {
-            throw new AccountNotFoundException("Account not found with number" + number);
+            throw new AccountNotFoundException(number);
         }
     }
 
@@ -81,7 +86,7 @@ public class LocalAccountService implements AccountService {
             Account account = optionalAccount.get();
             return accountMapper(account);
         } else {
-            throw new AccountNotFoundException("Account not found with number" + number);
+            throw new AccountNotFoundException(number);
         }
 
     }
