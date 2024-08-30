@@ -12,4 +12,5 @@ public record TransactionResponse(
         Integer fromAccountSortCode,
         Long toAccount,
         Integer toAccountSortCode,
-        BigDecimal amount){}
+        BigDecimal amount) {
+}

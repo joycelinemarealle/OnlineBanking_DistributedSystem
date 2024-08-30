@@ -1,6 +1,8 @@
 package com.jaqg.banking.services;
 import com.jaqg.banking.dto.*;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.mapper.CustomerGetRequestMapper;
+import com.jaqg.banking.mapper.CustomerPostRequestMapper;
 import com.jaqg.banking.repos.CustomerRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
