@@ -4,28 +4,19 @@ import { UserContext } from '../App';
 
 const BankDashBoard = () => {
   const { user } = useContext(UserContext);
-  const [userData, setUserData] = useState(() => {
-    // Check localStorage for user data when the component mounts
-    const savedUserData = localStorage.getItem('userData');
-    return savedUserData ? JSON.parse(savedUserData) : null;
-  });
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (user && user.id && !userData) { // Fetch only if userData is not already available
+      if (user && user.id) {
         try {
           const response = await axios.get(`http://localhost:8080/customer/${user.id}`);
           console.log("User Found:", response.data);
 
-          // Parse the fullName JSON string
           const parsedFullName = JSON.parse(response.data.fullName).fullName;
-
-          // Store the parsed fullName in userData
           const userData = { ...response.data, fullName: parsedFullName };
 
-          // Save user data to state and localStorage
           setUserData(userData);
-          localStorage.setItem('userData', JSON.stringify(userData));
         } catch (error) {
           console.error("Something went wrong:", error);
         }
@@ -33,7 +24,7 @@ const BankDashBoard = () => {
     };
 
     fetchUserInfo();
-  }, [user, userData]);
+  }, [user]);
 
   return (
     <div>
@@ -43,28 +34,37 @@ const BankDashBoard = () => {
           <h2>Welcome, {userData.fullName}</h2>
           <p><strong>ID:</strong> {userData.id}</p>
           <h3>Accounts</h3>
-          {userData.accounts.length > 0 ? (
+          {userData.accounts && userData.accounts.length > 0 ? (
             <ul>
               {userData.accounts.map((account, index) => (
-               <li key={index}>
-               <p><strong>Account Number:</strong> {account.number}</p>
-               <p><strong>Account Name:</strong> {account.name}</p>
-               <p><strong>Opening Balance:</strong> ${account.openingBalance}</p>
-               <p><strong>Current Balance:</strong> ${account.balance}</p>
-               <p><strong>Sort Code:</strong> {account.sortCode ? account.sortCode : "N/A"}</p>
-               <p><strong>Customer ID:</strong> {account.customer}</p>
-               <h4>Transactions</h4>
-               {/* {account.transactions.length > 0 ? (
-                 <ul>
-                   {account.transactions.map((transaction, index) => (
-                     <li key={index}>{JSON.stringify(transaction)}</li>
-                   ))}
-                 </ul>
-               ) : (
-                 <p>No transactions available.</p>
-               )} */}
-             </li>
-
+                <li key={index}>
+                  <p><strong>Account Number:</strong> {account.number}</p>
+                  <p><strong>Account Name:</strong> {account.name}</p>
+                  <p><strong>Opening Balance:</strong> ${account.openingBalance ? account.openingBalance.toFixed(2) : "N/A"}</p>
+                  <p><strong>Current Balance:</strong> ${account.balance ? account.balance.toFixed(2) : "N/A"}</p>
+                  <p><strong>Sort Code:</strong> {account.sortCode ? account.sortCode : "N/A"}</p>
+                  <p><strong>Customer ID:</strong> {account.customer}</p>
+                  <h4>Transactions</h4>
+                  {account.transactions && account.transactions.length > 0 ? (
+                    <ul>
+                      {account.transactions.map((transaction, index) => (
+                        <li key={index}>
+                          <p><strong>Time:</strong> {new Date(transaction.time).toLocaleString()}</p>
+                          <p><strong>Type:</strong> {transaction.type}</p>
+                          <p><strong>Amount:</strong> ${transaction.amount ? transaction.amount : "N/A"}</p>
+                          {transaction.fromAccount && (
+                            <p><strong>From Account:</strong> {transaction.fromAccount}</p>
+                          )}
+                          {transaction.toAccount && (
+                            <p><strong>To Account:</strong> {transaction.toAccount}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No transactions available.</p>
+                  )}
+                </li>
               ))}
             </ul>
           ) : (
