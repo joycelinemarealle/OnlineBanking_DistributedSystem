@@ -44,19 +44,29 @@ public class LocalAccountService implements AccountService {
     }
 
     @Override
-    public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) {
+    public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) throws AccountNotFoundException{
+
+        //Validate opening balance
+        if(createAccountRequestDTO.openingBalance().compareTo(BigDecimal.ZERO) <0){
+            throw new IllegalArgumentException("Opening balance cannot be negative ");
+        }
         Account account = new Account();
 
         //find customer by id then create Account
         Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
-        account.setCustomer(optionalCustomer.get()); //unwrap optional
-        account.setName(createAccountRequestDTO.accountName());
-        account.setOpeningBalance(createAccountRequestDTO.openingBalance());
-        account.setBalance(createAccountRequestDTO.openingBalance());
 
-        //save account to database
-        accountRepository.save(account);
-        return accountMapper(account);
+        if(optionalCustomer.isPresent()){
+            account.setCustomer(optionalCustomer.get()); //unwrap optional
+            account.setName(createAccountRequestDTO.accountName());account.setOpeningBalance(createAccountRequestDTO.openingBalance());
+            account.setBalance(createAccountRequestDTO.openingBalance());
+
+            //save account to database
+            accountRepository.save(account);
+            return accountMapper(account);
+        } else{
+            throw new AccountNotFoundException("Customer not found with id");
+        }
+
     }
 
     @Override
