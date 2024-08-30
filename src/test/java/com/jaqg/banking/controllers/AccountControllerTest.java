@@ -1,8 +1,6 @@
-package controllers;
+package com.jaqg.banking.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jaqg.banking.controllers.AccountController;
 import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.dto.CreateAccountRequestDTO;
 import com.jaqg.banking.services.AccountService;
@@ -18,16 +16,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.print.attribute.standard.Media;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.reflect.Array.get;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @Import(AccountController.class)
 @WebMvcTest(AccountController.class)
-public class AccountControllerIntegrationTest {
+public class AccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
 

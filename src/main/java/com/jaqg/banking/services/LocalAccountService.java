@@ -10,11 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
 import com.jaqg.banking.exceptions.AccountNotFoundException;
 
 import static com.jaqg.banking.mapper.AccountMapper.accountMapper;
@@ -26,7 +24,6 @@ public class LocalAccountService implements AccountService {
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
     //inject repo
-    @Autowired
     public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
         this.accountRepository = accountRepository;
         this.customerRepo = customerRepo;
@@ -50,7 +47,7 @@ public class LocalAccountService implements AccountService {
     public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) {
         Account account = new Account();
 
-        //find customer by id
+        //find customer by id then create Account
         Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
         account.setCustomer(optionalCustomer.get()); //unwrap optional
         account.setName(createAccountRequestDTO.accountName());
@@ -90,7 +87,6 @@ public class LocalAccountService implements AccountService {
     }
 
     public void deleteAccount(long number) {
-
         accountRepository.deleteById(number);
     }
 
