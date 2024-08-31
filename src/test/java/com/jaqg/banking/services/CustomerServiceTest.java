@@ -1,7 +1,7 @@
 package com.jaqg.banking.services;
 
 
-import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.CustomerRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +48,7 @@ public class CustomerServiceTest {
     public void addNewCustomerTest() {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         given(customerRepo.save(testCustomer)).willReturn((testCustomer));
-        CustomerPostRequest testCustomer = customerService.customerPostRequest("Dan Jones");
+        CustomerDTO testCustomer = customerService.customerPostRequest("Dan Jones");
         Customer customer = new Customer(testCustomer.fullName());
         assertThat(customer.getFullName()).isEqualTo("Dan Jones");
     }

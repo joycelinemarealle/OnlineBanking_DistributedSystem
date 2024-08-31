@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	//implementation("org.springframework.boot:spring-boot-starter-security")
+//	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	runtimeOnly("com.h2database:h2")
@@ -28,8 +28,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
+//	implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+//	testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
 
 }
 

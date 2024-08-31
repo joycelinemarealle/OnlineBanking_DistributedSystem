@@ -2,8 +2,8 @@ package com.jaqg.banking.controllers;
 
 
 import com.jaqg.banking.config.JacksonConfiguration;
-import com.jaqg.banking.dto.TransactionRequest;
-import com.jaqg.banking.dto.TransactionResponse;
+import com.jaqg.banking.dto.TransactionRequestDTO;
+import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.enums.OperationType;
 import com.jaqg.banking.services.TransactionService;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class TransactionControllerTest {
 
     @Test
     void createDeposit() {
-        final TransactionResponse transactionResponse = new TransactionResponse(
+        final TransactionDTO transactionDTO = new TransactionDTO(
                 LocalDateTime.of(2024, 5, 4, 12, 5, 6),
                 OperationType.DEPOSIT,
                 null,
@@ -49,15 +49,15 @@ class TransactionControllerTest {
         );
 
         final String payload = "{" +
-                "  \"type\": \"" + transactionResponse.type() + "\"" +
-                ", \"fromAccount\": " + transactionResponse.fromAccount() +
-                ", \"fromAccountSortCode\": " + transactionResponse.fromAccountSortCode() +
-                ", \"toAccount\": " + transactionResponse.toAccount() +
-                ", \"toAccountSortCode\": " + transactionResponse.toAccountSortCode() +
-                ", \"amount\": " + transactionResponse.amount() +
+                "  \"type\": \"" + transactionDTO.type() + "\"" +
+                ", \"fromAccount\": " + transactionDTO.fromAccount() +
+                ", \"fromAccountSortCode\": " + transactionDTO.fromAccountSortCode() +
+                ", \"toAccount\": " + transactionDTO.toAccount() +
+                ", \"toAccountSortCode\": " + transactionDTO.toAccountSortCode() +
+                ", \"amount\": " + transactionDTO.amount() +
                 "}";
 
-        when(transactionService.deposit(any(TransactionRequest.class))).thenReturn(transactionResponse);
+        when(transactionService.deposit(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
 
         try {
             mockMvc.perform(post("/transaction")
@@ -65,12 +65,12 @@ class TransactionControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("time").value("04-05-2024 12:05:06"))
-                    .andExpect(jsonPath("type").value(transactionResponse.type().name()))
-                    .andExpect(jsonPath("fromAccount").value(transactionResponse.fromAccount()))
-                    .andExpect(jsonPath("fromAccountSortCode").value(transactionResponse.fromAccountSortCode()))
-                    .andExpect(jsonPath("toAccount").value(transactionResponse.toAccount()))
-                    .andExpect(jsonPath("toAccountSortCode").value(transactionResponse.toAccountSortCode()))
-                    .andExpect(jsonPath("amount").value(transactionResponse.amount()))
+                    .andExpect(jsonPath("type").value(transactionDTO.type().name()))
+                    .andExpect(jsonPath("fromAccount").value(transactionDTO.fromAccount()))
+                    .andExpect(jsonPath("fromAccountSortCode").value(transactionDTO.fromAccountSortCode()))
+                    .andExpect(jsonPath("toAccount").value(transactionDTO.toAccount()))
+                    .andExpect(jsonPath("toAccountSortCode").value(transactionDTO.toAccountSortCode()))
+                    .andExpect(jsonPath("amount").value(transactionDTO.amount()))
                     .andExpect(status().isOk());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -79,7 +79,7 @@ class TransactionControllerTest {
 
     @Test
     void createWithdrawal() {
-        final TransactionResponse transactionResponse = new TransactionResponse(
+        final TransactionDTO transactionDTO = new TransactionDTO(
                 LocalDateTime.of(2024, 5, 4, 12, 5, 6),
                 OperationType.WITHDRAWAL,
                 1L,
@@ -90,15 +90,15 @@ class TransactionControllerTest {
         );
 
         final String payload = "{" +
-                "  \"type\": \"" + transactionResponse.type() + "\"" +
-                ", \"fromAccount\": " + transactionResponse.fromAccount() +
-                ", \"fromAccountSortCode\": " + transactionResponse.fromAccountSortCode() +
-                ", \"toAccount\": " + transactionResponse.toAccount() +
-                ", \"toAccountSortCode\": " + transactionResponse.toAccountSortCode() +
-                ", \"amount\": " + transactionResponse.amount() +
+                "  \"type\": \"" + transactionDTO.type() + "\"" +
+                ", \"fromAccount\": " + transactionDTO.fromAccount() +
+                ", \"fromAccountSortCode\": " + transactionDTO.fromAccountSortCode() +
+                ", \"toAccount\": " + transactionDTO.toAccount() +
+                ", \"toAccountSortCode\": " + transactionDTO.toAccountSortCode() +
+                ", \"amount\": " + transactionDTO.amount() +
                 "}";
 
-        when(transactionService.withdraw(any(TransactionRequest.class))).thenReturn(transactionResponse);
+        when(transactionService.withdraw(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
 
         try {
             mockMvc.perform(post("/transaction")
@@ -106,12 +106,12 @@ class TransactionControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("time").value("04-05-2024 12:05:06"))
-                    .andExpect(jsonPath("type").value(transactionResponse.type().name()))
-                    .andExpect(jsonPath("fromAccount").value(transactionResponse.fromAccount()))
-                    .andExpect(jsonPath("fromAccountSortCode").value(transactionResponse.fromAccountSortCode()))
-                    .andExpect(jsonPath("toAccount").value(transactionResponse.toAccount()))
-                    .andExpect(jsonPath("toAccountSortCode").value(transactionResponse.toAccountSortCode()))
-                    .andExpect(jsonPath("amount").value(transactionResponse.amount()))
+                    .andExpect(jsonPath("type").value(transactionDTO.type().name()))
+                    .andExpect(jsonPath("fromAccount").value(transactionDTO.fromAccount()))
+                    .andExpect(jsonPath("fromAccountSortCode").value(transactionDTO.fromAccountSortCode()))
+                    .andExpect(jsonPath("toAccount").value(transactionDTO.toAccount()))
+                    .andExpect(jsonPath("toAccountSortCode").value(transactionDTO.toAccountSortCode()))
+                    .andExpect(jsonPath("amount").value(transactionDTO.amount()))
                     .andExpect(status().isOk());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -120,7 +120,7 @@ class TransactionControllerTest {
 
     @Test
     void createTransfer() {
-        final TransactionResponse transactionResponse = new TransactionResponse(
+        final TransactionDTO transactionDTO = new TransactionDTO(
                 LocalDateTime.of(2024, 5, 4, 12, 5, 6),
                 OperationType.TRANSFER,
                 1L,
@@ -131,15 +131,15 @@ class TransactionControllerTest {
         );
 
         final String payload = "{" +
-                "  \"type\": \"" + transactionResponse.type() + "\"" +
-                ", \"fromAccount\": " + transactionResponse.fromAccount() +
-                ", \"fromAccountSortCode\": " + transactionResponse.fromAccountSortCode() +
-                ", \"toAccount\": " + transactionResponse.toAccount() +
-                ", \"toAccountSortCode\": " + transactionResponse.toAccountSortCode() +
-                ", \"amount\": " + transactionResponse.amount() +
+                "  \"type\": \"" + transactionDTO.type() + "\"" +
+                ", \"fromAccount\": " + transactionDTO.fromAccount() +
+                ", \"fromAccountSortCode\": " + transactionDTO.fromAccountSortCode() +
+                ", \"toAccount\": " + transactionDTO.toAccount() +
+                ", \"toAccountSortCode\": " + transactionDTO.toAccountSortCode() +
+                ", \"amount\": " + transactionDTO.amount() +
                 "}";
 
-        when(transactionService.executeTransfer(any(TransactionRequest.class))).thenReturn(transactionResponse);
+        when(transactionService.executeTransfer(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
 
         try {
             mockMvc.perform(post("/transaction")
@@ -147,12 +147,12 @@ class TransactionControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("time").value("04-05-2024 12:05:06"))
-                    .andExpect(jsonPath("type").value(transactionResponse.type().name()))
-                    .andExpect(jsonPath("fromAccount").value(transactionResponse.fromAccount()))
-                    .andExpect(jsonPath("fromAccountSortCode").value(transactionResponse.fromAccountSortCode()))
-                    .andExpect(jsonPath("toAccount").value(transactionResponse.toAccount()))
-                    .andExpect(jsonPath("toAccountSortCode").value(transactionResponse.toAccountSortCode()))
-                    .andExpect(jsonPath("amount").value(transactionResponse.amount()))
+                    .andExpect(jsonPath("type").value(transactionDTO.type().name()))
+                    .andExpect(jsonPath("fromAccount").value(transactionDTO.fromAccount()))
+                    .andExpect(jsonPath("fromAccountSortCode").value(transactionDTO.fromAccountSortCode()))
+                    .andExpect(jsonPath("toAccount").value(transactionDTO.toAccount()))
+                    .andExpect(jsonPath("toAccountSortCode").value(transactionDTO.toAccountSortCode()))
+                    .andExpect(jsonPath("amount").value(transactionDTO.amount()))
                     .andExpect(status().isOk());
         } catch (Exception e) {
             throw new RuntimeException(e);

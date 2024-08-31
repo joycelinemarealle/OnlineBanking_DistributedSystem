@@ -1,10 +1,8 @@
 package com.jaqg.banking.services;
 
-import com.jaqg.banking.dto.CustomerGetRequest;
-import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
-import com.jaqg.banking.mapper.CustomerGetRequestMapper;
-import com.jaqg.banking.mapper.CustomerPostRequestMapper;
+import com.jaqg.banking.mapper.CustomerMapper;
 import com.jaqg.banking.repos.CustomerRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -27,18 +25,18 @@ public class CustomerServiceImpl implements CustomerService {
     // Implementing Get Request DTO
 
     @Override
-    public CustomerGetRequest customerGetRequest(Long ID) {
+    public CustomerDTO customerGetRequest(Long ID) {
         Optional<Customer> customer = customerRepo.findById(ID);
-        return CustomerGetRequestMapper.toDTO(customer.orElse(null));
+        return CustomerMapper.toDTO(customer.orElse(null));
     }
     // Implementing Post Request DTO
 
     @Override
-    public CustomerPostRequest customerPostRequest(String fullName) {
+    public CustomerDTO customerPostRequest(String fullName) {
         Customer customer = new Customer(fullName);
-//        Customer customer = CustomerPostRequestMapper.toCustomer(customer);
+//        Customer customer = CustomerMapper.toCustomer(customer);
         Customer savedCustomer = customerRepo.save(customer);
-        return CustomerPostRequestMapper.toDTO(savedCustomer);
+        return CustomerMapper.toDTO(savedCustomer);
     }
 
     // Implementing Delete Request DTO
@@ -62,8 +60,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerGetRequest> findAll() {
-        return customerRepo.findAll().stream().map(CustomerGetRequestMapper::toDTO).toList();
+    public List<CustomerDTO> findAll() {
+        return customerRepo.findAll().stream().map(CustomerMapper::toDTO).toList();
     }
 }
 
