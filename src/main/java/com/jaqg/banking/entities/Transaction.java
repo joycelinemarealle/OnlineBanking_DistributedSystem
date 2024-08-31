@@ -2,6 +2,7 @@ package com.jaqg.banking.entities;
 
 import com.jaqg.banking.enums.OperationType;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,9 +19,11 @@ public class Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
-    @Column(precision=16, scale=2, nullable = false)
+    @Column(precision = 16, scale = 2, nullable = false)
     private BigDecimal transVal;
 
     @Enumerated(EnumType.STRING)
@@ -40,8 +43,8 @@ public class Transaction implements Serializable {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
-        this.recipient = recipient;
-        this.sender = sender;
+        setRecipient(recipient);
+        setSender(sender);
     }
 
     public Transaction() {
@@ -52,6 +55,9 @@ public class Transaction implements Serializable {
     }
 
     public void setSender(Account sender) {
+        if (recipient != null) {
+            recipient.addDebitTransaction(this);
+        }
         this.sender = sender;
     }
 
@@ -92,6 +98,9 @@ public class Transaction implements Serializable {
     }
 
     public void setRecipient(Account recipient) {
+        if (recipient != null) {
+            recipient.addCreditTransaction(this);
+        }
         this.recipient = recipient;
     }
 }

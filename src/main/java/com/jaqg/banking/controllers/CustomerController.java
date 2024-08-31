@@ -22,19 +22,19 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerGetRequest> retrieveAllCustomers(){
+    public List<CustomerGetRequest> retrieveAllCustomers() {
         return this.customerService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerGetRequest> getCustomerByID (@PathVariable Long id){
+    public ResponseEntity<CustomerGetRequest> getCustomerByID(@PathVariable Long id) {
         CustomerGetRequest customerGetRequest = customerService.customerGetRequest(id);
         return new ResponseEntity<>(customerGetRequest, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerPostRequest> addNewCustomer (@RequestBody String fullName){
-         CustomerPostRequest customerPostRequest1 = customerService.customerPostRequest(fullName);
+    public ResponseEntity<CustomerPostRequest> addNewCustomer(@RequestBody String fullName) {
+        CustomerPostRequest customerPostRequest1 = customerService.customerPostRequest(fullName);
         if (customerPostRequest1 == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -42,7 +42,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BigDecimal> deleteCustomer (@PathVariable("id") Long ID) {
+    public ResponseEntity<BigDecimal> deleteCustomer(@PathVariable("id") Long ID) {
         BigDecimal value = customerService.customerDeleteRequest(ID);
         if (value == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

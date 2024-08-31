@@ -1,6 +1,7 @@
 package com.jaqg.banking.controllers;
 
 
+import com.jaqg.banking.config.JacksonConfiguration;
 import com.jaqg.banking.dto.TransactionRequest;
 import com.jaqg.banking.dto.TransactionResponse;
 import com.jaqg.banking.enums.OperationType;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
+@Import(JacksonConfiguration.class)
 @WebMvcTest(controllers = TransactionController.class)
 class TransactionControllerTest {
 
@@ -61,7 +64,7 @@ class TransactionControllerTest {
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("time").value("2024-05-04T12:05:06"))
+                    .andExpect(jsonPath("time").value("04-05-2024 12:05:06"))
                     .andExpect(jsonPath("type").value(transactionResponse.type().name()))
                     .andExpect(jsonPath("fromAccount").value(transactionResponse.fromAccount()))
                     .andExpect(jsonPath("fromAccountSortCode").value(transactionResponse.fromAccountSortCode()))
@@ -102,7 +105,7 @@ class TransactionControllerTest {
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("time").value("2024-05-04T12:05:06"))
+                    .andExpect(jsonPath("time").value("04-05-2024 12:05:06"))
                     .andExpect(jsonPath("type").value(transactionResponse.type().name()))
                     .andExpect(jsonPath("fromAccount").value(transactionResponse.fromAccount()))
                     .andExpect(jsonPath("fromAccountSortCode").value(transactionResponse.fromAccountSortCode()))
@@ -143,7 +146,7 @@ class TransactionControllerTest {
                             .content(payload)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("time").value("2024-05-04T12:05:06"))
+                    .andExpect(jsonPath("time").value("04-05-2024 12:05:06"))
                     .andExpect(jsonPath("type").value(transactionResponse.type().name()))
                     .andExpect(jsonPath("fromAccount").value(transactionResponse.fromAccount()))
                     .andExpect(jsonPath("fromAccountSortCode").value(transactionResponse.fromAccountSortCode()))
