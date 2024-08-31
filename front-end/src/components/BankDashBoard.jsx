@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserContext } from '../App';
+import AccountInfo from './AccountInfo';
+import CreateAccountModal from './CreateAccountModal';
 
 const BankDashBoard = () => {
   const { user } = useContext(UserContext);
   const [userData, setUserData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -16,7 +19,11 @@ const BankDashBoard = () => {
           const parsedFullName = JSON.parse(response.data.fullName).fullName;
           const userData = { ...response.data, fullName: parsedFullName };
 
-          setUserData(userData);
+          // Fetch accounts for the user
+          const accountsResponse = await axios.get(`http://localhost:8080/account?customerId=${user.id}`);
+          const filteredAccounts = accountsResponse.data;
+
+          setUserData({ ...userData, accounts: filteredAccounts });
         } catch (error) {
           console.error("Something went wrong:", error);
         }
@@ -26,53 +33,55 @@ const BankDashBoard = () => {
     fetchUserInfo();
   }, [user]);
 
+  const handleAccountCreated = async () => {
+    if (userData) {
+      try {
+        const response = await axios.get(`http://localhost:8080/account?customerId=${userData.id}`);
+        const filteredAccounts = response.data;
+        setUserData({ ...userData, accounts: filteredAccounts });
+      } catch (error) {
+        console.error('Error fetching accounts:', error);
+      }
+    }
+  };
+
   return (
-    <div>
-      <h1>User Dashboard</h1>
-      {userData ? (
-        <div>
-          <h2>Welcome, {userData.fullName}</h2>
-          <p><strong>ID:</strong> {userData.id}</p>
-          <h3>Accounts</h3>
-          {userData.accounts && userData.accounts.length > 0 ? (
-            <ul>
-              {userData.accounts.map((account, index) => (
-                <li key={index}>
-                  <p><strong>Account Number:</strong> {account.number}</p>
-                  <p><strong>Account Name:</strong> {account.name}</p>
-                  <p><strong>Opening Balance:</strong> ${account.openingBalance ? account.openingBalance.toFixed(2) : "N/A"}</p>
-                  <p><strong>Current Balance:</strong> ${account.balance ? account.balance.toFixed(2) : "N/A"}</p>
-                  <p><strong>Sort Code:</strong> {account.sortCode ? account.sortCode : "N/A"}</p>
-                  <p><strong>Customer ID:</strong> {account.customer}</p>
-                  <h4>Transactions</h4>
-                  {account.transactions && account.transactions.length > 0 ? (
-                    <ul>
-                      {account.transactions.map((transaction, index) => (
-                        <li key={index}>
-                          <p><strong>Time:</strong> {new Date(transaction.time).toLocaleString()}</p>
-                          <p><strong>Type:</strong> {transaction.type}</p>
-                          <p><strong>Amount:</strong> ${transaction.amount ? transaction.amount : "N/A"}</p>
-                          {transaction.fromAccount && (
-                            <p><strong>From Account:</strong> {transaction.fromAccount}</p>
-                          )}
-                          {transaction.toAccount && (
-                            <p><strong>To Account:</strong> {transaction.toAccount}</p>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No transactions available.</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No accounts available.</p>
-          )}
-        </div>
-      ) : (
-        <p>Loading user data...</p>
+    <div className="bg-gray-100 w-full relative">
+      <div className="max-w-7xl">
+        <h1 className="text-3xl font-semibold mb-6 text-gray-800">
+          Welcome Back, {userData?.fullName || 'User'}
+        </h1>
+        
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-6"
+        >
+          Create New Account
+        </button>
+        
+        {userData ? (
+          <div>
+            <div className="mb-6">
+              <p className="text-lg font-medium text-gray-600">Your Accounts</p>
+              
+              <AccountInfo customerId={userData.id} accounts={userData.accounts || []} />
+            </div>
+          </div>
+        ) : (
+          <p className="text-gray-500">Loading user data...</p>
+        )}
+      </div>
+      
+      {isModalOpen && (
+        <>
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40" />
+          <CreateAccountModal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+            customerId={userData?.id} 
+            onAccountCreated={handleAccountCreated}
+          />
+        </>
       )}
     </div>
   );

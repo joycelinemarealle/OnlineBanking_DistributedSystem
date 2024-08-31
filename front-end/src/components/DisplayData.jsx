@@ -32,15 +32,7 @@ const DisplayData = () => {
           <>
             {projects.map((project) => (
               <div className="col-span-12">
-                {/* <FeaturedProject
-                  key={project.id}
-                  title={project.title}
-                  img={project.image}
-                  summary={project.paragraph}
-                  link={project.liveurl}
-                  github={project.github}
-                  techStack={project.tools}
-                /> */}
+                
               </div>
             ))}
           </>
