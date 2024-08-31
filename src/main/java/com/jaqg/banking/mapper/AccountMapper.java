@@ -1,6 +1,8 @@
 package com.jaqg.banking.mapper;
+
 import com.jaqg.banking.dto.AccountResponseDTO;
 import com.jaqg.banking.entities.Account;
+
 import static com.jaqg.banking.mapper.TransactionsMapper.transactionListMapper;
 
 //Convert Account Entity to AccountResponseDTO

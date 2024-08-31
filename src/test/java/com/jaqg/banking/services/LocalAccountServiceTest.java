@@ -8,7 +8,6 @@ import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.CustomerRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +19,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 public class LocalAccountServiceTest {
     @MockBean
@@ -38,10 +39,9 @@ public class LocalAccountServiceTest {
     private AccountResponseDTO accountResponse1;
     private AccountResponseDTO accountResponse2;
     private CreateAccountRequestDTO accountRequest1;
-    private List<AccountResponseDTO> accountResponses;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         //Create accounts
 //        accountRepository = mock(AccountRepository.class);
 //        customerRepo = mock (CustomerRepo.class);
@@ -52,9 +52,9 @@ public class LocalAccountServiceTest {
 
         //Create accounts
         accounts = new ArrayList<>();
-        account1 = new Account(1234L,"Savings", new BigDecimal(100),
+        account1 = new Account(1234L, "Savings", new BigDecimal(100),
                 new BigDecimal(100), customer, 1111);
-        account2 = new Account(5678L,"Checkings", new BigDecimal(200),
+        account2 = new Account(5678L, "Checkings", new BigDecimal(200),
                 new BigDecimal(200), customer, 2222);
 
         //Create accountDTOs that match the account above
@@ -68,7 +68,7 @@ public class LocalAccountServiceTest {
                 1L);
 
         //Create accountRequest DTO
-        accountRequest1 = new CreateAccountRequestDTO(1L,"Savings",new BigDecimal(200));
+        accountRequest1 = new CreateAccountRequestDTO(1L, "Savings", new BigDecimal(200));
 
         //add to list
         accounts.add(account1);
@@ -77,7 +77,7 @@ public class LocalAccountServiceTest {
 
 
     @Test
-    void retrieveAllAccounts(){
+    void retrieveAllAccounts() {
         //Test the size and elements of List
         when(accountRepository.findAll()).thenReturn(accounts);
 
@@ -100,7 +100,7 @@ public class LocalAccountServiceTest {
     }
 
     @Test
-    void findAccountByNumber(){
+    void findAccountByNumber() {
         Long accountNumber = account1.getNumber();
         Optional<Account> optionalAccount = Optional.ofNullable(account1);
 
@@ -111,10 +111,10 @@ public class LocalAccountServiceTest {
         AccountResponseDTO account = accountService.findAccountByNumber(accountNumber);
 
         //Asserts results
-         assertThat(account1.getNumber()).isEqualTo(account.number());
-         assertThat(account1.getOpeningBalance()).isEqualTo(account.openingBalance());
-         assertThat(account1.getBalance()).isEqualTo(account.balance());
-         assertThat(account1.getSortCode()).isEqualTo(account.sortCode());
+        assertThat(account1.getNumber()).isEqualTo(account.number());
+        assertThat(account1.getOpeningBalance()).isEqualTo(account.openingBalance());
+        assertThat(account1.getBalance()).isEqualTo(account.balance());
+        assertThat(account1.getSortCode()).isEqualTo(account.sortCode());
 
         //Verify Mock
         verify(accountRepository).findById(accountNumber);
@@ -122,12 +122,12 @@ public class LocalAccountServiceTest {
     }
 
     @Test
-    void closeAccount(){
+    void closeAccount() {
         Long accountNumber = account1.getNumber();
         Optional<Account> optionalAccount = Optional.ofNullable(account1);
 
         //Mock findById()
-        when ((accountRepository).findById(accountNumber)).thenReturn(optionalAccount);
+        when((accountRepository).findById(accountNumber)).thenReturn(optionalAccount);
 
         //Capture original balance
         BigDecimal originalBalance = account1.getBalance();
@@ -147,12 +147,12 @@ public class LocalAccountServiceTest {
         verify(accountRepository).save(account1);
 
 
-
     }
+
     @Test
-    void createAccount(){
+    void createAccount() {
         Long customerId = accountRequest1.customerId();
-        Optional<Customer> optionalCustomer= Optional.ofNullable(customer);
+        Optional<Customer> optionalCustomer = Optional.ofNullable(customer);
 
         //mock customerRepo.findBy
         when(customerRepo.findById(customerId)).thenReturn(optionalCustomer);

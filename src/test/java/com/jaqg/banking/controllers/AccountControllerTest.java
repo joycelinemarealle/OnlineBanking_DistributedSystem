@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -23,11 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(SpringExtension.class)
 @Import(AccountController.class)
 @WebMvcTest(AccountController.class)
@@ -36,7 +34,7 @@ public class AccountControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-   private  ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @MockBean
     private AccountService accountService;
@@ -62,7 +60,7 @@ public class AccountControllerTest {
         accountResponses.add(accountResponse1);
         accountResponses.add(accountResponse2);
 
-        accountRequest = new CreateAccountRequestDTO(1L,"Savings", new BigDecimal(100));
+        accountRequest = new CreateAccountRequestDTO(1L, "Savings", new BigDecimal(100));
     }
 
     @Test
@@ -75,7 +73,7 @@ public class AccountControllerTest {
                 .get("/account")
                 .accept(MediaType.APPLICATION_JSON);
 
-       //Perform the GET request and get result
+        //Perform the GET request and get result
         try {
             mockMvc.perform(request)
                     .andExpect(jsonPath("$", hasSize(2)))
@@ -107,7 +105,7 @@ public class AccountControllerTest {
 
         //Perform Request
 
-        try{
+        try {
             mockMvc.perform(request)
                     .andExpect(jsonPath("number").value(accountResponse1.number()))
                     .andExpect(jsonPath("sortCode").value(accountResponse1.sortCode()))
@@ -119,45 +117,45 @@ public class AccountControllerTest {
                     .andExpect(status().isOk())
                     .andReturn();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
 
         }
     }
 
-@Test
-        void createAccount() throws Exception {
+    @Test
+    void createAccount() throws Exception {
         //Mock Service
-    when(accountService.createAccount(accountRequest)).thenReturn(accountResponse1);
+        when(accountService.createAccount(accountRequest)).thenReturn(accountResponse1);
 
-            //Convert DTO to JSON
-       String  accountRequestJson = objectMapper.writeValueAsString(accountRequest);
+        //Convert DTO to JSON
+        String accountRequestJson = objectMapper.writeValueAsString(accountRequest);
 
-            //Create POST request
-            RequestBuilder request = MockMvcRequestBuilders
-                    .post("/account")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(accountRequestJson)
-                    .accept(MediaType.APPLICATION_JSON);
+        //Create POST request
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(accountRequestJson)
+                .accept(MediaType.APPLICATION_JSON);
 
-            //Perform request and get response
-            try {
-                mockMvc.perform(request)
-                        .andExpect(jsonPath("number").value(accountResponse1.number()))
-                        .andExpect(jsonPath("sortCode").value(accountResponse1.sortCode()))
-                        .andExpect(jsonPath("name").value(accountResponse1.name()))
-                        .andExpect(jsonPath("balance").value(accountResponse1.balance()))
-                        .andExpect(jsonPath("transactions").value(accountResponse1.transactions()))
-                        .andExpect(jsonPath("openingBalance").value(accountResponse1.openingBalance()))
-                        .andExpect(jsonPath("customer").value(accountResponse1.customer()))
-                        .andExpect(status().isCreated()) //expect 201 created
-                        .andReturn();
+        //Perform request and get response
+        try {
+            mockMvc.perform(request)
+                    .andExpect(jsonPath("number").value(accountResponse1.number()))
+                    .andExpect(jsonPath("sortCode").value(accountResponse1.sortCode()))
+                    .andExpect(jsonPath("name").value(accountResponse1.name()))
+                    .andExpect(jsonPath("balance").value(accountResponse1.balance()))
+                    .andExpect(jsonPath("transactions").value(accountResponse1.transactions()))
+                    .andExpect(jsonPath("openingBalance").value(accountResponse1.openingBalance()))
+                    .andExpect(jsonPath("customer").value(accountResponse1.customer()))
+                    .andExpect(status().isCreated()) //expect 201 created
+                    .andReturn();
 
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
 
-            }
         }
+    }
 
 
     @Test
@@ -175,16 +173,17 @@ public class AccountControllerTest {
 
         //Perform request and get response
 
-        try {  mockMvc.perform(request)
-                .andExpect(jsonPath("$").value(balance))
-                .andExpect(status().isOk()) //200 OK Status
-                .andReturn();
+        try {
+            mockMvc.perform(request)
+                    .andExpect(jsonPath("$").value(balance))
+                    .andExpect(status().isOk()) //200 OK Status
+                    .andReturn();
 
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException();
         }
 
-       }
+    }
 
 }
 
