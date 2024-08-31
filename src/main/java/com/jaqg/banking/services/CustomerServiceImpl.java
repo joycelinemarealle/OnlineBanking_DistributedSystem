@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerGetRequest customerGetRequest(Long ID) {
-        Optional<Customer> customer =  customerRepo.findById(ID);
+        Optional<Customer> customer = customerRepo.findById(ID);
         return CustomerGetRequestMapper.toDTO(customer.orElse(null));
     }
     // Implementing Post Request DTO
@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
     // Implementing Delete Request DTO
     @Override
     public BigDecimal customerDeleteRequest(Long id) {
-        Optional<Customer> optionalCustomer =  customerRepo.findById(id);
+        Optional<Customer> optionalCustomer = customerRepo.findById(id);
         if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
             customer.setRemoved(true);
@@ -56,19 +56,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> getCustomer(Long ID){
+    public Optional<Customer> getCustomer(Long ID) {
 
         return customerRepo.findById(ID);
     }
 
     @Override
     public List<CustomerGetRequest> findAll() {
-        return customerRepo.findAll().stream().map(e->CustomerGetRequestMapper.toDTO(e)).toList();
-    }
-
-    @Override
-    public Customer addNewCustomer(Customer customer){
-        return customerRepo.save(customer);
+        return customerRepo.findAll().stream().map(CustomerGetRequestMapper::toDTO).toList();
     }
 }
 

@@ -1,5 +1,7 @@
 package com.jaqg.banking.services;
-import com.jaqg.banking.dto.*;
+
+import com.jaqg.banking.dto.CustomerGetRequest;
+import com.jaqg.banking.dto.CustomerPostRequest;
 import com.jaqg.banking.entities.Customer;
 
 import java.math.BigDecimal;
@@ -18,7 +20,6 @@ public interface CustomerService {
 
     List<CustomerGetRequest> findAll();
 
-    Customer addNewCustomer(Customer customer);
 }
 
 

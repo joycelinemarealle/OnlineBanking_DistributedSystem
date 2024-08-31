@@ -15,7 +15,7 @@ public class RestResponseEntityExceptionHandler
 
 
     @ExceptionHandler(value
-            = { NotEnoughFundsException.class, IllegalStateException.class })
+            = {NotEnoughFundsException.class, IllegalStateException.class})
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = ex.getMessage();

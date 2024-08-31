@@ -5,6 +5,7 @@ import com.jaqg.banking.dto.CreateAccountRequestDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.exceptions.AccountNotFoundException;
+import com.jaqg.banking.mapper.AccountMapper;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.CustomerRepo;
 import jakarta.transaction.Transactional;
@@ -45,15 +46,15 @@ public class LocalAccountService implements AccountService {
 
         //Convert each Account Entity to a AccountResponseDTO
         return accounts.stream()
-                .map(account -> accountMapper(account))
+                .map(AccountMapper::accountMapper)
                 .toList(); //collect to a list
     }
 
     @Override
-    public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) throws AccountNotFoundException{
+    public AccountResponseDTO createAccount(CreateAccountRequestDTO createAccountRequestDTO) throws AccountNotFoundException {
 
         //Validate opening balance
-        if(createAccountRequestDTO.openingBalance().compareTo(BigDecimal.ZERO) <0){
+        if (createAccountRequestDTO.openingBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Opening balance cannot be negative ");
         }
         Account account = new Account();
@@ -61,9 +62,10 @@ public class LocalAccountService implements AccountService {
         //find customer by id then create Account
         Optional<Customer> optionalCustomer = customerRepo.findById(createAccountRequestDTO.customerId());
 
-        if(optionalCustomer.isPresent()){
+        if (optionalCustomer.isPresent()) {
             account.setCustomer(optionalCustomer.get()); //unwrap optional
-            account.setName(createAccountRequestDTO.accountName());account.setOpeningBalance(createAccountRequestDTO.openingBalance());
+            account.setName(createAccountRequestDTO.accountName());
+            account.setOpeningBalance(createAccountRequestDTO.openingBalance());
             account.setOpeningBalance(createAccountRequestDTO.openingBalance());
             account.setBalance(createAccountRequestDTO.openingBalance());
             account.setSortCode(sortcode);
@@ -71,7 +73,7 @@ public class LocalAccountService implements AccountService {
             //save account to database
             accountRepository.save(account);
             return accountMapper(account);
-        } else{
+        } else {
             throw new AccountNotFoundException("Customer not found with id");
         }
 
@@ -103,15 +105,5 @@ public class LocalAccountService implements AccountService {
         }
 
     }
-
-    public void deleteAccount(long number) {
-        accountRepository.deleteById(number);
-    }
-
-    private int generatesortcode() {
-        //Logic to generate sortCode
-        return 1234; //placeholder for now
-    }
-
 
 }
