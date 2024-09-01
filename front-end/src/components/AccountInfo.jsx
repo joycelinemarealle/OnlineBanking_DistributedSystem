@@ -1,8 +1,9 @@
 import React from 'react';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 
 const AccountInfo = ({ customerId, accounts, onDeleteAccount }) => {
   // Filter out accounts with a balance of 0
-  const visibleAccounts = accounts.filter(account => account.balance > 0);
+  const visibleAccounts = accounts.filter(account => account.balance + account.openingBalance > account.balance);
 
   return (
     <div className="max-w-4xl mx-auto mt-10">
@@ -17,7 +18,7 @@ const AccountInfo = ({ customerId, accounts, onDeleteAccount }) => {
                 onClick={() => onDeleteAccount(account.number)}
                 className="mt-2 px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
-                Delete Account
+                <DeleteOutlined />
               </button>
             </li>
           ))}

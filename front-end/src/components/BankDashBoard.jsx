@@ -3,6 +3,7 @@ import axios from 'axios';
 import { UserContext } from '../App';
 import AccountInfo from './AccountInfo';
 import CreateAccountModal from './CreateAccountModal';
+import AddIcon from '@mui/icons-material/Add';
 
 const BankDashBoard = () => {
   const { user } = useContext(UserContext);
@@ -66,7 +67,7 @@ const BankDashBoard = () => {
           localStorage.removeItem('userData'); // Clear localStorage
           window.location.href = '/'; // Redirect to register
         }}
-        className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-md"
+        className="absolute top-4 right-4 hover:underline text-black px-4 py-2 rounded-md"
       >
         Logout
       </button>
@@ -75,13 +76,13 @@ const BankDashBoard = () => {
         </h1>
         </div>
         
-        <div className='flex justify-between pt-6'>
+        <div className='flex justify-between pt-5'>
         <p className="text-lg font-medium text-gray-600">Your Accounts</p>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-6"
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-6"
         >
-          Create New Account
+          <AddIcon />
         </button>
         </div>
         
