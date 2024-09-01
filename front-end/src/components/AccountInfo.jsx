@@ -3,14 +3,14 @@ import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 
 const AccountInfo = ({ customerId, accounts, onDeleteAccount }) => {
   // Filter out accounts with a balance of 0
-  const visibleAccounts = accounts.filter(account => account.balance + account.openingBalance > account.balance);
+  const visibleAccounts = accounts.filter(account => account.balance > 0);
 
   return (
     <div className="max-w-4xl mx-auto mt-10">
       {visibleAccounts.length > 0 ? (
         <ul className="space-y-4">
           {visibleAccounts.map((account) => (
-            <li key={account.number} className="border-b border-gray-200 p-4 m-4 w-full bg-white shadow-lg rounded-lg">
+            <li key={account.number} className="border-b border-gray-200 p-4 m-4 w-full bg-white shadow-lg rounded-lg justify-between">
               <p className="text-xl font-semibold text-gray-700">Account Name: <span className="font-normal">{account.name}</span></p>
               <p className="text-xl font-semibold text-gray-700">Opening Balance: <span className="font-normal">${account.openingBalance?.toFixed(2)}</span></p>
               <p className="text-xl font-semibold text-gray-700">Current Balance: <span className="font-normal">${account.balance?.toFixed(2)}</span></p>

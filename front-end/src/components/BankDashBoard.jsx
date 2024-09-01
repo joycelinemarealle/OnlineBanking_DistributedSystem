@@ -37,24 +37,28 @@ const BankDashBoard = () => {
   }, [user]);
 
   const handleAccountCreated = async () => {
-    if (userData) {
-      try {
-        const response = await axios.get(`http://localhost:8080/account`);
-        const filteredAccounts = response.data.filter(account => account.customer === userData.id && account.balance > 0);
-        setUserData({ ...userData, accounts: filteredAccounts });
-      } catch (error) {
-        console.error('Error fetching accounts:', error);
+      if (userData) {
+        try {
+          const response = await axios.get(`http://localhost:8080/account`);
+          const filteredAccounts = response.data.filter(account => account.customer === userData.id && account.balance > 0);
+          const updatedUserData = { ...userData, accounts: filteredAccounts }
+          setUserData(updatedUserData);
+          localStorage.setItem("userData", JSON.stringify(updatedUserData))
+        } catch (error) {
+          console.error('Error fetching accounts:', error);
+        }
       }
-    }
   };
 
   const handleDeleteAccount = async (accountNumber) => {
-    try {
-      await axios.delete(`http://localhost:8080/account/${accountNumber}`);
-      // Refresh the account list
-      handleAccountCreated();
-    } catch (error) {
-      console.error('Error deleting account:', error);
+    const confirmDelete = window.confirm("Are you sure you want to delete this account? ");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:8080/account/${accountNumber}`);
+        handleAccountCreated();
+      } catch (error) {
+        console.error('Error deleting account:', error);
+      }
     }
   };
 
