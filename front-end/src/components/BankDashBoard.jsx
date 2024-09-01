@@ -19,25 +19,27 @@ const BankDashBoard = () => {
           const parsedFullName = JSON.parse(response.data.fullName).fullName;
           const userData = { ...response.data, fullName: parsedFullName };
 
-          // Fetch accounts for the user
-          const accountsResponse = await axios.get(`http://localhost:8080/account?customerId=${user.id}`);
-          const filteredAccounts = accountsResponse.data;
-
-          setUserData({ ...userData, accounts: filteredAccounts });
+          setUserData(userData);
+          localStorage.setItem('userData', JSON.stringify(userData));
         } catch (error) {
           console.error("Something went wrong:", error);
         }
       }
     };
 
-    fetchUserInfo();
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    } else {
+      fetchUserInfo();
+    }
   }, [user]);
 
   const handleAccountCreated = async () => {
     if (userData) {
       try {
-        const response = await axios.get(`http://localhost:8080/account?customerId=${userData.id}`);
-        const filteredAccounts = response.data;
+        const response = await axios.get(`http://localhost:8080/account`);
+        const filteredAccounts = response.data.filter(account => account.customer === userData.id && account.balance > 0);
         setUserData({ ...userData, accounts: filteredAccounts });
       } catch (error) {
         console.error('Error fetching accounts:', error);
@@ -45,26 +47,48 @@ const BankDashBoard = () => {
     }
   };
 
+  const handleDeleteAccount = async (accountNumber) => {
+    try {
+      await axios.delete(`http://localhost:8080/account/${accountNumber}`);
+      // Refresh the account list
+      handleAccountCreated();
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    }
+  };
+
   return (
     <div className="bg-gray-100 w-full relative">
-      <div className="max-w-7xl">
+      <div className="max-w-7xl mx-auto">
+        <div className='flex justify-between pt-4'>
+      <button
+        onClick={() => {
+          localStorage.removeItem('userData'); // Clear localStorage
+          window.location.href = '/'; // Redirect to register
+        }}
+        className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-md"
+      >
+        Logout
+      </button>
         <h1 className="text-3xl font-semibold mb-6 text-gray-800">
           Welcome Back, {userData?.fullName || 'User'}
         </h1>
+        </div>
         
+        <div className='flex justify-between pt-6'>
+        <p className="text-lg font-medium text-gray-600">Your Accounts</p>
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-6"
         >
           Create New Account
         </button>
+        </div>
         
         {userData ? (
           <div>
-            <div className="mb-6">
-              <p className="text-lg font-medium text-gray-600">Your Accounts</p>
-              
-              <AccountInfo customerId={userData.id} accounts={userData.accounts || []} />
+            <div className="mb-6">              
+              <AccountInfo customerId={userData.id} accounts={userData.accounts || []} onDeleteAccount={handleDeleteAccount} />
             </div>
           </div>
         ) : (
