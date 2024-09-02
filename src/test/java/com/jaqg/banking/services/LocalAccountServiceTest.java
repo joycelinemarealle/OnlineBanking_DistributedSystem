@@ -47,7 +47,7 @@ public class LocalAccountServiceTest {
 //        customerRepo = mock (CustomerRepo.class);
         //create customer
         customer = new Customer("Joyceline Marealle");
-        customer.setId(1L);
+//        customer.setId(1L);
 
 
         //Create accounts

@@ -2,6 +2,7 @@ package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,31 +13,41 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Entity
+@SequenceGenerator(
+        name = "account-number-gen",
+        sequenceName = "account_number_seq",
+        initialValue = 100000, allocationSize = 1)
 public class Account implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "account-number-gen")
     private long number;
 
     @Column(length = 50, nullable = false)
     @NotBlank(message = "Name is mandatory")
+    @NotNull
     private String name;
 
     @Column(precision=16, scale=2, nullable = false)
+    @NotNull
     private BigDecimal openingBalance;
 
     @Column(precision=16, scale=2, nullable = false)
+    @NotNull
     private BigDecimal balance;
 
+    @NotNull
     private boolean isClosed = false;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
+    @NotNull
     private Customer customer;
 
+    @NotNull
     private Integer sortCode;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -60,10 +71,6 @@ public class Account implements Serializable {
 
     public long getNumber() {
         return number;
-    }
-
-    public void setNumber(long number) {
-        this.number = number;
     }
 
     public String getName() {
@@ -97,6 +104,7 @@ public class Account implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+        customer.addAccount(this);
     }
 
     public List<Transaction> getTransactions() {
@@ -104,10 +112,12 @@ public class Account implements Serializable {
     }
 
     public void addDebitTransaction(Transaction transaction) {
+        validateTransaction(transaction);
         depositTransactions.add(transaction);
     }
 
     public void addCreditTransaction(Transaction transaction) {
+        validateTransaction(transaction);
         creditTransactions.add(transaction);
     }
 
@@ -149,5 +159,11 @@ public class Account implements Serializable {
                 ", balance=" + balance +
                 ", sortCode=" + sortCode +
                 '}';
+    }
+
+    private void validateTransaction(Transaction transaction) {
+        if (transaction == null) {
+            throw new NullPointerException("Can't add null transaction");
+        }
     }
 }

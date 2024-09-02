@@ -2,6 +2,7 @@ package com.jaqg.banking.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,13 +17,15 @@ public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(length = 150, nullable = false)
     @NotBlank(message = "Name is mandatory")
+    @NotNull
     private String fullName;
 
+    @NotNull
     private boolean isRemoved = false;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -48,10 +51,6 @@ public class Customer implements Serializable {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public boolean isRemoved() {
         return isRemoved;
     }
@@ -65,6 +64,12 @@ public class Customer implements Serializable {
     }
 
     public void addAccount(Account account) {
+        if (account == null) {
+            throw new NullPointerException("Can't add null account");
+        }
+        if (account.getCustomer() != null && !account.getCustomer().equals(this)) {
+            throw new IllegalStateException("Account is already assigned to a Customer");
+        }
         accounts.add(account);
     }
 

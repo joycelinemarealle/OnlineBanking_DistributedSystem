@@ -30,7 +30,7 @@ public class CustomerServiceTest {
     @BeforeEach
     public void setUp() {
         testCustomer = new Customer("Dan Jones");
-        testCustomer.setId(2);
+//        testCustomer.setId(2);
 
     }
 

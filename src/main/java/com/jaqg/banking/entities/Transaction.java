@@ -20,6 +20,7 @@ public class Transaction implements Serializable {
     private long id;
 
     @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
@@ -66,10 +67,6 @@ public class Transaction implements Serializable {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
