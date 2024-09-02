@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useState, createContext } from 'react';
 import RegisterForm from './components/RegisterForm';
 import BankDashBoard from './components/BankDashBoard';
+import TransactionsPage from './components/TransactionPage';
 
 export const UserContext = createContext();
 
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/" element={<RegisterForm />} />
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/dashboard" element={<BankDashBoard />} />
+                <Route path="/transactions/:accountNumber" element={<TransactionsPage/>} />
               </Routes>
             </div>
           </main>
