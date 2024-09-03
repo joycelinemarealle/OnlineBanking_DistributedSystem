@@ -1,8 +1,7 @@
 package com.jaqg.banking.controllers;
 
 
-import com.jaqg.banking.dto.CustomerGetRequest;
-import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.services.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +33,8 @@ class CustomerControllerTest {
 
     @Test
     void retrieveAllCustomers() {
-        final var customerDto1 = new CustomerGetRequest(10L, "Charlie", List.of(235235L));
-        final var customerDto2 = new CustomerGetRequest(11L, "Peter", List.of(235233L, 1L));
+        final var customerDto1 = new CustomerDTO(10L, "Charlie", List.of(235235L));
+        final var customerDto2 = new CustomerDTO(11L, "Peter", List.of(235233L, 1L));
 
         when(customerService.findAll()).thenReturn(List.of(customerDto1, customerDto2));
 
@@ -62,7 +61,7 @@ class CustomerControllerTest {
         final String fullName = "Charlie";
         List<Long> accounts = List.of(235235L);
 
-        when(customerService.customerGetRequest(customerId)).thenReturn(new CustomerGetRequest(customerId, fullName, accounts));
+        when(customerService.customerGetRequest(customerId)).thenReturn(new CustomerDTO(customerId, fullName, accounts));
 
         try {
             mockMvc.perform(get("/customer/" + customerId).accept(MediaType.APPLICATION_JSON))
@@ -83,7 +82,7 @@ class CustomerControllerTest {
         final String fullName = "Charlie";
         List<Long> accounts = List.of();
 
-        when(customerService.customerPostRequest(fullName)).thenReturn(new CustomerPostRequest(customerId, fullName, accounts));
+        when(customerService.customerPostRequest(fullName)).thenReturn(new CustomerDTO(customerId, fullName, accounts));
 
         try {
             mockMvc.perform(post("/customer")

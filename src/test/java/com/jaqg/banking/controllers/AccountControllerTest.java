@@ -1,8 +1,8 @@
 package com.jaqg.banking.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jaqg.banking.dto.AccountResponseDTO;
-import com.jaqg.banking.dto.CreateAccountRequestDTO;
+import com.jaqg.banking.dto.AccountDTO;
+import com.jaqg.banking.dto.AccountRequestDTO;
 import com.jaqg.banking.services.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,19 +39,19 @@ public class AccountControllerTest {
     @MockBean
     private AccountService accountService;
 
-    private List<AccountResponseDTO> accountResponses;
-    private AccountResponseDTO accountResponse1;
-    private AccountResponseDTO accountResponse2;
-    private CreateAccountRequestDTO accountRequest;
+    private List<AccountDTO> accountResponses;
+    private AccountDTO accountResponse1;
+    private AccountDTO accountResponse2;
+    private AccountRequestDTO accountRequest;
 
     @BeforeEach
     void setup() {
 
-        accountResponse1 = new AccountResponseDTO(1234L, 1111,
+        accountResponse1 = new AccountDTO(1234L, 1111,
                 "Savings", new BigDecimal(100),
                 new ArrayList<>(), new BigDecimal(100),
                 1L);
-        accountResponse2 = new AccountResponseDTO(5678L, 2222,
+        accountResponse2 = new AccountDTO(5678L, 2222,
                 "Checkings", new BigDecimal(200),
                 new ArrayList<>(), new BigDecimal(200),
                 2L);
@@ -60,7 +60,7 @@ public class AccountControllerTest {
         accountResponses.add(accountResponse1);
         accountResponses.add(accountResponse2);
 
-        accountRequest = new CreateAccountRequestDTO(1L, "Savings", new BigDecimal(100));
+        accountRequest = new AccountRequestDTO(1L, "Savings", new BigDecimal(100));
     }
 
     @Test

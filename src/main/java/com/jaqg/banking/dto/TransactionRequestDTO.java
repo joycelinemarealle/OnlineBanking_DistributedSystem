@@ -4,11 +4,11 @@ import com.jaqg.banking.enums.OperationType;
 
 import java.math.BigDecimal;
 
-public record TransactionRequest(
+public record TransactionRequestDTO(
         OperationType type,
         Long fromAccount,
-        Long fromAccountSortCode,
+        Integer fromAccountSortCode,
         Long toAccount,
-        Long toAccountSortCode,
+        Integer toAccountSortCode,
         BigDecimal amount) {
 }

@@ -5,7 +5,7 @@ import com.jaqg.banking.enums.OperationType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record TransactionResponse(
+public record TransactionDTO(
         LocalDateTime time,
         OperationType type,
         Long fromAccount,

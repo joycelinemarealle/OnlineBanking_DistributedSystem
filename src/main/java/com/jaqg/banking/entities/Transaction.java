@@ -20,6 +20,7 @@ public class Transaction implements Serializable {
     private long id;
 
     @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
@@ -31,13 +32,16 @@ public class Transaction implements Serializable {
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id")
+    @JoinColumn(name = "recipient_id", updatable = false)
     private Account recipient; // to account
 
+    private Long recipientSourceCode;
+
     @ManyToOne
-    @JoinColumn(name = "sender_id")
+    @JoinColumn(name = "sender_id", updatable = false)
     private Account sender;
 
+    private Long senderSourceCode;
 
     public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
         this.dateTime = dateTime;
@@ -63,10 +67,6 @@ public class Transaction implements Serializable {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
@@ -102,5 +102,21 @@ public class Transaction implements Serializable {
             recipient.addCreditTransaction(this);
         }
         this.recipient = recipient;
+    }
+
+    public Long getFromAccountNumber() {
+        return sender == null ? null : sender.getNumber();
+    }
+
+    public Integer getFromAccountSourceCode() {
+        return sender == null ? null : sender.getSortCode();
+    }
+
+    public Long getToAccountNumber() {
+        return recipient == null ? null : recipient.getNumber();
+    }
+
+    public Integer getToAccountSourceCode() {
+        return recipient == null ? null : recipient.getSortCode();
     }
 }

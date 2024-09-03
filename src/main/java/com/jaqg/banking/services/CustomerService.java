@@ -1,7 +1,6 @@
 package com.jaqg.banking.services;
 
-import com.jaqg.banking.dto.CustomerGetRequest;
-import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
 
 import java.math.BigDecimal;
@@ -10,15 +9,15 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-    CustomerGetRequest customerGetRequest(Long ID);
+    CustomerDTO customerGetRequest(Long ID);
 
-    CustomerPostRequest customerPostRequest(String fullName);
+    CustomerDTO customerPostRequest(String fullName);
 
     BigDecimal customerDeleteRequest(Long id);
 
     Optional<Customer> getCustomer(Long ID);
 
-    List<CustomerGetRequest> findAll();
+    List<CustomerDTO> findAll();
 
 }
 

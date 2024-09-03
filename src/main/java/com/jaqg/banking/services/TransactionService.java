@@ -1,17 +1,17 @@
 package com.jaqg.banking.services;
 
-import com.jaqg.banking.dto.TransactionRequest;
-import com.jaqg.banking.dto.TransactionResponse;
+import com.jaqg.banking.dto.TransactionRequestDTO;
+import com.jaqg.banking.dto.TransactionDTO;
 
 import java.util.List;
 
 public interface TransactionService {
     //    public TransactionResponse transfer(Long fromAccount, Long fromAccountSortCode, Long toAccount, Long toAccountSortCode, BigDecimal amount);
-    TransactionResponse withdraw(TransactionRequest request);
+    TransactionDTO withdraw(TransactionRequestDTO request);
 
-    TransactionResponse executeTransfer(TransactionRequest request);
+    TransactionDTO executeTransfer(TransactionRequestDTO request);
 
-    TransactionResponse deposit(TransactionRequest request);
+    TransactionDTO deposit(TransactionRequestDTO request);
 
-    List<TransactionResponse> getAllTransactions();
+    List<TransactionDTO> getAllTransactions();
 }

@@ -1,7 +1,7 @@
 package com.jaqg.banking.services;
 
-import com.jaqg.banking.dto.TransactionRequest;
-import com.jaqg.banking.dto.TransactionResponse;
+import com.jaqg.banking.dto.TransactionRequestDTO;
+import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.exceptions.AccountNotFoundException;
@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionResponse withdraw(TransactionRequest request) {
+    public TransactionDTO withdraw(TransactionRequestDTO request) {
         final Account account = accountRepository.findById(request.fromAccount())
                 .orElseThrow(() -> new AccountNotFoundException(request.fromAccount()));
 
@@ -47,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionsMapper.transactionMapper(transaction);
     }
 
-    public TransactionResponse executeTransfer(TransactionRequest request) {
+    public TransactionDTO executeTransfer(TransactionRequestDTO request) {
         deposit(request);
         return withdraw(request);
 
@@ -64,7 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
 //        }
     }
 
-    public TransactionResponse deposit(TransactionRequest request) {
+    public TransactionDTO deposit(TransactionRequestDTO request) {
         final Account account = accountRepository.findById(request.toAccount())
                 .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
 
@@ -95,7 +95,7 @@ public class TransactionServiceImpl implements TransactionService {
 //        return transactions.stream().map(e -> TransactionsMapper.transactionListMapper(e)).toList();
 //    }
     @Override
-    public List<TransactionResponse> getAllTransactions() {
+    public List<TransactionDTO> getAllTransactions() {
         List<Transaction> transactions = transactionRepo.findAll();
         return TransactionsMapper.transactionListMapper(transactions);
     }
