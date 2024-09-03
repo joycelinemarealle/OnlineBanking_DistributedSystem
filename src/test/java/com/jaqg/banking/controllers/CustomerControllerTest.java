@@ -29,12 +29,12 @@ class CustomerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
     private CustomerService customerService;
 
     @Test
     void retrieveAllCustomers() {
-        final var customerDto1 = new CustomerGetRequest(10L, "Charlie", List.of(235235L));
+        final var
+    @MockBean customerDto1 = new CustomerGetRequest(10L, "Charlie", List.of(235235L));
         final var customerDto2 = new CustomerGetRequest(11L, "Peter", List.of(235233L, 1L));
 
         when(customerService.findAll()).thenReturn(List.of(customerDto1, customerDto2));

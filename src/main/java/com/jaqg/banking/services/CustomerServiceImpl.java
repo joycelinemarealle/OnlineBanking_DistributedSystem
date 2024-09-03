@@ -2,9 +2,11 @@ package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.CustomerGetRequest;
 import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.mapper.CustomerGetRequestMapper;
 import com.jaqg.banking.mapper.CustomerPostRequestMapper;
+import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.CustomerRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,13 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepo customerRepo;
+    private final LocalAccountService localAccountService;
+    private final AccountRepository accountRepository;
 
-    public CustomerServiceImpl(CustomerRepo customerRepo) {
+    public CustomerServiceImpl(CustomerRepo customerRepo, LocalAccountService localAccountService, AccountRepository accountRepository) {
         this.customerRepo = customerRepo;
+        this.localAccountService = localAccountService;
+        this.accountRepository = accountRepository;
     }
 
     // Implementing Get Request DTO
@@ -44,17 +50,26 @@ public class CustomerServiceImpl implements CustomerService {
     // Implementing Delete Request DTO
     @Override
     public BigDecimal customerDeleteRequest(Long id) {
-        Optional<Customer> optionalCustomer =  customerRepo.findById(id);
+        Optional<Customer> optionalCustomer = customerRepo.findById(id);
         if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
             customer.setRemoved(true);
             customer = customerRepo.save(customer);
+            for (Account account : customer.getAccounts()) {
+                BigDecimal balance = account.getBalance();
+                account.setBalance(BigDecimal.ZERO);
+                account.setClosed(true);
+                accountRepository.save(account);
+                return balance;
+            }
             //return funds from all accounts, and summarize all balances
-            return new BigDecimal("50.55");
+//            return new BigDecimal("50.55");
+
         } else {
             return null;
         }
     }
+
 
     @Override
     public Optional<Customer> getCustomer(Long ID){

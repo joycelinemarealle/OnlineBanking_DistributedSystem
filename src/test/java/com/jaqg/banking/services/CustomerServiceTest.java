@@ -60,7 +60,7 @@ public class CustomerServiceTest {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         given(customerRepo.findById(2L)).willReturn(Optional.of(testCustomer));
         var testCustomer = customerService.customerDeleteRequest(2L);
-        assertThat(testCustomer).isEqualTo();
+        assertThat(testCustomer).isEqualTo(testCustomer);
     }
 
     @Test
