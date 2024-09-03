@@ -3,7 +3,7 @@ package com.jaqg.banking.services;
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.mapper.CustomerMapper;
-import com.jaqg.banking.repos.CustomerRepo;
+import com.jaqg.banking.repos.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,9 @@ import java.util.Optional;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerRepo customerRepo;
+    private final CustomerRepository customerRepo;
 
-    public CustomerServiceImpl(CustomerRepo customerRepo) {
+    public CustomerServiceImpl(CustomerRepository customerRepo) {
         this.customerRepo = customerRepo;
     }
 

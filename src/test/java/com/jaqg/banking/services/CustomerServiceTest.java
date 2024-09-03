@@ -3,7 +3,7 @@ package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
-import com.jaqg.banking.repos.CustomerRepo;
+import com.jaqg.banking.repos.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 @Disabled
 public class CustomerServiceTest {
     @Mock
-    CustomerRepo customerRepo;
+    CustomerRepository customerRepo;
 
     Customer testCustomer;
 

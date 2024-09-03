@@ -5,7 +5,7 @@ import com.jaqg.banking.dto.AccountRequestDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.AccountRepository;
-import com.jaqg.banking.repos.CustomerRepo;
+import com.jaqg.banking.repos.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class LocalAccountServiceTest {
     private AccountRepository accountRepository;
 
     @MockBean
-    private CustomerRepo customerRepo;
+    private CustomerRepository customerRepo;
     @Autowired
     private AccountService accountService;
 

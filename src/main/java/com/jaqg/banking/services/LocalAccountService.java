@@ -7,7 +7,7 @@ import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.exceptions.AccountNotFoundException;
 import com.jaqg.banking.mapper.AccountMapper;
 import com.jaqg.banking.repos.AccountRepository;
-import com.jaqg.banking.repos.CustomerRepo;
+import com.jaqg.banking.repos.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +24,14 @@ import static com.jaqg.banking.mapper.AccountMapper.accountMapper;
 @Transactional
 public class LocalAccountService implements AccountService {
     private final AccountRepository accountRepository;
-    private final CustomerRepo customerRepo;
+    private final CustomerRepository customerRepo;
     private final Logger logger = LoggerFactory.getLogger(LocalAccountService.class);
 
     @Value("${sortcode}")
     private Integer sortcode;
 
     //inject repo
-    public LocalAccountService(AccountRepository accountRepository, CustomerRepo customerRepo) {
+    public LocalAccountService(AccountRepository accountRepository, CustomerRepository customerRepo) {
         this.accountRepository = accountRepository;
         this.customerRepo = customerRepo;
 
