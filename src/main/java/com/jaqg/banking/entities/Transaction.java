@@ -32,13 +32,13 @@ public class Transaction implements Serializable {
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id")
+    @JoinColumn(name = "recipient_id", updatable = false)
     private Account recipient; // to account
 
     private Long recipientSourceCode;
 
     @ManyToOne
-    @JoinColumn(name = "sender_id")
+    @JoinColumn(name = "sender_id", updatable = false)
     private Account sender;
 
     private Long senderSourceCode;

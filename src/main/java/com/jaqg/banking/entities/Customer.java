@@ -28,7 +28,7 @@ public class Customer implements Serializable {
     @NotNull
     private boolean isRemoved = false;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final List<Account> accounts = new ArrayList<>();
 
     public Customer(String fullName) {

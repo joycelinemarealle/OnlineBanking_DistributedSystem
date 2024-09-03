@@ -3,6 +3,7 @@ package com.jaqg.banking.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import com.jaqg.banking.Constants;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,9 +13,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+
 @Entity
 @SequenceGenerator(
-        name = "account-number-gen",
+        name = Constants.ACCOUNT_NUMBER_GENERATOR,
         sequenceName = "account_number_seq",
         initialValue = 100000, allocationSize = 1)
 public class Account implements Serializable {
@@ -23,7 +25,7 @@ public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "account-number-gen")
+    @GeneratedValue(generator = Constants.ACCOUNT_NUMBER_GENERATOR)
     private long number;
 
     @Column(length = 50, nullable = false)
@@ -51,9 +53,11 @@ public class Account implements Serializable {
     private Integer sortCode;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy(value =  "dateTime desc")
     private final List<Transaction> depositTransactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy(value =  "dateTime desc")
     private final List<Transaction> creditTransactions = new ArrayList<>();
 
     public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, Integer sortCode) {
