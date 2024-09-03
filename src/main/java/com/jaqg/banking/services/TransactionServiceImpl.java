@@ -10,23 +10,32 @@ import com.jaqg.banking.mapper.TransactionsMapper;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.TransactionRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
-
+    @Value("${sortcode}")
+    private Long sortcode;
     private final TransactionRepository transactionRepo;
 
     private final AccountRepository accountRepository;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepo, AccountRepository accountRepository) {
+    private final RestTemplate restTemplate;
+
+
+    public TransactionServiceImpl(TransactionRepository transactionRepo, AccountRepository accountRepository, RestTemplateBuilder restTemplateBuilder) {
         this.transactionRepo = transactionRepo;
         this.accountRepository = accountRepository;
+        this.restTemplate = restTemplateBuilder.build();
     }
 
     @Override
@@ -48,7 +57,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public TransactionResponse executeTransfer(TransactionRequest request) {
-        deposit(request);
+
+        Long recipient_sortcode = request.toAccountSortCode();
+        Long sender_sortcode = request.fromAccountSortCode();
+
+        if (Objects.equals(recipient_sortcode, sortcode)){
+            //logic of local transfer
+            deposit(request);
+
+        } else{
+            //logic of remote transfer
+            String url = "http://localhost:" + recipient_sortcode + "/transaction";
+           TransactionResponse response =  restTemplate.postForObject(url, request, TransactionResponse.class);
+        }
         return withdraw(request);
 
 //        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
