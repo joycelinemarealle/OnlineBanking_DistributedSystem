@@ -16,7 +16,7 @@ const BankDashBoard = () => {
         try {
           const response = await axios.get(`http://localhost:8080/customer/${user.id}`);
           console.log("User Found:", response.data);
-
+          
           const parsedFullName = JSON.parse(response.data.fullName).fullName;
           const userData = { ...response.data, fullName: parsedFullName };
 
@@ -56,6 +56,8 @@ const BankDashBoard = () => {
       try {
         await axios.delete(`http://localhost:8080/account/${accountNumber}`);
         handleAccountCreated(); // Fetch accounts after deletion
+        alert("Account deleted")
+        location.reload();
       } catch (error) {
         console.error('Error deleting account:', error);
       }
@@ -76,7 +78,7 @@ const BankDashBoard = () => {
             Logout
           </button>
           <h1 className="text-3xl font-semibold mb-6 text-gray-800">
-            Welcome Back, {userData?.fullName || 'User'}
+            Welcome, {userData?.fullName || 'User'}
           </h1>
         </div>
         

@@ -1,4 +1,3 @@
-// CreateAccountModal.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -23,6 +22,8 @@ const CreateAccountModal = ({ isOpen, onClose, customerId, onAccountCreated }) =
       console.log('Account Created:', response.data);
       onAccountCreated(); // Notify parent component
       onClose();
+      alert("Account created!")
+      location.reload();
     } catch (error) {
       console.error('Error creating account:', error);
     }

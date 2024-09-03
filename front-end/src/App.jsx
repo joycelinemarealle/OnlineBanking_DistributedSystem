@@ -17,7 +17,7 @@ function App() {
         <BrowserRouter>
           <header className="bg-blue-800 text-white py-4 shadow-md">
             <div className="max-w-7xl mx-auto px-4">
-              <h1 className="text-3xl font-bold">The JAGQ Banking Application</h1>
+              <h1 className="text-3xl font-bold">The JAQG Banking Application</h1>
             </div>
           </header>
           <main className="flex-grow p-4">
@@ -32,7 +32,7 @@ function App() {
           </main>
           <footer className="bg-gray-800 text-white py-4">
             <div className="max-w-7xl mx-auto px-4 text-center">
-              <p>&copy; 2024 The JAGQ Banking Application. All rights reserved.</p>
+              <p>&copy; 2024 The JAQG Banking Application. All rights reserved.</p>
             </div>
           </footer>
         </BrowserRouter>

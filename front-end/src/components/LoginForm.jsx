@@ -21,12 +21,14 @@ const LoginForm = () => {
         `http://localhost:8080/customer/${formData.customerID}`,
         formData
       );
+
       console.log("Login Successful:", response.data);
       setUser(response.data);
       setFormData({ customerID: "" });
       navigate("/dashboard");
     } catch (error) {
       console.error("Something went wrong:", error);
+      
     }
   };
 

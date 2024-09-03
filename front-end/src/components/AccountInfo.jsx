@@ -3,13 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import Options from "@mui/icons-material/ArrowDownwardSharp";
 import TransactionForm from './TransactionForm';
+import axios from "axios";
 
 const AccountInfo = ({ accounts, onDeleteAccount }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
-  const [accountsState, setAccountsState] = useState(accounts);
+  const [accountsState, setAccountsState] = useState(accounts || []);
   const navigate = useNavigate(); 
+
+  const fetchUpdateAccountData = async() => {
+    try {
+      const response = await axios.get('http://localhost:8080/account'); 
+      setAccountsState(response.data);
+      console.log(response.data.amount);
+    } catch (error) {
+      console.error('Error fetching updated account data:', error);
+    }
+  }
 
   const handleViewTransactions = (accountNumber) => {
     navigate(`/transactions/${accountNumber}`);
@@ -28,6 +39,10 @@ const AccountInfo = ({ accounts, onDeleteAccount }) => {
     setIsModalOpen(false);
     setSelectedAccount(null);
   };
+
+  const handleCompletedTransaction = () => {
+      fetchUpdateAccountData();
+  }
 
   const updateAccountBalance = (transaction) => {
     setAccountsState(prevAccounts => 
@@ -52,9 +67,12 @@ const AccountInfo = ({ accounts, onDeleteAccount }) => {
   return (
     <div className="max-w-4xl mx-auto mt-10">
       {accountsState.length > 0 ? (
-        <ul className="space-y-4">
+        <ul key={accountsState} className="space-y-4">
           {accountsState.map((account) => (
-            <li key={account.number} className="flex justify-between relative border-b border-gray-200 p-4 m-4 w-full bg-white shadow-lg rounded-lg">
+            <li 
+              key={account.number}
+              className="flex justify-between relative border-b border-gray-200 p-4 m-4 w-full bg-white shadow-lg rounded-lg"
+            >
               <div>
                 <p className="text-xl font-semibold text-gray-700">
                   Account Name: <span className="font-normal">{account.name}</span>
@@ -108,7 +126,8 @@ const AccountInfo = ({ accounts, onDeleteAccount }) => {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           accountNumber={selectedAccount}
-          onTransaction={updateAccountBalance} // Pass the callback function here
+          onTransaction={updateAccountBalance}
+          onTransactionCompleted={handleCompletedTransaction}
         />
       )}
     </div>

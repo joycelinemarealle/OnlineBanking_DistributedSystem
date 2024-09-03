@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const TransactionForm = ({ isOpen, onClose, accountNumber }) => {
+const TransactionForm = ({ isOpen, onClose, accountNumber, onTransactionCompleted }) => {
   const [transactionType, setTransactionType] = useState('DEPOSIT');
   const [toAccount, setToAccount] = useState('');
   const [toAccountSortCode, setToAccountSortCode] = useState('');
@@ -21,27 +21,15 @@ const TransactionForm = ({ isOpen, onClose, accountNumber }) => {
         await axios.post('http://localhost:8080/transaction', requestObject);
         alert('Transaction successful!');
 
-        // Update LocalStorage
-        const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        const updatedAccounts = accounts.map((acc) => {
-            if (acc.number === accountNumber) {
-                acc.balance = transactionType === 'WITHDRAWAL' 
-                    ? acc.balance - parseFloat(amount) 
-                    : acc.balance + parseFloat(amount);
-            }
-            return acc;
-        });
-
-        localStorage.setItem('accounts', JSON.stringify(updatedAccounts));
+        // Notify parent component
+        onTransactionCompleted();
 
         onClose();
     } catch (error) {
         console.error('Error processing transaction:', error);
-        alert(error.response.data);
         alert('Failed to process transaction.');
     }
 };
-
 
   return isOpen ? (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
