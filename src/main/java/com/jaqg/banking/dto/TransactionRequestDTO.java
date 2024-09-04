@@ -1,13 +1,11 @@
 package com.jaqg.banking.dto;
 
-import com.jaqg.banking.enums.OperationType;
+import com.jaqg.banking.enums.TransactionType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-public record TransactionResponse(
-        LocalDateTime time,
-        OperationType type,
+public record TransactionRequestDTO(
+        TransactionType type,
         Long fromAccount,
         Integer fromAccountSortCode,
         Long toAccount,

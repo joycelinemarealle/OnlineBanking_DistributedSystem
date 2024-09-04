@@ -21,5 +21,5 @@ public class BankController {
     public Integer getSortCode() {
         return sortCode;
     }
-}
 
+}

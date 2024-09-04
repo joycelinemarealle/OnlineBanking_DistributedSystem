@@ -12,10 +12,10 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class CustomerRepoTest {
+class CustomerRepositoryTest {
 
     @Autowired
-    private CustomerRepo customerRepo;
+    private CustomerRepository customerRepo;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -36,6 +36,22 @@ class CustomerRepoTest {
     }
 
     @Test
+    void testFindAllCustomersAndIsRemovedFalse() {
+        Customer customer1 = new Customer();
+        customer1.setFullName("Peter Smith");
+        customer1.setRemoved(true);
+
+        Customer customer2 = new Customer();
+        customer2.setFullName("Josh Smith");
+
+        entityManager.persist(customer1);
+        entityManager.persist(customer2);
+
+        List<Customer> customers = customerRepo.findByIsRemovedFalse();
+        assertThat(customers).hasSize(1).contains(customer2);
+    }
+
+    @Test
     void testFindCustomerById() {
         Customer customer1 = new Customer();
         customer1.setFullName("Peter Smith");
@@ -51,6 +67,30 @@ class CustomerRepoTest {
         Customer customer = optionalCustomer.get();
         assertThat(customer.getId()).isEqualTo(storedCustomer.getId());
         assertThat(customer.getFullName()).isEqualTo(storedCustomer.getFullName());
+        assertThat(customer.isRemoved()).isEqualTo(false);
+        assertThat(customer.getAccounts()).isEmpty();
+    }
+
+    @Test
+    void testFindCustomerByIdAndIsRemovedFalse() {
+        Customer customer1 = new Customer();
+        customer1.setFullName("Peter Smith");
+        customer1.setRemoved(true);
+
+        Customer customer2 = new Customer();
+        customer2.setFullName("Josh Smith");
+
+        Customer storedCustomer1 = entityManager.persist(customer1);
+        Customer storedCustomer2 = entityManager.persist(customer2);
+
+        Optional<Customer> optionalCustomer1 = customerRepo.findByIdAndIsRemovedFalse(storedCustomer1.getId());
+        assertThat(optionalCustomer1).isNotPresent();
+
+        Optional<Customer> optionalCustomer2 = customerRepo.findByIdAndIsRemovedFalse(storedCustomer2.getId());
+        assertThat(optionalCustomer2).isPresent();
+        Customer customer = optionalCustomer2.get();
+        assertThat(customer.getId()).isEqualTo(storedCustomer2.getId());
+        assertThat(customer.getFullName()).isEqualTo(storedCustomer2.getFullName());
         assertThat(customer.isRemoved()).isEqualTo(false);
         assertThat(customer.getAccounts()).isEmpty();
     }

@@ -1,10 +1,9 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.dto.AccountResponseDTO;
-import com.jaqg.banking.dto.CreateAccountRequestDTO;
+import com.jaqg.banking.dto.AccountDTO;
+import com.jaqg.banking.dto.AccountRequestDTO;
 import com.jaqg.banking.services.AccountService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -14,6 +13,7 @@ import java.util.List;
 @RequestMapping("/account")
 @CrossOrigin
 public class AccountController {
+
     private final AccountService accountService;
 
     //constructor injection
@@ -22,27 +22,24 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
-        List<AccountResponseDTO> accountResponseDTOList = accountService.retrieveAllAccounts();
-        return new ResponseEntity<>(accountResponseDTOList, HttpStatus.OK);
+    public List<AccountDTO> getAllAccounts() {
+        return accountService.retrieveAllAccounts();
     }
 
     @GetMapping("/{number}")
-    public ResponseEntity<AccountResponseDTO> findAccountByNumber(@PathVariable Long number) {
-        AccountResponseDTO accountResponseDTO = accountService.findAccountByNumber(number);
-        return new ResponseEntity<>(accountResponseDTO, HttpStatus.OK);
+    public AccountDTO findAccountByNumber(@PathVariable Long number) {
+        return accountService.findAccountByNumber(number);
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody CreateAccountRequestDTO createAccountDTO) {
-        AccountResponseDTO accountResponseDTO = accountService.createAccount(createAccountDTO);
-        return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountDTO createAccount(@RequestBody AccountRequestDTO createAccountDTO) {
+        return accountService.createAccount(createAccountDTO);
     }
 
     @DeleteMapping("/{number}")
-    public ResponseEntity<BigDecimal> closeAccount(@PathVariable long number) {
-        BigDecimal balance = accountService.closeAccount(number);
-        return new ResponseEntity<>(balance, HttpStatus.OK);
+    public BigDecimal closeAccount(@PathVariable Long number) {
+        return accountService.closeAccount(number);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.jaqg.banking.enums;
 
-public enum OperationType {
+public enum TransactionType {
     TRANSFER,
     WITHDRAWAL,
     DEPOSIT

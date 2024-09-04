@@ -1,6 +1,6 @@
 package com.jaqg.banking.mapper;
 
-import com.jaqg.banking.dto.TransactionResponse;
+import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.entities.Transaction;
 
 import java.util.List;
@@ -8,22 +8,21 @@ import java.util.List;
 public class TransactionsMapper {
 
     //Convert List of Transaction Entity to List of TransactionResponseDTO
-    public static List<TransactionResponse> transactionListMapper(List<Transaction> transactions) {
+    public static List<TransactionDTO> mapToDTO(List<Transaction> transactions) {
         return transactions.stream()
-                .map(TransactionsMapper::transactionMapper
-                )
+                .map(TransactionsMapper::mapToDTO)
                 .toList(); //collect to a list
     }
 
-    public static TransactionResponse transactionMapper(Transaction transaction) {
-        return new com.jaqg.banking.dto.TransactionResponse(
+    public static TransactionDTO mapToDTO(Transaction transaction) {
+        return new TransactionDTO(
                 transaction.getDateTime(),
-                transaction.getTransType(),
-                transaction.getSender() == null ? null : transaction.getSender().getNumber(),
-                transaction.getSender() == null ? null : transaction.getSender().getSortCode(),
-                transaction.getRecipient().getNumber(),
-                transaction.getRecipient().getSortCode(),
-                transaction.getTransVal());
+                transaction.getType(),
+                transaction.getFromAccountNumber(),
+                transaction.getFromAccountSourceCode(),
+                transaction.getToAccountNumber(),
+                transaction.getToAccountSourceCode(),
+                transaction.getValue());
 
     }
 }

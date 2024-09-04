@@ -3,7 +3,7 @@ package com.jaqg.banking.repos;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.entities.Transaction;
-import com.jaqg.banking.enums.OperationType;
+import com.jaqg.banking.enums.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -32,19 +32,19 @@ class TransactionRepositoryTest {
 
 
     @ParameterizedTest
-    @EnumSource(OperationType.class)
-    void testOperationType(OperationType type) {
+    @EnumSource(TransactionType.class)
+    void testOperationType(TransactionType type) {
         Transaction expectedTransaction = new Transaction();
         expectedTransaction.setDateTime(LocalDateTime.now());
-        expectedTransaction.setTransType(type);
-        expectedTransaction.setTransVal(BigDecimal.TEN);
+        expectedTransaction.setType(type);
+        expectedTransaction.setValue(BigDecimal.TEN);
 
         final long id = entityManager.persist(expectedTransaction).getId();
 
         Optional<Transaction> transactionOptional = transactionRepository.findById(id);
         assertThat(transactionOptional).isPresent();
         Transaction transaction = transactionOptional.get();
-        assertEquals(type, transaction.getTransType());
+        assertEquals(type, transaction.getType());
     }
 
     @Test
@@ -63,15 +63,15 @@ class TransactionRepositoryTest {
         account = entityManager.persist(account);
 
         Transaction transaction1 = new Transaction();
-        transaction1.setRecipient(account);
-        transaction1.setTransType(OperationType.DEPOSIT);
-        transaction1.setTransVal(BigDecimal.TEN);
+        transaction1.setSender(account);
+        transaction1.setType(TransactionType.DEPOSIT);
+        transaction1.setValue(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         Transaction transaction2 = new Transaction();
         transaction2.setRecipient(account);
-        transaction2.setTransType(OperationType.WITHDRAWAL);
-        transaction2.setTransVal(BigDecimal.ONE);
+        transaction2.setType(TransactionType.WITHDRAWAL);
+        transaction2.setValue(BigDecimal.ONE);
         transaction2.setDateTime(LocalDateTime.now());
 
         entityManager.persist(transaction1);
@@ -85,14 +85,14 @@ class TransactionRepositoryTest {
     void testFindTransactionById() {
         Transaction transaction1 = new Transaction();
         transaction1.setRecipient(new Account());
-        transaction1.setTransType(OperationType.DEPOSIT);
-        transaction1.setTransVal(BigDecimal.TEN);
+        transaction1.setType(TransactionType.DEPOSIT);
+        transaction1.setValue(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         Transaction transaction2 = new Transaction();
-        transaction2.setRecipient(new Account());
-        transaction2.setTransType(OperationType.WITHDRAWAL);
-        transaction2.setTransVal(BigDecimal.ONE);
+        transaction2.setSender(new Account());
+        transaction2.setType(TransactionType.WITHDRAWAL);
+        transaction2.setValue(BigDecimal.ONE);
         transaction2.setDateTime(LocalDateTime.now());
 
         entityManager.persist(transaction1);
@@ -103,29 +103,29 @@ class TransactionRepositoryTest {
         Transaction transaction = optionalTransaction.get();
         assertThat(transaction.getId()).isEqualTo(storedTransaction.getId());
         assertThat(transaction.getDateTime()).isEqualTo(storedTransaction.getDateTime());
-        assertThat(transaction.getTransVal()).isEqualTo(storedTransaction.getTransVal());
-        assertThat(transaction.getTransType()).isEqualTo(storedTransaction.getTransType());
+        assertThat(transaction.getValue()).isEqualTo(storedTransaction.getValue());
+        assertThat(transaction.getType()).isEqualTo(storedTransaction.getType());
     }
 
     @Test
     void testSaveTransaction() {
-        final OperationType expectedType = OperationType.TRANSFER;
+        final TransactionType expectedType = TransactionType.TRANSFER;
         final BigDecimal expectedValue = BigDecimal.ONE;
 
         Transaction transaction = new Transaction();
         transaction.setRecipient(new Account());
-        transaction.setTransType(OperationType.DEPOSIT);
-        transaction.setTransVal(BigDecimal.TEN);
+        transaction.setType(TransactionType.DEPOSIT);
+        transaction.setValue(BigDecimal.TEN);
         transaction.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         final Transaction storedTransaction = entityManager.persist(transaction);
 
-        transaction.setTransType(expectedType);
-        transaction.setTransVal(expectedValue);
+        transaction.setType(expectedType);
+        transaction.setValue(expectedValue);
         transaction = transactionRepository.save(transaction);
 
         assertThat(transaction.getId()).isEqualTo(storedTransaction.getId());
-        assertThat(transaction.getTransType()).isEqualTo(expectedType);
-        assertThat(transaction.getTransVal()).isEqualTo(expectedValue);
+        assertThat(transaction.getType()).isEqualTo(expectedType);
+        assertThat(transaction.getValue()).isEqualTo(expectedValue);
     }
 }

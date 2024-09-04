@@ -1,11 +1,11 @@
 package com.jaqg.banking.services;
 
-import com.jaqg.banking.dto.AccountResponseDTO;
-import com.jaqg.banking.dto.CreateAccountRequestDTO;
+import com.jaqg.banking.dto.AccountDTO;
+import com.jaqg.banking.dto.AccountRequestDTO;
 import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.AccountRepository;
-import com.jaqg.banking.repos.CustomerRepo;
+import com.jaqg.banking.repos.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class LocalAccountServiceTest {
+public class AccountServiceImplTest {
     @MockBean
     private AccountRepository accountRepository;
 
     @MockBean
-    private CustomerRepo customerRepo;
+    private CustomerRepository customerRepo;
     @Autowired
     private AccountService accountService;
 
@@ -36,9 +36,9 @@ public class LocalAccountServiceTest {
     private Account account2;
     private List<Account> accounts;
     private Customer customer;
-    private AccountResponseDTO accountResponse1;
-    private AccountResponseDTO accountResponse2;
-    private CreateAccountRequestDTO accountRequest1;
+    private AccountDTO accountResponse1;
+    private AccountDTO accountResponse2;
+    private AccountRequestDTO accountRequest1;
 
     @BeforeEach
     void setUp() {
@@ -47,28 +47,26 @@ public class LocalAccountServiceTest {
 //        customerRepo = mock (CustomerRepo.class);
         //create customer
         customer = new Customer("Joyceline Marealle");
-        customer.setId(1L);
+//        customer.setId(1L);
 
 
         //Create accounts
         accounts = new ArrayList<>();
-        account1 = new Account(1234L, "Savings", new BigDecimal(100),
-                new BigDecimal(100), customer, 1111);
-        account2 = new Account(5678L, "Checkings", new BigDecimal(200),
-                new BigDecimal(200), customer, 2222);
+        account1 = new Account("Savings", new BigDecimal("100"), customer, 1111);
+        account2 = new Account("Checkings", new BigDecimal("200"), customer, 2222);
 
         //Create accountDTOs that match the account above
-        accountResponse1 = new AccountResponseDTO(1234L, 1111,
+        accountResponse1 = new AccountDTO(1234L, 1111,
                 "Savings", new BigDecimal(100),
                 new ArrayList<>(), new BigDecimal(100),
                 1L);
-        accountResponse2 = new AccountResponseDTO(5678L, 2222,
+        accountResponse2 = new AccountDTO(5678L, 2222,
                 "Checkings", new BigDecimal(200),
                 new ArrayList<>(), new BigDecimal(200),
                 1L);
 
         //Create accountRequest DTO
-        accountRequest1 = new CreateAccountRequestDTO(1L, "Savings", new BigDecimal(200));
+        accountRequest1 = new AccountRequestDTO(1L, "Savings", new BigDecimal(200));
 
         //add to list
         accounts.add(account1);
@@ -82,18 +80,18 @@ public class LocalAccountServiceTest {
         when(accountRepository.findAll()).thenReturn(accounts);
 
         //Execute service method
-        List<AccountResponseDTO> accountResponseDTOList = accountService.retrieveAllAccounts();
+        List<AccountDTO> accountDTOList = accountService.retrieveAllAccounts();
 
         //Assertions
-        assertThat(accountResponseDTOList).hasSize(2);
-        assertThat(accountResponseDTOList).containsExactly(accountResponse1, accountResponse2);
+        assertThat(accountDTOList).hasSize(2);
+        assertThat(accountDTOList).containsExactly(accountResponse1, accountResponse2);
 
         //Test for each attribute of account
-        assertEquals(accountResponse1.number(), accountResponseDTOList.get(0).number());
-        assertEquals(accountResponse1.name(), accountResponseDTOList.get(0).name());
-        assertEquals(accountResponse1.openingBalance(), accountResponseDTOList.get(0).openingBalance());
-        assertEquals(accountResponse1.balance(), accountResponseDTOList.get(0).balance());
-        assertEquals(accountResponse1.sortCode(), accountResponseDTOList.get(0).sortCode());
+        assertEquals(accountResponse1.number(), accountDTOList.get(0).number());
+        assertEquals(accountResponse1.name(), accountDTOList.get(0).name());
+        assertEquals(accountResponse1.openingBalance(), accountDTOList.get(0).openingBalance());
+        assertEquals(accountResponse1.balance(), accountDTOList.get(0).balance());
+        assertEquals(accountResponse1.sortCode(), accountDTOList.get(0).sortCode());
 
         //Verify mock if method called
         verify(accountRepository).findAll();
@@ -108,7 +106,7 @@ public class LocalAccountServiceTest {
         when(accountRepository.findById(accountNumber)).thenReturn(optionalAccount);
 
         //Execute service method
-        AccountResponseDTO account = accountService.findAccountByNumber(accountNumber);
+        AccountDTO account = accountService.findAccountByNumber(accountNumber);
 
         //Asserts results
         assertThat(account1.getNumber()).isEqualTo(account.number());
@@ -158,7 +156,7 @@ public class LocalAccountServiceTest {
         when(customerRepo.findById(customerId)).thenReturn(optionalCustomer);
 
         //assert
-        AccountResponseDTO accountResponse = accountService.createAccount(accountRequest1);
+        AccountDTO accountResponse = accountService.createAccount(accountRequest1);
 
         assertThat(accountResponse.name()).isEqualTo(accountRequest1.accountName());
         assertThat(accountResponse.openingBalance()).isEqualTo(accountRequest1.openingBalance());
