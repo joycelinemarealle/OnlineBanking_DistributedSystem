@@ -3,6 +3,7 @@ package com.jaqg.banking.entities;
 import com.jaqg.banking.Constants;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,7 +21,7 @@ public class AccountPK implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @GeneratedValue(generator = Constants.ACCOUNT_NUMBER_GENERATOR)
+    @GeneratedValue(generator = Constants.ACCOUNT_NUMBER_GENERATOR, strategy = GenerationType.AUTO)
     protected long number;
 
     @NotNull

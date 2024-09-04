@@ -73,7 +73,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public BigDecimal closeAccount(long number) throws AccountNotFoundException {
-        Account account = accountRepository.findByIdNumberAndIsClosedFalse(number)
+        Account account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(number, sortCode)
                 .orElseThrow(() -> new AccountNotFoundException(number));
         BigDecimal balance = account.getBalance();
         account.setBalance(BigDecimal.ZERO);
@@ -84,7 +84,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO findAccountByNumber(long number) throws AccountNotFoundException {
-        Account account = accountRepository.findByIdNumberAndIsClosedFalse(number)
+        Account account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(number, sortCode)
                 .orElseThrow(() -> new AccountNotFoundException(number));
         return accountMapper(account);
     }

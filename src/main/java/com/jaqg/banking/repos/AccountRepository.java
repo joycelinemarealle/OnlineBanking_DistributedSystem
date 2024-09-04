@@ -12,6 +12,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     List<Account> findByIsClosedFalse();
 
-    Optional<Account> findByIdNumberAndIsClosedFalse(long id);
+    Optional<Account> findByIdNumberAndIdSortCodeAndIsClosedFalse(long id, int sortCode);
 
 }

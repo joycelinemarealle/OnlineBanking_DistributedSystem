@@ -57,6 +57,14 @@ public class Account implements Serializable {
         this.id = new AccountPK(sortCode);
     }
 
+    public Account(Long id, String name, BigDecimal openingBalance, Customer customer, Integer sortCode) {
+        this.name = name;
+        this.openingBalance = openingBalance;
+        this.balance = openingBalance;
+        this.customer = customer;
+        this.id = new AccountPK(id, sortCode);
+    }
+
     public Account() {
         this.id = new AccountPK();
     }
