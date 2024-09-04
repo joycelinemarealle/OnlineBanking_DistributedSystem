@@ -2,6 +2,7 @@ package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.exceptions.CustomerNotFoundException;
 import com.jaqg.banking.mapper.CustomerMapper;
 import com.jaqg.banking.repos.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -25,43 +26,31 @@ public class CustomerServiceImpl implements CustomerService {
     // Implementing Get Request DTO
 
     @Override
-    public CustomerDTO customerGetRequest(Long ID) {
-        Optional<Customer> customer = customerRepo.findById(ID);
-        return CustomerMapper.toDTO(customer.orElse(null));
+    public CustomerDTO customerGetRequest(Long id) {
+        Customer customer = customerRepo.findByIdAndIsRemovedFalse(id).orElseThrow(() -> new CustomerNotFoundException(id));
+        return CustomerMapper.toDTO(customer);
     }
     // Implementing Post Request DTO
 
     @Override
     public CustomerDTO customerPostRequest(String fullName) {
-        Customer customer = new Customer(fullName);
-//        Customer customer = CustomerMapper.toCustomer(customer);
-        Customer savedCustomer = customerRepo.save(customer);
-        return CustomerMapper.toDTO(savedCustomer);
+        Customer customer = customerRepo.save(new Customer(fullName));
+        return CustomerMapper.toDTO(customer);
     }
 
     // Implementing Delete Request DTO
     @Override
     public BigDecimal customerDeleteRequest(Long id) {
-        Optional<Customer> optionalCustomer = customerRepo.findById(id);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            customer.setRemoved(true);
-            customer = customerRepo.save(customer);
-            return new BigDecimal("50.55");
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public Optional<Customer> getCustomer(Long ID) {
-
-        return customerRepo.findById(ID);
+        Customer customer = customerRepo.findByIdAndIsRemovedFalse(id).orElseThrow(() -> new CustomerNotFoundException(id));
+        customer.setRemoved(true);
+        customerRepo.save(customer);
+        // TODO: asdgs
+        return new BigDecimal("50.55");
     }
 
     @Override
     public List<CustomerDTO> findAll() {
-        return customerRepo.findAll().stream().map(CustomerMapper::toDTO).toList();
+        return customerRepo.findByIsRemovedFalse().stream().map(CustomerMapper::toDTO).toList();
     }
 }
 

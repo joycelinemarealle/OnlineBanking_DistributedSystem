@@ -51,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
         deposit(request);
         return withdraw(request);
 
-//        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
+//        Optional<Account> optionalAccount = accountRepository.findByIdAndIsRemovedFalse(request.toAccount());
 //        if (optionalAccount.isPresent()){
 //            Account account = optionalAccount.get();
 //            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);
@@ -65,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public TransactionDTO deposit(TransactionRequestDTO request) {
-        final Account account = accountRepository.findById(request.toAccount())
+        final Account account = accountRepository.findByIdAndIsRemovedFalse(request.toAccount())
                 .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
 
         BigDecimal newBalance = account.getBalance().add(request.amount());
@@ -76,7 +76,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionsMapper.transactionMapper(transaction);
 
-//        Optional<Account> optionalAccount = accountRepository.findById(request.toAccount());
+//        Optional<Account> optionalAccount = accountRepository.findByIdAndIsRemovedFalse(request.toAccount());
 //        if (optionalAccount.isPresent()){
 //            Account account = optionalAccount.get();
 //            Transaction transaction = new Transaction(LocalDateTime.now(), request.amount(), request.type(), account, null);

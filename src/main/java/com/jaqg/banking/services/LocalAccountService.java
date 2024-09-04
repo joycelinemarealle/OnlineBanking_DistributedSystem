@@ -60,7 +60,7 @@ public class LocalAccountService implements AccountService {
         Account account = new Account();
 
         //find customer by id then create Account
-        Optional<Customer> optionalCustomer = customerRepo.findById(accountRequestDTO.customerId());
+        Optional<Customer> optionalCustomer = customerRepo.findByIdAndIsRemovedFalse(accountRequestDTO.customerId());
 
         if (optionalCustomer.isPresent()) {
             account.setCustomer(optionalCustomer.get()); //unwrap optional
@@ -81,7 +81,7 @@ public class LocalAccountService implements AccountService {
 
     @Override
     public BigDecimal closeAccount(long number) throws AccountNotFoundException {
-        Optional<Account> optionalAccount = accountRepository.findById(number);
+        Optional<Account> optionalAccount = accountRepository.findByIdAndIsRemovedFalse(number);
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get(); //unwrap
             BigDecimal balance = account.getBalance();
@@ -96,7 +96,7 @@ public class LocalAccountService implements AccountService {
 
     @Override
     public AccountDTO findAccountByNumber(long number) throws AccountNotFoundException {
-        Optional<Account> optionalAccount = accountRepository.findById(number);
+        Optional<Account> optionalAccount = accountRepository.findByIdAndIsRemovedFalse(number);
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             return accountMapper(account);

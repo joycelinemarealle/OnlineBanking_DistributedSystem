@@ -26,9 +26,8 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDTO> getCustomerByID(@PathVariable Long id) {
-        CustomerDTO customerDTO = customerService.customerGetRequest(id);
-        return new ResponseEntity<>(customerDTO, HttpStatus.OK);
+    public CustomerDTO getCustomerByID(@PathVariable Long id) {
+        return customerService.customerGetRequest(id);
     }
 
     @PostMapping

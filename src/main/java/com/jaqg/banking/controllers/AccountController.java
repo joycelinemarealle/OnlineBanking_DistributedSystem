@@ -22,9 +22,8 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        List<AccountDTO> accountDTOList = accountService.retrieveAllAccounts();
-        return new ResponseEntity<>(accountDTOList, HttpStatus.OK);
+    public List<AccountDTO> getAllAccounts() {
+        return accountService.retrieveAllAccounts();
     }
 
     @GetMapping("/{number}")
