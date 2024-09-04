@@ -14,4 +14,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Customer> findByIdAndIsRemovedFalse(long id);
 
+    boolean existsByIdAndIsRemovedFalse(Long aLong);
 }

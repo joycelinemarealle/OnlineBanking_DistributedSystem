@@ -8,21 +8,21 @@ import java.util.List;
 public class TransactionsMapper {
 
     //Convert List of Transaction Entity to List of TransactionResponseDTO
-    public static List<TransactionDTO> transactionListMapper(List<Transaction> transactions) {
+    public static List<TransactionDTO> mapToDTO(List<Transaction> transactions) {
         return transactions.stream()
-                .map(TransactionsMapper::transactionMapper)
+                .map(TransactionsMapper::mapToDTO)
                 .toList(); //collect to a list
     }
 
-    public static TransactionDTO transactionMapper(Transaction transaction) {
+    public static TransactionDTO mapToDTO(Transaction transaction) {
         return new TransactionDTO(
                 transaction.getDateTime(),
-                transaction.getTransType(),
+                transaction.getType(),
                 transaction.getFromAccountNumber(),
                 transaction.getFromAccountSourceCode(),
                 transaction.getToAccountNumber(),
                 transaction.getToAccountSourceCode(),
-                transaction.getTransVal());
+                transaction.getValue());
 
     }
 }

@@ -4,6 +4,7 @@ package com.jaqg.banking.services;
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.CustomerRepository;
+import com.jaqg.banking.services.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -35,16 +36,6 @@ public class CustomerServiceTest {
         testCustomer = new Customer("Dan Jones");
 //        testCustomer.setId(2);
 
-    }
-
-    @Test
-    public void getCustomerByIdTest() {
-        CustomerService customerService = new CustomerServiceImpl(customerRepo);
-        given(customerRepo.findById(2L)).willReturn(Optional.of(testCustomer));
-        Optional<Customer> testCustomer = customerService.getCustomer(2L);
-        assertThat(testCustomer).isPresent();
-        Customer customer = testCustomer.get();
-        assertThat(customer.getId()).isEqualTo(2L);
     }
 
     @Test

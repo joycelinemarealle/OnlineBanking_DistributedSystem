@@ -3,7 +3,6 @@ package com.jaqg.banking.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import com.jaqg.banking.Constants;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,29 +14,24 @@ import java.util.stream.Stream;
 
 
 @Entity
-@SequenceGenerator(
-        name = Constants.ACCOUNT_NUMBER_GENERATOR,
-        sequenceName = "account_number_seq",
-        initialValue = 100000, allocationSize = 1)
 public class Account implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(generator = Constants.ACCOUNT_NUMBER_GENERATOR)
-    private long number;
+    @EmbeddedId
+    private AccountPK id;
 
     @Column(length = 50, nullable = false)
     @NotBlank(message = "Name is mandatory")
     @NotNull
     private String name;
 
-    @Column(precision=16, scale=2, nullable = false)
+    @Column(precision = 16, scale = 2, nullable = false)
     @NotNull
     private BigDecimal openingBalance;
 
-    @Column(precision=16, scale=2, nullable = false)
+    @Column(precision = 16, scale = 2, nullable = false)
     @NotNull
     private BigDecimal balance;
 
@@ -45,36 +39,30 @@ public class Account implements Serializable {
     private boolean isClosed = false;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    @NotNull
     private Customer customer;
 
-    @NotNull
-    private Integer sortCode;
-
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy(value =  "dateTime desc")
-    private final List<Transaction> depositTransactions = new ArrayList<>();
+    @OrderBy(value = "dateTime desc")
+    private final List<Transaction> debitTransactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy(value =  "dateTime desc")
+    @OrderBy(value = "dateTime desc")
     private final List<Transaction> creditTransactions = new ArrayList<>();
 
-    public Account(long number, String name, BigDecimal openingBalance, BigDecimal balance, Customer customer, Integer sortCode) {
-        this.number = number;
+    public Account(String name, BigDecimal openingBalance, Customer customer, Integer sortCode) {
         this.name = name;
         this.openingBalance = openingBalance;
-        this.balance = balance;
+        this.balance = openingBalance;
         this.customer = customer;
-        this.sortCode = sortCode;
+        this.id = new AccountPK(sortCode);
     }
 
-
     public Account() {
+        this.id = new AccountPK();
     }
 
     public long getNumber() {
-        return number;
+        return id.number();
     }
 
     public String getName() {
@@ -112,12 +100,12 @@ public class Account implements Serializable {
     }
 
     public List<Transaction> getTransactions() {
-        return Stream.concat(depositTransactions.stream(), creditTransactions.stream()).toList();
+        return Stream.concat(debitTransactions.stream(), creditTransactions.stream()).sorted().toList();
     }
 
     public void addDebitTransaction(Transaction transaction) {
         validateTransaction(transaction);
-        depositTransactions.add(transaction);
+        debitTransactions.add(transaction);
     }
 
     public void addCreditTransaction(Transaction transaction) {
@@ -126,11 +114,11 @@ public class Account implements Serializable {
     }
 
     public Integer getSortCode() {
-        return sortCode;
+        return id.sortCode();
     }
 
     public void setSortCode(int sortCode) {
-        this.sortCode = sortCode;
+        this.id.setSortCode(sortCode);
     }
 
     public boolean isClosed() {
@@ -145,23 +133,22 @@ public class Account implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return number == account.number;
+        if (!(o instanceof Account account)) return false;
+        return Objects.equals(id, account.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(number);
+        return Objects.hashCode(id);
     }
 
     @Override
     public String toString() {
         return "Account{" +
-                "number=" + number +
+                "number=" + id.number() +
+                ", sortCode=" + id.sortCode() +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
-                ", sortCode=" + sortCode +
                 '}';
     }
 

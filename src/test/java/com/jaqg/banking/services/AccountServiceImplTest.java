@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class LocalAccountServiceTest {
+public class AccountServiceImplTest {
     @MockBean
     private AccountRepository accountRepository;
 
@@ -52,10 +52,8 @@ public class LocalAccountServiceTest {
 
         //Create accounts
         accounts = new ArrayList<>();
-        account1 = new Account(1234L, "Savings", new BigDecimal(100),
-                new BigDecimal(100), customer, 1111);
-        account2 = new Account(5678L, "Checkings", new BigDecimal(200),
-                new BigDecimal(200), customer, 2222);
+        account1 = new Account("Savings", new BigDecimal("100"), customer, 1111);
+        account2 = new Account("Checkings", new BigDecimal("200"), customer, 2222);
 
         //Create accountDTOs that match the account above
         accountResponse1 = new AccountDTO(1234L, 1111,

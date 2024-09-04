@@ -2,8 +2,6 @@ package com.jaqg.banking.controllers;
 
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.services.CustomerService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -31,23 +29,13 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDTO> addNewCustomer(@RequestBody String fullName) {
-        CustomerDTO customerPostRequest1 = customerService.customerPostRequest(fullName);
-        if (customerPostRequest1 == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(customerPostRequest1, HttpStatus.CREATED);
+    public CustomerDTO addNewCustomer(@RequestBody String fullName) {
+        return customerService.customerPostRequest(fullName);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BigDecimal> deleteCustomer(@PathVariable("id") Long ID) {
-        BigDecimal value = customerService.customerDeleteRequest(ID);
-        if (value == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(value, HttpStatus.OK);
-
+    public BigDecimal deleteCustomer(@PathVariable("id") Long ID) {
+        return customerService.customerDeleteRequest(ID);
     }
 
 }
-

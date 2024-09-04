@@ -3,9 +3,10 @@ package com.jaqg.banking.services;
 import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.entities.Account;
-import com.jaqg.banking.enums.OperationType;
+import com.jaqg.banking.enums.TransactionType;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.TransactionRepository;
+import com.jaqg.banking.services.impl.TransactionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -40,17 +41,17 @@ class TransactionServiceImplTest {
     @BeforeEach
     void setup() {
         when(accountRepository.findById(any())).thenReturn(
-                Optional.of(new Account(1234, "Savings", new BigDecimal(100), new BigDecimal(100), null, 4444))
+                Optional.of(new Account("Savings", new BigDecimal("100"), null, 4444))
         );
         transferRequest = new TransactionRequestDTO(
-                OperationType.TRANSFER,
+                TransactionType.TRANSFER,
                 123456789L,
                 1234,
                 987654321L,
                 4444,
                 new BigDecimal("150.00"));
         withdrawRequest = new TransactionRequestDTO(
-                OperationType.WITHDRAWAL,
+                TransactionType.WITHDRAWAL,
                 123456789L,
                 1234,
                 null,
@@ -58,7 +59,7 @@ class TransactionServiceImplTest {
                 new BigDecimal(100)
         );
         depositRequest = new TransactionRequestDTO(
-                OperationType.DEPOSIT,
+                TransactionType.DEPOSIT,
                 null,
                 null,
                 123456789L,

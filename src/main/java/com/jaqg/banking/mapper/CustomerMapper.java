@@ -10,13 +10,9 @@ public class CustomerMapper {
                 customer.getId(),
                 customer.getFullName(),
                 customer.getAccounts()
-                        .stream().filter(e -> !e.isClosed())
+                        .stream()
                         .map(Account::getNumber)
                         .toList()
         );
-    }
-
-    public static Customer toCustomer(CustomerDTO dto) {
-        return new Customer(dto.fullName());
     }
 }

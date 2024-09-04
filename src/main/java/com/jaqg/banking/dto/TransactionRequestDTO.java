@@ -1,11 +1,11 @@
 package com.jaqg.banking.dto;
 
-import com.jaqg.banking.enums.OperationType;
+import com.jaqg.banking.enums.TransactionType;
 
 import java.math.BigDecimal;
 
 public record TransactionRequestDTO(
-        OperationType type,
+        TransactionType type,
         Long fromAccount,
         Integer fromAccountSortCode,
         Long toAccount,

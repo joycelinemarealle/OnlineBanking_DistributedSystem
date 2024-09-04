@@ -4,7 +4,7 @@ package com.jaqg.banking.controllers;
 import com.jaqg.banking.config.JacksonConfiguration;
 import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.dto.TransactionDTO;
-import com.jaqg.banking.enums.OperationType;
+import com.jaqg.banking.enums.TransactionType;
 import com.jaqg.banking.services.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +40,7 @@ class TransactionControllerTest {
     void createDeposit() {
         final TransactionDTO transactionDTO = new TransactionDTO(
                 LocalDateTime.of(2024, 5, 4, 12, 5, 6),
-                OperationType.DEPOSIT,
+                TransactionType.DEPOSIT,
                 null,
                 null,
                 1L,
@@ -71,7 +71,7 @@ class TransactionControllerTest {
                     .andExpect(jsonPath("toAccount").value(transactionDTO.toAccount()))
                     .andExpect(jsonPath("toAccountSortCode").value(transactionDTO.toAccountSortCode()))
                     .andExpect(jsonPath("amount").value(transactionDTO.amount()))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +81,7 @@ class TransactionControllerTest {
     void createWithdrawal() {
         final TransactionDTO transactionDTO = new TransactionDTO(
                 LocalDateTime.of(2024, 5, 4, 12, 5, 6),
-                OperationType.WITHDRAWAL,
+                TransactionType.WITHDRAWAL,
                 1L,
                 1234,
                 null,
@@ -112,7 +112,7 @@ class TransactionControllerTest {
                     .andExpect(jsonPath("toAccount").value(transactionDTO.toAccount()))
                     .andExpect(jsonPath("toAccountSortCode").value(transactionDTO.toAccountSortCode()))
                     .andExpect(jsonPath("amount").value(transactionDTO.amount()))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -122,7 +122,7 @@ class TransactionControllerTest {
     void createTransfer() {
         final TransactionDTO transactionDTO = new TransactionDTO(
                 LocalDateTime.of(2024, 5, 4, 12, 5, 6),
-                OperationType.TRANSFER,
+                TransactionType.TRANSFER,
                 1L,
                 1234,
                 2L,
@@ -153,7 +153,7 @@ class TransactionControllerTest {
                     .andExpect(jsonPath("toAccount").value(transactionDTO.toAccount()))
                     .andExpect(jsonPath("toAccountSortCode").value(transactionDTO.toAccountSortCode()))
                     .andExpect(jsonPath("amount").value(transactionDTO.amount()))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
