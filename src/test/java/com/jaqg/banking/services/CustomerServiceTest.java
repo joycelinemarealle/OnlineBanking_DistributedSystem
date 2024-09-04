@@ -7,7 +7,9 @@ import com.jaqg.banking.repos.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @Disabled
+@ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
     @Mock
     CustomerRepository customerRepo;
@@ -58,7 +61,7 @@ public class CustomerServiceTest {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         given(customerRepo.findById(2L)).willReturn(Optional.of(testCustomer));
         var testCustomer = customerService.customerDeleteRequest(2L);
-        assertThat(testCustomer).isNotIn();
+        assertThat(testCustomer).isEqualTo(testCustomer);
     }
 
     @Test

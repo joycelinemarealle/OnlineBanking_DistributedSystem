@@ -1,8 +1,15 @@
 package com.jaqg.banking.services;
 
+import com.jaqg.banking.dto.CustomerGetRequest;
+import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.exceptions.CustomerNotFoundException;
+import com.jaqg.banking.mapper.CustomerGetRequestMapper;
+import com.jaqg.banking.mapper.CustomerPostRequestMapper;
+import com.jaqg.banking.repos.AccountRepository;
+import com.jaqg.banking.repos.CustomerRepo;
 import com.jaqg.banking.mapper.CustomerMapper;
 import com.jaqg.banking.repos.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +25,8 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepo;
+    private final LocalAccountService localAccountService;
+    private final AccountRepository accountRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepo) {
         this.customerRepo = customerRepo;
@@ -43,9 +52,17 @@ public class CustomerServiceImpl implements CustomerService {
     public BigDecimal customerDeleteRequest(Long id) {
         Customer customer = customerRepo.findByIdAndIsRemovedFalse(id).orElseThrow(() -> new CustomerNotFoundException(id));
         customer.setRemoved(true);
-        customerRepo.save(customer);
-        // TODO: asdgs
-        return new BigDecimal("50.55");
+        customer = customerRepo.save(customer);
+        for (Account account : customer.getAccounts()) {
+            BigDecimal balance = account.getBalance();
+            account.setBalance(BigDecimal.ZERO);
+            account.setClosed(true);
+            accountRepository.save(account);
+            return balance;
+        }
+            //return funds from all accounts, and summarize all balances
+//            return new BigDecimal("50.55");
+
     }
 
     @Override
