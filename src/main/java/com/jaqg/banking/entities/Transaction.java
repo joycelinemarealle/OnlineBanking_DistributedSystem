@@ -2,6 +2,7 @@ package com.jaqg.banking.entities;
 
 import com.jaqg.banking.enums.OperationType;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,9 +19,12 @@ public class Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // This helps auto-generate primary keys
     private long id;
 
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dateTime;
 
-    @Column(precision=16, scale=2, nullable = false)
+    @Column(precision = 16, scale = 2, nullable = false)
     private BigDecimal transVal;
 
     @Enumerated(EnumType.STRING)
@@ -28,20 +32,23 @@ public class Transaction implements Serializable {
     private OperationType transType; // Transaction type can be withdraw, deposit, ect...peit
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id")
+    @JoinColumn(name = "recipient_id", updatable = false)
     private Account recipient; // to account
 
+    private Long recipientSourceCode;
+
     @ManyToOne
-    @JoinColumn(name = "sender_id")
+    @JoinColumn(name = "sender_id", updatable = false)
     private Account sender;
 
+    private Long senderSourceCode;
 
     public Transaction(LocalDateTime dateTime, BigDecimal transVal, OperationType transType, Account recipient, Account sender) {
         this.dateTime = dateTime;
         this.transVal = transVal;
         this.transType = transType;
-        this.recipient = recipient;
-        this.sender = sender;
+        setRecipient(recipient);
+        setSender(sender);
     }
 
     public Transaction() {
@@ -52,15 +59,14 @@ public class Transaction implements Serializable {
     }
 
     public void setSender(Account sender) {
+        if (recipient != null) {
+            recipient.addDebitTransaction(this);
+        }
         this.sender = sender;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
@@ -92,6 +98,25 @@ public class Transaction implements Serializable {
     }
 
     public void setRecipient(Account recipient) {
+        if (recipient != null) {
+            recipient.addCreditTransaction(this);
+        }
         this.recipient = recipient;
+    }
+
+    public Long getFromAccountNumber() {
+        return sender == null ? null : sender.getNumber();
+    }
+
+    public Integer getFromAccountSourceCode() {
+        return sender == null ? null : sender.getSortCode();
+    }
+
+    public Long getToAccountNumber() {
+        return recipient == null ? null : recipient.getNumber();
+    }
+
+    public Integer getToAccountSourceCode() {
+        return recipient == null ? null : recipient.getSortCode();
     }
 }

@@ -12,10 +12,10 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class CustomerRepoTest {
+class CustomerRepositoryTest {
 
     @Autowired
-    private CustomerRepo customerRepo;
+    private CustomerRepository customerRepo;
 
     @Autowired
     private TestEntityManager entityManager;

@@ -1,7 +1,6 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.dto.CustomerGetRequest;
-import com.jaqg.banking.dto.CustomerPostRequest;
+import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +21,19 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerGetRequest> retrieveAllCustomers(){
+    public List<CustomerDTO> retrieveAllCustomers() {
         return this.customerService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerGetRequest> getCustomerByID (@PathVariable Long id){
-        CustomerGetRequest customerGetRequest = customerService.customerGetRequest(id);
-        return new ResponseEntity<>(customerGetRequest, HttpStatus.OK);
+    public ResponseEntity<CustomerDTO> getCustomerByID(@PathVariable Long id) {
+        CustomerDTO customerDTO = customerService.customerGetRequest(id);
+        return new ResponseEntity<>(customerDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerPostRequest> addNewCustomer (@RequestBody String fullName){
-         CustomerPostRequest customerPostRequest1 = customerService.customerPostRequest(fullName);
+    public ResponseEntity<CustomerDTO> addNewCustomer(@RequestBody String fullName) {
+        CustomerDTO customerPostRequest1 = customerService.customerPostRequest(fullName);
         if (customerPostRequest1 == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -42,7 +41,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BigDecimal> deleteCustomer (@PathVariable("id") Long ID) {
+    public ResponseEntity<BigDecimal> deleteCustomer(@PathVariable("id") Long ID) {
         BigDecimal value = customerService.customerDeleteRequest(ID);
         if (value == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

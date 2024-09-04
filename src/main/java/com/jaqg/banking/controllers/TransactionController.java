@@ -1,7 +1,7 @@
 package com.jaqg.banking.controllers;
 
-import com.jaqg.banking.dto.TransactionRequest;
-import com.jaqg.banking.dto.TransactionResponse;
+import com.jaqg.banking.dto.TransactionRequestDTO;
+import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ public class TransactionController {
     TransactionService transactionService;
 
     @GetMapping
-    public List<TransactionResponse> retrieveAllCustomers(){
+    public List<TransactionDTO> retrieveAllCustomers(){
         return this.transactionService.getAllTransactions();
     }
 
     @PostMapping
-    public TransactionResponse create(@RequestBody TransactionRequest request){
+    public TransactionDTO create(@RequestBody TransactionRequestDTO request){
         return switch (request.type()) {
             case WITHDRAWAL -> transactionService.withdraw(request);
             case DEPOSIT -> transactionService.deposit(request);

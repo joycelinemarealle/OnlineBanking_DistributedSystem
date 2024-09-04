@@ -3,11 +3,14 @@ package com.jaqg.banking.services;
 import com.jaqg.banking.dto.CustomerGetRequest;
 import com.jaqg.banking.dto.CustomerPostRequest;
 import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.mapper.CustomerGetRequestMapper;
 import com.jaqg.banking.mapper.CustomerPostRequestMapper;
 import com.jaqg.banking.repos.AccountRepository;
 import com.jaqg.banking.repos.CustomerRepo;
+import com.jaqg.banking.mapper.CustomerMapper;
+import com.jaqg.banking.repos.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,31 +23,29 @@ import java.util.Optional;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerRepo customerRepo;
+    private final CustomerRepository customerRepo;
     private final LocalAccountService localAccountService;
     private final AccountRepository accountRepository;
 
-    public CustomerServiceImpl(CustomerRepo customerRepo, LocalAccountService localAccountService, AccountRepository accountRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepo) {
         this.customerRepo = customerRepo;
-        this.localAccountService = localAccountService;
-        this.accountRepository = accountRepository;
     }
 
     // Implementing Get Request DTO
 
     @Override
-    public CustomerGetRequest customerGetRequest(Long ID) {
-        Optional<Customer> customer =  customerRepo.findById(ID);
-        return CustomerGetRequestMapper.toDTO(customer.orElse(null));
+    public CustomerDTO customerGetRequest(Long ID) {
+        Optional<Customer> customer = customerRepo.findById(ID);
+        return CustomerMapper.toDTO(customer.orElse(null));
     }
     // Implementing Post Request DTO
 
     @Override
-    public CustomerPostRequest customerPostRequest(String fullName) {
+    public CustomerDTO customerPostRequest(String fullName) {
         Customer customer = new Customer(fullName);
-//        Customer customer = CustomerPostRequestMapper.toCustomer(customer);
+//        Customer customer = CustomerMapper.toCustomer(customer);
         Customer savedCustomer = customerRepo.save(customer);
-        return CustomerPostRequestMapper.toDTO(savedCustomer);
+        return CustomerMapper.toDTO(savedCustomer);
     }
 
     // Implementing Delete Request DTO
@@ -70,21 +71,15 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-
     @Override
-    public Optional<Customer> getCustomer(Long ID){
+    public Optional<Customer> getCustomer(Long ID) {
 
         return customerRepo.findById(ID);
     }
 
     @Override
-    public List<CustomerGetRequest> findAll() {
-        return customerRepo.findAll().stream().map(e->CustomerGetRequestMapper.toDTO(e)).toList();
-    }
-
-    @Override
-    public Customer addNewCustomer(Customer customer){
-        return customerRepo.save(customer);
+    public List<CustomerDTO> findAll() {
+        return customerRepo.findAll().stream().map(CustomerMapper::toDTO).toList();
     }
 }
 

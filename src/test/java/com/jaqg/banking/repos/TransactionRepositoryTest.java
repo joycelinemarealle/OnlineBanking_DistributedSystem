@@ -1,6 +1,7 @@
 package com.jaqg.banking.repos;
 
 import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.enums.OperationType;
 import org.junit.jupiter.api.Test;
@@ -48,16 +49,29 @@ class TransactionRepositoryTest {
 
     @Test
     void testFindAllTransactions() {
+        Customer customer = new Customer();
+        customer.setFullName("Peter Smith");
+
+        customer = entityManager.persist(customer);
+
+        Account account = new Account();
+        account.setName("Checking");
+        account.setOpeningBalance(BigDecimal.ONE);
+        account.setBalance(BigDecimal.ONE);
+        account.setSortCode(1235);
+        account.setCustomer(customer);
+        account = entityManager.persist(account);
+
         Transaction transaction1 = new Transaction();
-        transaction1.setRecipient(new Account());
+        transaction1.setRecipient(account);
         transaction1.setTransType(OperationType.DEPOSIT);
         transaction1.setTransVal(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         Transaction transaction2 = new Transaction();
-        transaction1.setRecipient(new Account());
-        transaction1.setTransType(OperationType.WITHDRAWAL);
-        transaction1.setTransVal(BigDecimal.ONE);
+        transaction2.setRecipient(account);
+        transaction2.setTransType(OperationType.WITHDRAWAL);
+        transaction2.setTransVal(BigDecimal.ONE);
         transaction2.setDateTime(LocalDateTime.now());
 
         entityManager.persist(transaction1);

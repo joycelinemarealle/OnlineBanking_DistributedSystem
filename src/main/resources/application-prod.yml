@@ -21,3 +21,8 @@ spring:
       auto-commit: true
 server:
   port: 8080
+  error:
+    include-message: always
+    include-binding-errors: on_param
+    include-stacktrace: never
+    include-exception: false
