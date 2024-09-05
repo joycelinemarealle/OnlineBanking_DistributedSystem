@@ -23,7 +23,7 @@ public class TransactionController {
         return switch (request.type()) {
             case WITHDRAWAL -> transactionService.withdraw(request);
             case DEPOSIT -> transactionService.deposit(request);
-            case TRANSFER -> transactionService.executeTransfer(request);
+            case TRANSFER -> transactionService.transfer(request);
         };
     }
 

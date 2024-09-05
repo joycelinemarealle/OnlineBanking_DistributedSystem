@@ -2,13 +2,14 @@ package com.jaqg.banking.services.impl;
 
 import com.jaqg.banking.dto.AccountDTO;
 import com.jaqg.banking.dto.AccountRequestDTO;
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.entities.LocalAccount;
 import com.jaqg.banking.exceptions.AccountNotFoundException;
 import com.jaqg.banking.exceptions.CustomerNotFoundException;
 import com.jaqg.banking.exceptions.NotEnoughFundsException;
-import com.jaqg.banking.repos.AccountRepository;
+import com.jaqg.banking.mapper.AccountMapper;
 import com.jaqg.banking.repos.CustomerRepository;
+import com.jaqg.banking.repos.LocalAccountRepository;
 import com.jaqg.banking.services.AccountService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.jaqg.banking.mapper.AccountMapper.accountMapper;
+import static com.jaqg.banking.mapper.AccountMapper.mapToDTO;
 
 @Service
 @Transactional
@@ -27,12 +28,12 @@ public class AccountServiceImpl implements AccountService {
 
     private final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
-    private final AccountRepository accountRepository;
+    private final LocalAccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final Integer sortCode;
 
     public AccountServiceImpl(
-            AccountRepository accountRepository,
+            LocalAccountRepository accountRepository,
             CustomerRepository customerRepository,
             @Value("${sortcode}") Integer sortCode
     ) {
@@ -46,10 +47,10 @@ public class AccountServiceImpl implements AccountService {
         logger.info("Getting accounts from Account Repository");
 
         //Retrieve all accounts from the repository
-        List<Account> accounts = accountRepository.findByIsClosedFalse();
+        List<LocalAccount> accounts = accountRepository.findByIdSortCodeAndIsClosedFalse(sortCode);
 
         //Convert each Account Entity to a AccountResponseDTO
-        return accountMapper(accounts);
+        return mapToDTO(accounts);
     }
 
     @Override
@@ -64,16 +65,14 @@ public class AccountServiceImpl implements AccountService {
         Customer customer = customerRepository.findByIdAndIsRemovedFalse(accountRequestDTO.customerId())
                 .orElseThrow(() -> new CustomerNotFoundException(accountRequestDTO.customerId()));
 
-        //save account to database
-        Account account = accountRepository.save(
-                new Account(accountRequestDTO.accountName(), accountRequestDTO.openingBalance(), customer, sortCode)
-        );
-        return accountMapper(account);
+        //save an account to database
+        LocalAccount account = accountRepository.save(new LocalAccount(accountRequestDTO.accountName(), accountRequestDTO.openingBalance(), customer, sortCode));
+        return AccountMapper.mapToDTO(account);
     }
 
     @Override
     public BigDecimal closeAccount(long number) throws AccountNotFoundException {
-        Account account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(number, sortCode)
+        LocalAccount account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(number, sortCode)
                 .orElseThrow(() -> new AccountNotFoundException(number));
         BigDecimal balance = account.getBalance();
         account.setBalance(BigDecimal.ZERO);
@@ -84,9 +83,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO findAccountByNumber(long number) throws AccountNotFoundException {
-        Account account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(number, sortCode)
+        LocalAccount account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(number, sortCode)
                 .orElseThrow(() -> new AccountNotFoundException(number));
-        return accountMapper(account);
+        return AccountMapper.mapToDTO(account);
     }
 
 }

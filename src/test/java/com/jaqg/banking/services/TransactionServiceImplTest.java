@@ -1,10 +1,10 @@
 package com.jaqg.banking.services;
 
-import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.dto.TransactionDTO;
-import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.dto.TransactionRequestDTO;
+import com.jaqg.banking.entities.LocalAccount;
 import com.jaqg.banking.enums.TransactionType;
-import com.jaqg.banking.repos.AccountRepository;
+import com.jaqg.banking.repos.LocalAccountRepository;
 import com.jaqg.banking.repos.TransactionRepository;
 import com.jaqg.banking.services.impl.TransactionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @Disabled
 class TransactionServiceImplTest {
     @Mock
-    AccountRepository accountRepository;
+    LocalAccountRepository accountRepository;
 
     @Mock
     TransactionRepository transactionRepository;
@@ -41,7 +41,7 @@ class TransactionServiceImplTest {
     @BeforeEach
     void setup() {
         when(accountRepository.findById(any())).thenReturn(
-                Optional.of(new Account("Savings", new BigDecimal("100"), null, 4444))
+                Optional.of(new LocalAccount("Savings", new BigDecimal("100"), null, 4444))
         );
         transferRequest = new TransactionRequestDTO(
                 TransactionType.TRANSFER,
@@ -71,7 +71,7 @@ class TransactionServiceImplTest {
 
     @Test
     void transfer() {
-        TransactionDTO response = transactionServiceImpl.executeTransfer(transferRequest);
+        TransactionDTO response = transactionServiceImpl.transfer(transferRequest);
         assertEquals(response.amount(), transferRequest.amount());
         verify(accountRepository.findById(transferRequest.toAccount()));
         verify(accountRepository.save(any()));

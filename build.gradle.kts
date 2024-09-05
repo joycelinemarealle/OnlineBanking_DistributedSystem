@@ -29,8 +29,6 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 //	implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-//	testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.0")
-
 }
 
 tasks.withType<Test> {

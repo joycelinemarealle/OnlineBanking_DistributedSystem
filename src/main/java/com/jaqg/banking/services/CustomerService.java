@@ -7,16 +7,12 @@ import java.util.List;
 
 public interface CustomerService {
 
-    CustomerDTO customerGetRequest(Long id);
+    CustomerDTO retrieveCustomer(Long id);
 
-    CustomerDTO customerPostRequest(String fullName);
+    CustomerDTO createCustomer(String fullName);
 
-    BigDecimal customerDeleteRequest(Long id);
+    BigDecimal deleteCustomer(Long id);
 
-    List<CustomerDTO> findAll();
+    List<CustomerDTO> retrieveAllCustomers();
 
 }
-
-
-
-

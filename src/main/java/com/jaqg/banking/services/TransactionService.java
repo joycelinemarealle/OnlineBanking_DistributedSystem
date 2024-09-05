@@ -7,7 +7,7 @@ public interface TransactionService {
 
     TransactionDTO withdraw(TransactionRequestDTO request);
 
-    TransactionDTO executeTransfer(TransactionRequestDTO request);
+    TransactionDTO transfer(TransactionRequestDTO request);
 
     TransactionDTO deposit(TransactionRequestDTO request);
 

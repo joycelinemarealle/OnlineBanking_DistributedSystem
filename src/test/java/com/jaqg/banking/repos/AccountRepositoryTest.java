@@ -1,7 +1,7 @@
 package com.jaqg.banking.repos;
 
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.entities.LocalAccount;
 import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.enums.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,13 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AccountRepositoryTest {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private LocalAccountRepository accountRepository;
 
     @Autowired
     private TestEntityManager entityManager;
 
     private Customer customer;
-    private Account account;
+    private LocalAccount account;
 
     @BeforeEach
     void setUp() {
@@ -36,7 +36,7 @@ class AccountRepositoryTest {
 
         this.customer = entityManager.persist(customer);
 
-        Account account = new Account();
+        LocalAccount account = new LocalAccount();
         account.setName("Checking");
         account.setOpeningBalance(BigDecimal.ONE);
         account.setBalance(BigDecimal.ONE);
@@ -48,7 +48,7 @@ class AccountRepositoryTest {
 
     @Test
     void testFindAllAccounts() {
-        Account account = new Account();
+        LocalAccount account = new LocalAccount();
         account.setName("Savings");
         account.setOpeningBalance(BigDecimal.TEN);
         account.setBalance(BigDecimal.TEN);
@@ -57,17 +57,17 @@ class AccountRepositoryTest {
 
         entityManager.persist(account);
 
-        List<Account> accounts = accountRepository.findAll();
+        List<LocalAccount> accounts = accountRepository.findAll();
         assertThat(accounts).hasSize(2).contains(account, this.account);
     }
 
     @Test
     void testFindAccountById() {
-        Optional<Account> optionalAccount = accountRepository.findById(this.account.getNumber());
+        Optional<LocalAccount> optionalAccount = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(this.account.getNumber(), this.account.getSortCode());
 
         assertThat(optionalAccount).isPresent();
 
-        Account account = optionalAccount.get();
+        LocalAccount account = optionalAccount.get();
 
         assertThat(account.getNumber()).isEqualTo(this.account.getNumber());
         assertThat(account.getName()).isEqualTo(this.account.getName());
@@ -94,16 +94,16 @@ class AccountRepositoryTest {
     @Test
     void testFindAccountByIdWithDebitTransaction() {
         Transaction transaction1 = new Transaction();
-        transaction1.setRecipient(new Account());
+        transaction1.setRecipient(account);
         transaction1.setType(TransactionType.DEPOSIT);
-        transaction1.setValue(BigDecimal.TEN);
+        transaction1.setAmount(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
-        account.addDebitTransaction(transaction1);
+        account.addDebitTransaction(entityManager.persist(transaction1));
+        LocalAccount storedAccount = entityManager.persist(account);
 
-        Account storedAccount = entityManager.persist(account);
 
-        Optional<Account> optionalAccount = accountRepository.findById(storedAccount.getNumber());
+        Optional<LocalAccount> optionalAccount = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(storedAccount.getNumber(), storedAccount.getSortCode());
         assertThat(optionalAccount).isPresent();
         account = optionalAccount.get();
         assertThat(account.getNumber()).isEqualTo(storedAccount.getNumber());
@@ -116,9 +116,9 @@ class AccountRepositoryTest {
     @Test
     void testFindAccountByIdWithDebitTransaction_withJpaSaveMethod() {
         Transaction transaction1 = new Transaction();
-        transaction1.setRecipient(new Account());
+        transaction1.setRecipient(account);
         transaction1.setType(TransactionType.DEPOSIT);
-        transaction1.setValue(BigDecimal.TEN);
+        transaction1.setAmount(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         account.addDebitTransaction(transaction1);
@@ -133,22 +133,22 @@ class AccountRepositoryTest {
         List<Transaction> transactions = savedAccount.getTransactions();
 
         assertThat(transactions).hasSize(1);
-        assertThat(transactions.get(0).getValue()).isEqualTo(BigDecimal.TEN);
+        assertThat(transactions.get(0).getAmount()).isEqualTo(BigDecimal.TEN);
     }
 
     @Test
     void testFindAccountByIdWithCreditTransaction() {
         Transaction transaction1 = new Transaction();
-        transaction1.setSender(new Account());
+        transaction1.setSender(account);
         transaction1.setType(TransactionType.WITHDRAWAL);
-        transaction1.setValue(BigDecimal.TEN);
+        transaction1.setAmount(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         account.addCreditTransaction(transaction1);
 
-        Account storedAccount = entityManager.persist(account);
+        LocalAccount storedAccount = entityManager.persist(account);
 
-        Optional<Account> optionalAccount = accountRepository.findById(storedAccount.getNumber());
+        Optional<LocalAccount> optionalAccount = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(storedAccount.getNumber(), storedAccount.getSortCode());
         assertThat(optionalAccount).isPresent();
         account = optionalAccount.get();
         assertThat(account.getNumber()).isEqualTo(storedAccount.getNumber());
@@ -161,24 +161,24 @@ class AccountRepositoryTest {
     @Test
     void testFindAccountByIdWithDebitAndCreditTransactions() {
         Transaction transaction1 = new Transaction();
-        transaction1.setRecipient(new Account());
+        transaction1.setRecipient(account);
         transaction1.setType(TransactionType.DEPOSIT);
-        transaction1.setValue(BigDecimal.ONE);
+        transaction1.setAmount(BigDecimal.ONE);
         transaction1.setDateTime(LocalDateTime.now());
 
         account.addDebitTransaction(transaction1);
 
         Transaction transaction2 = new Transaction();
-        transaction2.setSender(new Account());
+        transaction2.setSender(account);
         transaction2.setType(TransactionType.WITHDRAWAL);
-        transaction2.setValue(BigDecimal.TEN);
+        transaction2.setAmount(BigDecimal.TEN);
         transaction2.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         account.addCreditTransaction(transaction2);
 
-        Account storedAccount = entityManager.persist(account);
+        LocalAccount storedAccount = entityManager.persist(account);
 
-        Optional<Account> optionalAccount = accountRepository.findById(storedAccount.getNumber());
+        Optional<LocalAccount> optionalAccount = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(storedAccount.getNumber(), storedAccount.getSortCode());
         assertThat(optionalAccount).isPresent();
         account = optionalAccount.get();
         assertThat(account.getNumber()).isEqualTo(storedAccount.getNumber());

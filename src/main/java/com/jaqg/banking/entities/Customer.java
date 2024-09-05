@@ -29,7 +29,7 @@ public class Customer implements Serializable {
     private boolean isRemoved = false;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final List<Account> accounts = new ArrayList<>();
+    private final List<LocalAccount> accounts = new ArrayList<>();
 
     public Customer(String fullName) {
         this.fullName = fullName;
@@ -59,11 +59,11 @@ public class Customer implements Serializable {
         isRemoved = removed;
     }
 
-    public List<Account> getAccounts() {
+    public List<LocalAccount> getAccounts() {
         return accounts;
     }
 
-    public void addAccount(Account account) {
+    public void addAccount(LocalAccount account) {
         if (account == null) {
             throw new NullPointerException("Can't add null account");
         }

@@ -139,7 +139,7 @@ class TransactionControllerTest {
                 ", \"amount\": " + transactionDTO.amount() +
                 "}";
 
-        when(transactionService.executeTransfer(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
+        when(transactionService.transfer(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
 
         try {
             mockMvc.perform(post("/transaction")

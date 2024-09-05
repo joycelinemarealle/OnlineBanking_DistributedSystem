@@ -2,6 +2,7 @@ package com.jaqg.banking.controllers;
 
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -20,22 +21,23 @@ public class CustomerController {
 
     @GetMapping
     public List<CustomerDTO> retrieveAllCustomers() {
-        return this.customerService.findAll();
+        return this.customerService.retrieveAllCustomers();
     }
 
     @GetMapping("/{id}")
     public CustomerDTO getCustomerByID(@PathVariable Long id) {
-        return customerService.customerGetRequest(id);
+        return customerService.retrieveCustomer(id);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO addNewCustomer(@RequestBody String fullName) {
-        return customerService.customerPostRequest(fullName);
+        return customerService.createCustomer(fullName);
     }
 
     @DeleteMapping("/{id}")
     public BigDecimal deleteCustomer(@PathVariable("id") Long ID) {
-        return customerService.customerDeleteRequest(ID);
+        return customerService.deleteCustomer(ID);
     }
 
 }

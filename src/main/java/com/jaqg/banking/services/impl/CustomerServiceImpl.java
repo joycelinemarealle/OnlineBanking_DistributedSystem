@@ -1,7 +1,6 @@
 package com.jaqg.banking.services.impl;
 
 import com.jaqg.banking.dto.CustomerDTO;
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.exceptions.CustomerNotFoundException;
 import com.jaqg.banking.mapper.CustomerMapper;
@@ -27,26 +26,26 @@ public class CustomerServiceImpl implements CustomerService {
     // Implementing Get Request DTO
 
     @Override
-    public CustomerDTO customerGetRequest(Long id) {
+    public CustomerDTO retrieveCustomer(Long id) {
         Customer customer = customerRepo.findByIdAndIsRemovedFalse(id).orElseThrow(() -> new CustomerNotFoundException(id));
         return CustomerMapper.toDTO(customer);
     }
-    // Implementing Post Request DTO
 
+    // Implementing Post Request DTO
     @Override
-    public CustomerDTO customerPostRequest(String fullName) {
+    public CustomerDTO createCustomer(String fullName) {
         Customer customer = customerRepo.save(new Customer(fullName));
         return CustomerMapper.toDTO(customer);
     }
 
     // Implementing Delete Request DTO
     @Override
-    public BigDecimal customerDeleteRequest(Long id) {
+    public BigDecimal deleteCustomer(Long id) {
         Customer customer = customerRepo.findByIdAndIsRemovedFalse(id).orElseThrow(() -> new CustomerNotFoundException(id));
         customer.setRemoved(true);
 
         BigDecimal totalBalance = BigDecimal.ZERO;
-        for (Account account : customer.getAccounts()) {
+        for (var account : customer.getAccounts()) {
             totalBalance = totalBalance.add(account.getBalance());
             account.setBalance(BigDecimal.ZERO);
             account.setClosed(true);
@@ -56,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> findAll() {
+    public List<CustomerDTO> retrieveAllCustomers() {
         return customerRepo.findByIsRemovedFalse()
                 .stream()
                 .map(CustomerMapper::toDTO)

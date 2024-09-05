@@ -27,7 +27,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     private LocalDateTime dateTime;
 
     @Column(precision = 16, scale = 2, nullable = false)
-    private BigDecimal value;
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false)
@@ -47,8 +47,8 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     } )
     private Account sender;
 
-    public Transaction(BigDecimal value, TransactionType type, Account recipient, Account sender) {
-        this.value = value;
+    public Transaction(BigDecimal amount, TransactionType type, Account recipient, Account sender) {
+        this.amount = amount;
         this.type = type;
         setRecipient(recipient);
         setSender(sender);
@@ -80,12 +80,12 @@ public class Transaction implements Serializable, Comparable<Transaction> {
         this.dateTime = dateTime;
     }
 
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setValue(BigDecimal transVal) {
-        this.value = transVal;
+    public void setAmount(BigDecimal transVal) {
+        this.amount = transVal;
     }
 
     public TransactionType getType() {

@@ -22,7 +22,7 @@ public class TransactionsMapper {
                 transaction.getFromAccountSourceCode(),
                 transaction.getToAccountNumber(),
                 transaction.getToAccountSourceCode(),
-                transaction.getValue());
+                transaction.getAmount());
 
     }
 }

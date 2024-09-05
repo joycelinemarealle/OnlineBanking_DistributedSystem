@@ -1,58 +1,58 @@
 package com.jaqg.banking.entities;
 
-import com.jaqg.banking.Constants;
+import com.jaqg.banking.config.AccountNumberGenerator;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+//    @SequenceGenerator(
+//            name = "account-number-gen",
+//            sequenceName = "account_number_seq",
+//            initialValue = 100000, allocationSize = 1)
 @Embeddable
-@SequenceGenerator(
-        name = Constants.ACCOUNT_NUMBER_GENERATOR,
-        sequenceName = "account_number_seq",
-        initialValue = 100000, allocationSize = 1)
 public class AccountPK implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @GeneratedValue(generator = Constants.ACCOUNT_NUMBER_GENERATOR, strategy = GenerationType.AUTO)
-    protected long number;
-
+    @GenericGenerator(
+            name = "account-number-gen",
+            type = AccountNumberGenerator.class,
+            parameters = {
+                @Parameter(name = AccountNumberGenerator.INCREMENT_PARAM, value = "50"),
+                @Parameter(name = AccountNumberGenerator.INITIAL_PARAM, value = "100000")
+            }
+            )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account-number-gen")
+    @Column(nullable = false)
     @NotNull
-    protected int sortCode;
+    protected Long number;
 
-    public AccountPK() {
+    @Column(nullable = false)
+    @NotNull
+    protected Integer sortCode;
 
-    }
-
-    public AccountPK(int sortCode) {
-        this.sortCode = sortCode;
-    }
-
-    public AccountPK(long number, int sortCode) {
-        this.number = number;
-        this.sortCode = sortCode;
-    }
-
-    public long number() {
+    public Long number() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
-    public int sortCode() {
+    public Integer sortCode() {
         return sortCode;
     }
 
-    public void setSortCode(int sortCode) {
+    public void setSortCode(Integer sortCode) {
         this.sortCode = sortCode;
     }
 
@@ -60,7 +60,7 @@ public class AccountPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AccountPK accountPK)) return false;
-        return number == accountPK.number && sortCode == accountPK.sortCode;
+        return Objects.equals(number, accountPK.number) && Objects.equals(sortCode, accountPK.sortCode);
     }
 
     @Override

@@ -3,11 +3,13 @@ package com.jaqg.banking.services.impl;
 import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.entities.RemoteAccount;
 import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.exceptions.AccountNotFoundException;
 import com.jaqg.banking.exceptions.NotEnoughFundsException;
 import com.jaqg.banking.mapper.TransactionsMapper;
-import com.jaqg.banking.repos.AccountRepository;
+import com.jaqg.banking.repos.LocalAccountRepository;
+import com.jaqg.banking.repos.RemoteAccountRepository;
 import com.jaqg.banking.repos.TransactionRepository;
 import com.jaqg.banking.services.TransactionService;
 import jakarta.transaction.Transactional;
@@ -18,26 +20,32 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
-    @Value("${sortcode}")
-    private Integer sortcode;
-    private final AccountRepository accountRepository;
+
+    private final Integer sortCode;
+    private final LocalAccountRepository accountRepository;
+    private final RemoteAccountRepository remoteAccountRepository;
     private final TransactionRepository transactionRepository;
     private final RestTemplate restTemplate;
 
-    public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, RestTemplateBuilder restTemplateBuilder) {
+    public TransactionServiceImpl(LocalAccountRepository accountRepository,
+                                  RemoteAccountRepository remoteAccountRepository,
+                                  TransactionRepository transactionRepository,
+                                  @Value("${sortcode}") Integer sortCode,
+                                  RestTemplateBuilder restTemplateBuilder) {
         this.accountRepository = accountRepository;
+        this.remoteAccountRepository = remoteAccountRepository;
         this.transactionRepository = transactionRepository;
+        this.sortCode = sortCode;
         this.restTemplate = restTemplateBuilder.build();
     }
 
     @Override
     public TransactionDTO withdraw(TransactionRequestDTO request) {
-        final Account account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.fromAccount(), request.fromAccountSortCode())
+        final var account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.fromAccount(), request.fromAccountSortCode())
                 .orElseThrow(() -> new AccountNotFoundException(request.fromAccount()));
 
         BigDecimal newBalance = account.getBalance().subtract(request.amount());
@@ -46,7 +54,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         Transaction transaction = new Transaction(request.amount(), request.type(), null, account);
-        transactionRepository.save(transaction);
+        transaction = transactionRepository.save(transaction);
 
         account.setBalance(newBalance);
         accountRepository.save(account);
@@ -54,47 +62,8 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionsMapper.mapToDTO(transaction);
     }
 
-    public TransactionDTO executeTransfer(TransactionRequestDTO request) {
-        final Optional<Account> senderOptional = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.fromAccount(), request.fromAccountSortCode());
-        final Optional<Account> recipientOptional = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode());
-
-        Account sender;
-        BigDecimal newBalance = BigDecimal.ZERO;
-        if (Objects.equals(request.fromAccountSortCode(), sortcode)) {
-            sender = senderOptional.orElseThrow(() -> new AccountNotFoundException(request.fromAccount()));
-            newBalance = sender.getBalance().subtract(request.amount());
-            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-                throw new NotEnoughFundsException(request.fromAccount());
-            }
-        } else {
-            //logic of remote transfer
-            sender = senderOptional.orElse(new Account("remote", request.amount(), null, request.fromAccountSortCode()));
-        }
-
-        Account recipient;
-        if (Objects.equals(request.toAccountSortCode(), sortcode)) {
-            recipient = recipientOptional.orElseThrow(() -> new AccountNotFoundException(request.fromAccount()));
-        } else {
-            //logic of remote transfer
-            String url = "http://localhost:" + request.toAccountSortCode() + "/transaction";
-            TransactionDTO response = restTemplate.postForObject(url, request, TransactionDTO.class);
-            recipient = recipientOptional.orElse(new Account(request.toAccount(), "remote", BigDecimal.ZERO, null, request.toAccountSortCode()));
-        }
-
-        recipient.setBalance(recipient.getBalance().add(request.amount()));
-        recipient = accountRepository.save(recipient);
-
-        sender.setBalance(newBalance);
-        sender = accountRepository.save(sender);
-
-        Transaction transaction = new Transaction(request.amount(), request.type(), recipient, sender);
-        transactionRepository.save(transaction);
-
-        return TransactionsMapper.mapToDTO(transaction);
-    }
-
     public TransactionDTO deposit(TransactionRequestDTO request) {
-        final Account account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode())
+        final var account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode())
                 .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
 
         BigDecimal newBalance = account.getBalance().add(request.amount());
@@ -105,5 +74,49 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.save(account);
 
         return TransactionsMapper.mapToDTO(transaction);
+    }
+
+    public TransactionDTO transfer(TransactionRequestDTO request) {
+        Account sender = computeFromAccount(request);
+        Account recipient = computeToAccount(request);
+
+        Transaction transaction = new Transaction(request.amount(), request.type(), recipient, sender);
+        transactionRepository.save(transaction);
+
+        return TransactionsMapper.mapToDTO(transaction);
+    }
+
+    private Account computeFromAccount(TransactionRequestDTO request) {
+        if (Objects.equals(request.fromAccountSortCode(), sortCode)) {
+            final var sender = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.fromAccount(), request.fromAccountSortCode())
+                    .orElseThrow(() -> new AccountNotFoundException(request.fromAccount()));
+            BigDecimal newBalance = sender.getBalance().subtract(request.amount());
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+                throw new NotEnoughFundsException(request.fromAccount());
+            }
+            sender.setBalance(newBalance);
+            return accountRepository.save(sender);
+        } else {
+            var sender = remoteAccountRepository.findByIdNumberAndIdSortCode(request.fromAccount(), request.fromAccountSortCode())
+                    .orElse(new RemoteAccount(request.fromAccount(), request.fromAccountSortCode()));
+            return remoteAccountRepository.save(sender);
+        }
+    }
+
+    private Account computeToAccount(TransactionRequestDTO request) {
+        if (Objects.equals(request.toAccountSortCode(), sortCode)) {
+            final var recipient = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode())
+                    .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
+            recipient.setBalance(recipient.getBalance().add(request.amount()));
+            return accountRepository.save(recipient);
+        } else {
+            final var recipient = remoteAccountRepository.findByIdNumberAndIdSortCode(request.toAccount(), request.toAccountSortCode())
+                    .orElse(new RemoteAccount(request.toAccount(), request.toAccountSortCode()));
+
+            String url = "http://localhost:" + request.toAccountSortCode() + "/transaction";
+            TransactionDTO response = restTemplate.postForObject(url, request, TransactionDTO.class);
+
+            return remoteAccountRepository.save(recipient);
+        }
     }
 }

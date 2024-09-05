@@ -2,10 +2,10 @@ package com.jaqg.banking.services;
 
 import com.jaqg.banking.dto.AccountDTO;
 import com.jaqg.banking.dto.AccountRequestDTO;
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
-import com.jaqg.banking.repos.AccountRepository;
+import com.jaqg.banking.entities.LocalAccount;
 import com.jaqg.banking.repos.CustomerRepository;
+import com.jaqg.banking.repos.LocalAccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,16 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class AccountServiceImplTest {
     @MockBean
-    private AccountRepository accountRepository;
+    private LocalAccountRepository accountRepository;
 
     @MockBean
     private CustomerRepository customerRepo;
     @Autowired
     private AccountService accountService;
 
-    private Account account1;
-    private Account account2;
-    private List<Account> accounts;
+    private LocalAccount account1;
+    private LocalAccount account2;
+    private List<LocalAccount> accounts;
     private Customer customer;
     private AccountDTO accountResponse1;
     private AccountDTO accountResponse2;
@@ -52,8 +52,8 @@ public class AccountServiceImplTest {
 
         //Create accounts
         accounts = new ArrayList<>();
-        account1 = new Account("Savings", new BigDecimal("100"), customer, 1111);
-        account2 = new Account("Checkings", new BigDecimal("200"), customer, 2222);
+        account1 = new LocalAccount("Savings", new BigDecimal("100"), customer, 1111);
+        account2 = new LocalAccount("Checkings", new BigDecimal("200"), customer, 2222);
 
         //Create accountDTOs that match the account above
         accountResponse1 = new AccountDTO(1234L, 1111,
@@ -100,7 +100,7 @@ public class AccountServiceImplTest {
     @Test
     void findAccountByNumber() {
         Long accountNumber = account1.getNumber();
-        Optional<Account> optionalAccount = Optional.ofNullable(account1);
+        Optional<LocalAccount> optionalAccount = Optional.ofNullable(account1);
 
         //Mock findById()
         when(accountRepository.findById(accountNumber)).thenReturn(optionalAccount);
@@ -122,7 +122,7 @@ public class AccountServiceImplTest {
     @Test
     void closeAccount() {
         Long accountNumber = account1.getNumber();
-        Optional<Account> optionalAccount = Optional.ofNullable(account1);
+        Optional<LocalAccount> optionalAccount = Optional.ofNullable(account1);
 
         //Mock findById()
         when((accountRepository).findById(accountNumber)).thenReturn(optionalAccount);

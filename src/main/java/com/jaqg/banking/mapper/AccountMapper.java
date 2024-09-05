@@ -1,22 +1,20 @@
 package com.jaqg.banking.mapper;
 
 import com.jaqg.banking.dto.AccountDTO;
-import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.entities.LocalAccount;
 
 import java.util.List;
 
 //Convert Account Entity to AccountResponseDTO
 public class AccountMapper {
 
-    public static List<AccountDTO> accountMapper(List<Account> accounts) {
+    public static List<AccountDTO> mapToDTO(List<LocalAccount> accounts) {
         return accounts.stream()
-                .map(AccountMapper::accountMapper)
+                .map(AccountMapper::mapToDTO)
                 .toList();
     }
 
-    public static AccountDTO accountMapper(Account account) {
-        return new AccountDTO(
-                account.getNumber(),
+    public static AccountDTO mapToDTO(LocalAccount account) {
                 account.getSortCode(),
                 account.getName(),
                 account.getOpeningBalance(),

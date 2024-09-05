@@ -10,6 +10,7 @@ import java.util.List;
 
 @Service
 public interface AccountService {
+
     List<AccountDTO> retrieveAllAccounts();
 
     AccountDTO createAccount(AccountRequestDTO createAccountDTO);
@@ -17,4 +18,5 @@ public interface AccountService {
     BigDecimal closeAccount(long number) throws AccountNotFoundException;
 
     AccountDTO findAccountByNumber(long number) throws AccountNotFoundException;
+
 }

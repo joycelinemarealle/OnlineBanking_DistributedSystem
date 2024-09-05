@@ -1,7 +1,7 @@
 package com.jaqg.banking.repos;
 
-import com.jaqg.banking.entities.Account;
 import com.jaqg.banking.entities.Customer;
+import com.jaqg.banking.entities.LocalAccount;
 import com.jaqg.banking.entities.Transaction;
 import com.jaqg.banking.enums.TransactionType;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +36,7 @@ class TransactionRepositoryTest {
         Transaction expectedTransaction = new Transaction();
         expectedTransaction.setDateTime(LocalDateTime.now());
         expectedTransaction.setType(type);
-        expectedTransaction.setValue(BigDecimal.TEN);
+        expectedTransaction.setAmount(BigDecimal.TEN);
 
         final long id = entityManager.persist(expectedTransaction).getId();
 
@@ -54,7 +53,7 @@ class TransactionRepositoryTest {
 
         customer = entityManager.persist(customer);
 
-        Account account = new Account();
+        LocalAccount account = new LocalAccount();
         account.setName("Checking");
         account.setOpeningBalance(BigDecimal.ONE);
         account.setBalance(BigDecimal.ONE);
@@ -65,13 +64,13 @@ class TransactionRepositoryTest {
         Transaction transaction1 = new Transaction();
         transaction1.setSender(account);
         transaction1.setType(TransactionType.DEPOSIT);
-        transaction1.setValue(BigDecimal.TEN);
+        transaction1.setAmount(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         Transaction transaction2 = new Transaction();
         transaction2.setRecipient(account);
         transaction2.setType(TransactionType.WITHDRAWAL);
-        transaction2.setValue(BigDecimal.ONE);
+        transaction2.setAmount(BigDecimal.ONE);
         transaction2.setDateTime(LocalDateTime.now());
 
         entityManager.persist(transaction1);
@@ -84,15 +83,15 @@ class TransactionRepositoryTest {
     @Test
     void testFindTransactionById() {
         Transaction transaction1 = new Transaction();
-        transaction1.setRecipient(new Account());
+        transaction1.setRecipient(new LocalAccount());
         transaction1.setType(TransactionType.DEPOSIT);
-        transaction1.setValue(BigDecimal.TEN);
+        transaction1.setAmount(BigDecimal.TEN);
         transaction1.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         Transaction transaction2 = new Transaction();
-        transaction2.setSender(new Account());
+        transaction2.setSender(new LocalAccount());
         transaction2.setType(TransactionType.WITHDRAWAL);
-        transaction2.setValue(BigDecimal.ONE);
+        transaction2.setAmount(BigDecimal.ONE);
         transaction2.setDateTime(LocalDateTime.now());
 
         entityManager.persist(transaction1);
@@ -103,7 +102,7 @@ class TransactionRepositoryTest {
         Transaction transaction = optionalTransaction.get();
         assertThat(transaction.getId()).isEqualTo(storedTransaction.getId());
         assertThat(transaction.getDateTime()).isEqualTo(storedTransaction.getDateTime());
-        assertThat(transaction.getValue()).isEqualTo(storedTransaction.getValue());
+        assertThat(transaction.getAmount()).isEqualTo(storedTransaction.getAmount());
         assertThat(transaction.getType()).isEqualTo(storedTransaction.getType());
     }
 
@@ -113,19 +112,19 @@ class TransactionRepositoryTest {
         final BigDecimal expectedValue = BigDecimal.ONE;
 
         Transaction transaction = new Transaction();
-        transaction.setRecipient(new Account());
+        transaction.setRecipient(new LocalAccount());
         transaction.setType(TransactionType.DEPOSIT);
-        transaction.setValue(BigDecimal.TEN);
+        transaction.setAmount(BigDecimal.TEN);
         transaction.setDateTime(LocalDateTime.of(2024, 6, 2, 23, 34, 34));
 
         final Transaction storedTransaction = entityManager.persist(transaction);
 
         transaction.setType(expectedType);
-        transaction.setValue(expectedValue);
+        transaction.setAmount(expectedValue);
         transaction = transactionRepository.save(transaction);
 
         assertThat(transaction.getId()).isEqualTo(storedTransaction.getId());
         assertThat(transaction.getType()).isEqualTo(expectedType);
-        assertThat(transaction.getValue()).isEqualTo(expectedValue);
+        assertThat(transaction.getAmount()).isEqualTo(expectedValue);
     }
 }

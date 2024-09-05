@@ -6,7 +6,6 @@ import com.jaqg.banking.entities.Customer;
 import com.jaqg.banking.repos.CustomerRepository;
 import com.jaqg.banking.services.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -20,21 +19,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
+
     @Mock
-    CustomerRepository customerRepo;
+    private CustomerRepository customerRepo;
 
-    Customer testCustomer;
+    private Customer testCustomer;
 
-    List<Customer> customerList;
+    private List<Customer> customerList;
 
 
     @BeforeEach
     public void setUp() {
         testCustomer = new Customer("Dan Jones");
-//        testCustomer.setId(2);
 
     }
 
@@ -42,7 +40,7 @@ public class CustomerServiceTest {
     public void addNewCustomerTest() {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         given(customerRepo.save(testCustomer)).willReturn((testCustomer));
-        CustomerDTO testCustomer = customerService.customerPostRequest("Dan Jones");
+        CustomerDTO testCustomer = customerService.createCustomer("Dan Jones");
         Customer customer = new Customer(testCustomer.fullName());
         assertThat(customer.getFullName()).isEqualTo("Dan Jones");
     }
@@ -51,12 +49,12 @@ public class CustomerServiceTest {
     public void deleteCustomerTest() {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         given(customerRepo.findById(2L)).willReturn(Optional.of(testCustomer));
-        var testCustomer = customerService.customerDeleteRequest(2L);
+        var testCustomer = customerService.deleteCustomer(2L);
         assertThat(testCustomer).isEqualTo(testCustomer);
     }
 
     @Test
-    public void findAllCustomersTest() {
+    public void retrieveAllCustomersCustomersTest() {
         CustomerService customerService = new CustomerServiceImpl(customerRepo);
         when(customerList.containsAll(customerList)).thenReturn(true);
         assertTrue(customerList.containsAll(customerList));
