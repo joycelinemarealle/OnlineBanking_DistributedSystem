@@ -13,10 +13,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-//    @SequenceGenerator(
-//            name = "account-number-gen",
-//            sequenceName = "account_number_seq",
-//            initialValue = 100000, allocationSize = 1)
 @Embeddable
 public class AccountPK implements Serializable {
 

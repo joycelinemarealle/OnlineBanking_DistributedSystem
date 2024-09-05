@@ -1,4 +1,4 @@
-package com.jaqg.banking.controllers;
+package com.jaqg.banking.web.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaqg.banking.dto.AccountDTO;

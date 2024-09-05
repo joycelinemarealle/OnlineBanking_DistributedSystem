@@ -7,7 +7,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
-import static com.jaqg.banking.config.Constants.SPRING_PROFILE_DEVELOPMENT;
+import static com.jaqg.banking.config.Constant.SPRING_PROFILE_DEVELOPMENT;
 
 @Configuration
 @EnableAspectJAutoProxy

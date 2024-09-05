@@ -13,7 +13,7 @@ import org.springframework.core.env.Profiles;
 
 import java.util.Arrays;
 
-import static com.jaqg.banking.config.Constants.SPRING_PROFILE_DEVELOPMENT;
+import static com.jaqg.banking.config.Constant.SPRING_PROFILE_DEVELOPMENT;
 
 @Aspect
 public class LoggingAspect {
@@ -68,13 +68,15 @@ public class LoggingAspect {
     @Around("applicationPackagePointcut() && springBeanPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Logger log = logger(joinPoint);
+        long start = System.currentTimeMillis();
         if (log.isDebugEnabled()) {
             log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         }
         try {
             Object result = joinPoint.proceed();
+            long elapsedTime = System.currentTimeMillis() - start;
             if (log.isDebugEnabled()) {
-                log.debug("Exit: {}() with result = {}", joinPoint.getSignature().getName(), result);
+                log.debug("Exit: {}() with result = {}() execution time: {}mc", joinPoint.getSignature().getName(), result, elapsedTime);
             }
             return result;
         } catch (IllegalArgumentException e) {

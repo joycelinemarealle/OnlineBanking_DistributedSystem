@@ -18,7 +18,7 @@ public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(length = 150, nullable = false)
     @NotBlank(message = "Name is mandatory")
@@ -47,7 +47,7 @@ public class Customer implements Serializable {
         this.fullName = fullName;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

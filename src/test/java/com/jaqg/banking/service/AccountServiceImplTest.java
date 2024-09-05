@@ -1,20 +1,18 @@
-package com.jaqg.banking.services;
+package com.jaqg.banking.service;
 
 import com.jaqg.banking.dto.AccountDTO;
 import com.jaqg.banking.dto.AccountRequestDTO;
-import com.jaqg.banking.entities.Account;
-import com.jaqg.banking.entities.Customer;
-import com.jaqg.banking.repos.AccountRepository;
-import com.jaqg.banking.repos.CustomerRepository;
+import com.jaqg.banking.entity.Customer;
+import com.jaqg.banking.entity.LocalAccount;
+import com.jaqg.banking.repository.CustomerRepository;
+import com.jaqg.banking.repository.LocalAccountRepository;
+import com.jaqg.banking.service.impl.AccountServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -85,7 +83,7 @@ public class AccountServiceImplTest {
     void retrieveAllAccounts() {
 
         //Test the size and elements of List
-        when(accountRepository.findByIsClosedFalse()).thenReturn(accounts);
+        when(accountRepository.findByIdSortCodeAndIsClosedFalse(1234)).thenReturn(accounts);
 
         //Execute service method
         List<AccountDTO> accountDTOList = accountService.retrieveAllAccounts();
@@ -102,7 +100,7 @@ public class AccountServiceImplTest {
         assertEquals(accountResponse1.sortCode(), accountDTOList.get(0).sortCode());
 
         //Verify mock if method called
-        verify(accountRepository).findByIsClosedFalse();
+        verify(accountRepository).findByIdSortCodeAndIsClosedFalse(1234);
     }
 
     @Test
@@ -112,7 +110,7 @@ public class AccountServiceImplTest {
         Optional<LocalAccount> optionalAccount = Optional.ofNullable(account1);
 
         //Mock findById()
-        when(accountRepository.findByIdNumberAndIsClosedFalse(accountNumber)).thenReturn(optionalAccount);
+        when(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(accountNumber, 1234)).thenReturn(optionalAccount);
 
         //Execute service method
         AccountDTO account = accountService.findAccountByNumber(accountNumber);
@@ -124,7 +122,7 @@ public class AccountServiceImplTest {
         assertThat(account1.getSortCode()).isEqualTo(account.sortCode());
 
         //Verify Mock
-        verify(accountRepository).findByIdNumberAndIsClosedFalse(accountNumber);
+        verify(accountRepository).findByIdNumberAndIdSortCodeAndIsClosedFalse(accountNumber, 1234);
 
     }
 
@@ -134,7 +132,7 @@ public class AccountServiceImplTest {
         Optional<LocalAccount> optionalAccount = Optional.ofNullable(account1);
 
         //Mock findById()
-        when((accountRepository).findByIdNumberAndIsClosedFalse(accountNumber)).thenReturn(optionalAccount);
+        when((accountRepository).findByIdNumberAndIdSortCodeAndIsClosedFalse(accountNumber, 1234)).thenReturn(optionalAccount);
 
         //Capture original balance
         BigDecimal originalBalance = account1.getBalance();
@@ -150,7 +148,7 @@ public class AccountServiceImplTest {
         assertThat(account1.getBalance()).isEqualTo(BigDecimal.ZERO);
 
         //Verify mock used
-        verify(accountRepository).findByIdNumberAndIsClosedFalse(accountNumber);
+        verify(accountRepository).findByIdNumberAndIdSortCodeAndIsClosedFalse(accountNumber, 1234);
         verify(accountRepository).save(account1);
 
 
