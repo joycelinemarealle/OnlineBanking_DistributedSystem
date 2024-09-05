@@ -2,7 +2,8 @@ package com.jaqg.banking.controllers;
 
 
 import com.jaqg.banking.dto.CustomerDTO;
-import com.jaqg.banking.services.CustomerService;
+import com.jaqg.banking.service.CustomerService;
+import com.jaqg.banking.web.rest.CustomerController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ class CustomerControllerTest {
         final var customerDto1 = new CustomerDTO(10L, "Charlie", List.of(235235L));
         final var customerDto2 = new CustomerDTO(11L, "Peter", List.of(235233L, 1L));
 
-        when(customerService.findAll()).thenReturn(List.of(customerDto1, customerDto2));
+        when(customerService.retrieveAllCustomers()).thenReturn(List.of(customerDto1, customerDto2));
 
         try {
             mockMvc.perform(get("/customer").accept(MediaType.APPLICATION_JSON))
@@ -61,7 +62,7 @@ class CustomerControllerTest {
         final String fullName = "Charlie";
         List<Long> accounts = List.of(235235L);
 
-        when(customerService.customerGetRequest(customerId)).thenReturn(new CustomerDTO(customerId, fullName, accounts));
+        when(customerService.retrieveCustomer(customerId)).thenReturn(new CustomerDTO(customerId, fullName, accounts));
 
         try {
             mockMvc.perform(get("/customer/" + customerId).accept(MediaType.APPLICATION_JSON))
@@ -82,7 +83,7 @@ class CustomerControllerTest {
         final String fullName = "Charlie";
         List<Long> accounts = List.of();
 
-        when(customerService.customerPostRequest(fullName)).thenReturn(new CustomerDTO(customerId, fullName, accounts));
+        when(customerService.createCustomer(fullName)).thenReturn(new CustomerDTO(customerId, fullName, accounts));
 
         try {
             mockMvc.perform(post("/customer")
@@ -104,7 +105,7 @@ class CustomerControllerTest {
         final long customerId = 10L;
         final BigDecimal value = new BigDecimal("50.55");
 
-        when(customerService.customerDeleteRequest(customerId)).thenReturn(value);
+        when(customerService.deleteCustomer(customerId)).thenReturn(value);
 
         try {
             mockMvc.perform(delete("/customer/" + customerId)

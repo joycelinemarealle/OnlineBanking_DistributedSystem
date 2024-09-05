@@ -5,7 +5,8 @@ import com.jaqg.banking.config.JacksonConfiguration;
 import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.dto.TransactionDTO;
 import com.jaqg.banking.enums.TransactionType;
-import com.jaqg.banking.services.TransactionService;
+import com.jaqg.banking.service.TransactionService;
+import com.jaqg.banking.web.rest.TransactionController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +140,7 @@ class TransactionControllerTest {
                 ", \"amount\": " + transactionDTO.amount() +
                 "}";
 
-        when(transactionService.executeTransfer(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
+        when(transactionService.transfer(any(TransactionRequestDTO.class))).thenReturn(transactionDTO);
 
         try {
             mockMvc.perform(post("/transaction")

@@ -1,7 +1,7 @@
 package com.jaqg.banking.mapper;
 
 import com.jaqg.banking.dto.TransactionDTO;
-import com.jaqg.banking.entities.Transaction;
+import com.jaqg.banking.entity.Transaction;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class TransactionsMapper {
                 transaction.getFromAccountSourceCode(),
                 transaction.getToAccountNumber(),
                 transaction.getToAccountSourceCode(),
-                transaction.getValue());
+                transaction.getAmount());
 
     }
 }
