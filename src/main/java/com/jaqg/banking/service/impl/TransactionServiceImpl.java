@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -75,6 +76,13 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.save(account);
 
         return TransactionsMapper.mapToDTO(transaction);
+    }
+
+    @Override
+    public List<TransactionDTO> getAllTransactions(Long accountNumber) {
+        final var account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(accountNumber, sortCode)
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
+        return TransactionsMapper.mapToDTO(account.getTransactions());
     }
 
     @Override

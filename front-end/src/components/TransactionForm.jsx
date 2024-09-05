@@ -11,9 +11,9 @@ const TransactionForm = ({ isOpen, onClose, accountNumber, onTransactionComplete
     const requestObject = {
         type: transactionType,
         fromAccount: transactionType !== 'DEPOSIT' ? accountNumber : null,
-        fromAccountSortCode: transactionType !== 'DEPOSIT' ? 1234 : null,
+        fromAccountSortCode: transactionType !== 'DEPOSIT' ? 135513 : null,
         toAccount: transactionType !== 'WITHDRAWAL' ? toAccount || accountNumber : null,
-        toAccountSortCode: transactionType !== 'WITHDRAWAL' ? toAccountSortCode || 1234 : null,
+        toAccountSortCode: transactionType !== 'WITHDRAWAL' ? toAccountSortCode || 135513 : null,
         amount: parseFloat(amount),
     };
 

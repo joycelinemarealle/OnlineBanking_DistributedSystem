@@ -11,7 +11,7 @@ const TransactionsPage = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/transaction');
+        const response = await axios.get('http://localhost:8080/transaction'); //add account number variable
         const filteredTransactions = response.data.filter(transaction => 
           transaction.toAccount === parseInt(accountNumber)
         );

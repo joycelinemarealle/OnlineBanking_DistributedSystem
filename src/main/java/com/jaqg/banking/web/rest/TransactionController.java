@@ -6,6 +6,8 @@ import com.jaqg.banking.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/transaction")
@@ -15,6 +17,11 @@ public class TransactionController {
 
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
+    }
+
+    @GetMapping("/{accountNumber}")
+    public List<TransactionDTO> retrieveAllCustomers(@PathVariable Long accountNumber) {
+        return this.transactionService.getAllTransactions(accountNumber);
     }
 
     @PostMapping

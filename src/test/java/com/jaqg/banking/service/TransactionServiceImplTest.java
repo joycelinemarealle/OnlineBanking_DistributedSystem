@@ -26,7 +26,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@Disabled
 class TransactionServiceImplTest {
 
     private final static Integer SORT_CODE = 1234;
@@ -54,13 +53,13 @@ class TransactionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        transactionService = new TransactionServiceImpl(accountRepository, remoteAccountRepository, transactionRepository, SORT_CODE, restTemplateBuilder);
-
-        when(restTemplateBuilder.build()).thenReturn(restTemplate);
-
-        when(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(any(), any())).thenReturn(
-                Optional.of(new LocalAccount("Savings", new BigDecimal("100"), null, 4444))
-        );
+//        transactionService = new TransactionServiceImpl(accountRepository, remoteAccountRepository, transactionRepository, SORT_CODE, restTemplateBuilder);
+//
+//        when(restTemplateBuilder.build()).thenReturn(restTemplate);
+//
+//        when(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(any(), any())).thenReturn(
+//                Optional.of(new LocalAccount("Savings", new BigDecimal("100"), null, 4444))
+//        );
         transferRequest = new TransactionRequestDTO(
                 TransactionType.TRANSFER,
                 123456789L,
@@ -88,8 +87,14 @@ class TransactionServiceImplTest {
 
 
     @Test
-    void transfer() {
-        TransactionDTO response = transactionService.transfer(transferRequest);
+    void deposit() {
+        when(restTemplateBuilder.build()).thenReturn(restTemplate);
+        transactionService = new TransactionServiceImpl(accountRepository, remoteAccountRepository, transactionRepository, SORT_CODE, restTemplateBuilder);
+
+        when(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(any(), any())).thenReturn(Optional.of(new LocalAccount("Savings", new BigDecimal("100"), null, 4444)));
+
+        TransactionDTO response = transactionService.deposit(transferRequest);
+
 
         assertEquals(response.amount(), transferRequest.amount());
 
@@ -109,6 +114,6 @@ class TransactionServiceImplTest {
 
 
     @Test
-    void deposit() {
+    void transfer() {
     }
 }
