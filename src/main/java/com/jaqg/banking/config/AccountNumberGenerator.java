@@ -1,6 +1,6 @@
 package com.jaqg.banking.config;
 
-import com.jaqg.banking.entities.Account;
+import com.jaqg.banking.entity.Account;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;

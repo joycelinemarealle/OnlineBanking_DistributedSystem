@@ -1,7 +1,7 @@
 package com.jaqg.banking.mapper;
 
 import com.jaqg.banking.dto.AccountDTO;
-import com.jaqg.banking.entities.LocalAccount;
+import com.jaqg.banking.entity.LocalAccount;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ public class AccountMapper {
     }
 
     public static AccountDTO mapToDTO(LocalAccount account) {
+        return new AccountDTO(
+                account.getNumber(),
                 account.getSortCode(),
                 account.getName(),
                 account.getOpeningBalance(),

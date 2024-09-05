@@ -2,6 +2,9 @@ logging:
   level:
     ROOT: INFO
     com.jaqg.banking: INFO
+  file:
+    name: banking.log
+
 
 spring:
   jpa:
