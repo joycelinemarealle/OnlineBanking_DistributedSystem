@@ -62,6 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionsMapper.mapToDTO(transaction);
     }
 
+    @Override
     public TransactionDTO deposit(TransactionRequestDTO request) {
         final var account = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode())
                 .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
@@ -76,9 +77,10 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionsMapper.mapToDTO(transaction);
     }
 
+    @Override
     public TransactionDTO transfer(TransactionRequestDTO request) {
-        Account sender = computeFromAccount(request);
-        Account recipient = computeToAccount(request);
+        Account sender = processFromAccount(request);
+        Account recipient = processToAccount(request);
 
         Transaction transaction = new Transaction(request.amount(), request.type(), recipient, sender);
         transactionRepository.save(transaction);
@@ -86,7 +88,7 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionsMapper.mapToDTO(transaction);
     }
 
-    private Account computeFromAccount(TransactionRequestDTO request) {
+    private Account processFromAccount(TransactionRequestDTO request) {
         if (Objects.equals(request.fromAccountSortCode(), sortCode)) {
             final var sender = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.fromAccount(), request.fromAccountSortCode())
                     .orElseThrow(() -> new AccountNotFoundException(request.fromAccount()));
@@ -103,7 +105,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    private Account computeToAccount(TransactionRequestDTO request) {
+    private Account processToAccount(TransactionRequestDTO request) {
         if (Objects.equals(request.toAccountSortCode(), sortCode)) {
             final var recipient = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode())
                     .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));

@@ -34,6 +34,10 @@ public abstract class Account implements Serializable {
         return id.number();
     }
 
+    public void setNumber(Long number) {
+        this.id.number = number;
+    }
+
     public Integer getSortCode() {
         return id.sortCode();
     }

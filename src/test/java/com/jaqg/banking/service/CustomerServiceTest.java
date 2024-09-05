@@ -51,19 +51,48 @@ public class CustomerServiceTest {
         testCustomer.addAccount(new LocalAccount("Test2", BigDecimal.ONE, testCustomer, 1234));
 
         given(customerRepository.findByIdAndIsRemovedFalse(2L)).willReturn(Optional.of(testCustomer));
+
         BigDecimal amount = customerService.deleteCustomer(2L);
+
         assertThat(amount).isEqualTo(new BigDecimal("11"));
+
+        verify(customerRepository).findByIdAndIsRemovedFalse(2L);
     }
 
     @Test
-    public void retrieveAllCustomersCustomersTest() {
+    public void retrieveAllCustomersTest() {
         List<Customer> customers = List.of(new Customer("Dan Jones"), new Customer("Ivan Jones"));
-
         final var expectedValues = List.of(new CustomerDTO(null, "Dan Jones", List.of()), new CustomerDTO(null, "Ivan Jones", List.of()));
 
         when(customerRepository.findByIsRemovedFalse()).thenReturn(customers);
 
         List<CustomerDTO> customerDTOS = customerService.retrieveAllCustomers();
+
         assertThat(customerDTOS).hasSize(2).containsAll(expectedValues);
+
+        verify(customerRepository).findByIsRemovedFalse();
+    }
+
+    @Test
+    void retrieveCustomerTest() {
+        var testCustomer = new Customer("Dan Jones");
+
+        LocalAccount account1 = new LocalAccount("Test", BigDecimal.TEN, testCustomer, 1234);
+        account1.setNumber(12356236L);
+        LocalAccount account2 = new LocalAccount("Test2", BigDecimal.ONE, testCustomer, 1234);
+        account2.setNumber(46326236L);
+
+        testCustomer.addAccount(account1);
+        testCustomer.addAccount(account2);
+
+        given(customerRepository.findByIdAndIsRemovedFalse(2L)).willReturn(Optional.of(testCustomer));
+
+        CustomerDTO customerDTO = customerService.retrieveCustomer(2L);
+
+        assertThat(customerDTO).isNotNull();
+        assertThat(customerDTO.fullName()).isEqualTo("Dan Jones");
+        assertThat(customerDTO.accounts()).isNotEmpty().containsAll(List.of(account1.getNumber(), account2.getNumber()));
+
+        verify(customerRepository).findByIdAndIsRemovedFalse(2L);
     }
 }

@@ -5,14 +5,17 @@ import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.entity.LocalAccount;
 import com.jaqg.banking.enums.TransactionType;
 import com.jaqg.banking.repository.LocalAccountRepository;
+import com.jaqg.banking.repository.RemoteAccountRepository;
 import com.jaqg.banking.repository.TransactionRepository;
 import com.jaqg.banking.service.impl.TransactionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -22,17 +25,28 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @Disabled
 class TransactionServiceImplTest {
-    @Mock
-    LocalAccountRepository accountRepository;
+
+    private final static Integer SORT_CODE = 1234;
 
     @Mock
-    TransactionRepository transactionRepository;
+    private LocalAccountRepository accountRepository;
 
-    @InjectMocks
-    TransactionServiceImpl transactionServiceImpl;
+    @Mock
+    private RemoteAccountRepository remoteAccountRepository;
+
+    @Mock
+    private RestTemplateBuilder restTemplateBuilder;
+
+    @Mock
+    private RestTemplate restTemplate;
+
+    @Mock
+    private TransactionRepository transactionRepository;
+
+    private TransactionService transactionService;
 
     private TransactionRequestDTO transferRequest;
     private TransactionRequestDTO withdrawRequest;
@@ -40,7 +54,11 @@ class TransactionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        when(accountRepository.findById(any())).thenReturn(
+        transactionService = new TransactionServiceImpl(accountRepository, remoteAccountRepository, transactionRepository, SORT_CODE, restTemplateBuilder);
+
+        when(restTemplateBuilder.build()).thenReturn(restTemplate);
+
+        when(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(any(), any())).thenReturn(
                 Optional.of(new LocalAccount("Savings", new BigDecimal("100"), null, 4444))
         );
         transferRequest = new TransactionRequestDTO(
@@ -71,27 +89,26 @@ class TransactionServiceImplTest {
 
     @Test
     void transfer() {
-        TransactionDTO response = transactionServiceImpl.transfer(transferRequest);
+        TransactionDTO response = transactionService.transfer(transferRequest);
+
         assertEquals(response.amount(), transferRequest.amount());
-        verify(accountRepository.findById(transferRequest.toAccount()));
+
+        verify(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(transferRequest.toAccount(), transferRequest.toAccountSortCode()));
         verify(accountRepository.save(any()));
     }
 
 
     @Test
     void withdraw() {
-        TransactionDTO response = transactionServiceImpl.withdraw(withdrawRequest);
+        TransactionDTO response = transactionService.withdraw(withdrawRequest);
+
         assertEquals(response.amount(), withdrawRequest.amount());
-        verify(accountRepository.findById(withdrawRequest.fromAccount()));
+        verify(accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(withdrawRequest.fromAccount(), withdrawRequest.toAccountSortCode()));
         verify(accountRepository.save(any()));
     }
 
 
     @Test
     void deposit() {
-    }
-
-    @Test
-    void getAllTransactions() {
     }
 }
