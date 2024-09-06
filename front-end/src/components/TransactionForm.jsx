@@ -24,9 +24,9 @@ const TransactionForm = ({ isOpen, onClose, accountNumber, onTransactionComplete
     const requestObject = {
         type: transactionType,
         fromAccount: transactionType !== 'DEPOSIT' ? accountNumber : null,
-        fromAccountSortCode: transactionType !== 'DEPOSIT' ? setSortCode : null,
+        fromAccountSortCode: transactionType !== 'DEPOSIT' ? sortCode : null,
         toAccount: transactionType !== 'WITHDRAWAL' ? toAccount || accountNumber : null,
-        toAccountSortCode: transactionType !== 'WITHDRAWAL' ? toAccountSortCode || setSortCode : null,
+        toAccountSortCode: transactionType !== 'WITHDRAWAL' ? toAccountSortCode || sortCode : null,
         amount: parseFloat(amount),
     };
 
@@ -36,7 +36,6 @@ const TransactionForm = ({ isOpen, onClose, accountNumber, onTransactionComplete
 
         // Notify parent component
         onTransactionCompleted();
-
         onClose();
     } catch (error) {
         console.error('Error processing transaction:', error);
