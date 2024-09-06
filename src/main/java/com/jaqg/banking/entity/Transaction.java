@@ -2,6 +2,7 @@ package com.jaqg.banking.entity;
 
 import com.jaqg.banking.enums.TransactionType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -27,6 +28,7 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     private LocalDateTime dateTime;
 
     @Column(precision = 16, scale = 2, nullable = false)
+    @PositiveOrZero
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)

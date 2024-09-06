@@ -1,7 +1,3 @@
-#  1. docker compose -f .\postgresql.yml up
-#  1. docker ps -a
-#  2. docker exec -it sample-postgresql psql -U user -W
-
 name: postgres
 services:
   postgresql:
@@ -9,10 +5,10 @@ services:
     volumes:
       - ./postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=1010
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
-    #  - POSTGRES_DB=bank
+      - POSTGRES_DB=bank
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
       interval: 5s

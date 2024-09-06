@@ -6,6 +6,7 @@ import com.jaqg.banking.entity.Account;
 import com.jaqg.banking.entity.RemoteAccount;
 import com.jaqg.banking.entity.Transaction;
 import com.jaqg.banking.exception.AccountNotFoundException;
+import com.jaqg.banking.exception.IllegalRestArgumentException;
 import com.jaqg.banking.exception.NotEnoughFundsException;
 import com.jaqg.banking.mapper.TransactionsMapper;
 import com.jaqg.banking.repository.LocalAccountRepository;
@@ -114,16 +115,17 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private Account processToAccount(TransactionRequestDTO request) {
-        if (Objects.equals(request.toAccountSortCode(), sortCode)) {
-            final var recipient = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), request.toAccountSortCode())
+        Integer accountSortCode = request.toAccountSortCode() == null || request.toAccountSortCode() == 0 ? sortCode : request.toAccountSortCode();
+        if (Objects.equals(accountSortCode, sortCode)) {
+            final var recipient = accountRepository.findByIdNumberAndIdSortCodeAndIsClosedFalse(request.toAccount(), accountSortCode)
                     .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
             recipient.setBalance(recipient.getBalance().add(request.amount()));
             return accountRepository.save(recipient);
         } else {
-            final var recipient = remoteAccountRepository.findByIdNumberAndIdSortCode(request.toAccount(), request.toAccountSortCode())
-                    .orElse(new RemoteAccount(request.toAccount(), request.toAccountSortCode()));
+            final var recipient = remoteAccountRepository.findByIdNumberAndIdSortCode(request.toAccount(), accountSortCode)
+                    .orElse(new RemoteAccount(request.toAccount(), accountSortCode));
 
-            String url = "http://localhost:" + request.toAccountSortCode() + "/transaction";
+            String url = "http://localhost:" + accountSortCode + "/transaction";
             TransactionDTO response = restTemplate.postForObject(url, request, TransactionDTO.class);
 
             return remoteAccountRepository.save(recipient);
