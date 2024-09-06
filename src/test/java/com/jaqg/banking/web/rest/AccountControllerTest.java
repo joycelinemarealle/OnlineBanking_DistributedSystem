@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaqg.banking.dto.AccountDTO;
 import com.jaqg.banking.dto.AccountRequestDTO;
 import com.jaqg.banking.service.AccountService;
-import com.jaqg.banking.web.rest.AccountController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -94,7 +93,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    void findAccountByNumber() throws Exception {
+    void findAccountByNumber() {
 
         //Mock Service
         when(accountService.findAccountByNumber(accountResponse1.number())).thenReturn(accountResponse1);
@@ -160,7 +159,7 @@ public class AccountControllerTest {
 
 
     @Test
-    void closeAccount() throws Exception {
+    void closeAccount() {
         Long accountNumber = accountResponse1.number();
         BigDecimal balance = accountResponse1.balance();
 

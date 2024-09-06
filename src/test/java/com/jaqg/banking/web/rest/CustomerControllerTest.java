@@ -3,7 +3,6 @@ package com.jaqg.banking.web.rest;
 
 import com.jaqg.banking.dto.CustomerDTO;
 import com.jaqg.banking.service.CustomerService;
-import com.jaqg.banking.web.rest.CustomerController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

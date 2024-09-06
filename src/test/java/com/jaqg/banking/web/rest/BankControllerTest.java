@@ -1,6 +1,5 @@
 package com.jaqg.banking.web.rest;
 
-import com.jaqg.banking.web.rest.BankController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

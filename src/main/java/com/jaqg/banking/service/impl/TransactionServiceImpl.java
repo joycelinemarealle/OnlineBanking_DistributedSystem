@@ -69,8 +69,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new AccountNotFoundException(request.toAccount()));
 
         BigDecimal newBalance = account.getBalance().add(request.amount());
-        Transaction transaction = new Transaction(request.amount(), request.type(), account, null);
-        transactionRepository.save(transaction);
+
+        Transaction transaction = transactionRepository.save(new Transaction(request.amount(), request.type(), account, null));
 
         account.setBalance(newBalance);
         accountRepository.save(account);

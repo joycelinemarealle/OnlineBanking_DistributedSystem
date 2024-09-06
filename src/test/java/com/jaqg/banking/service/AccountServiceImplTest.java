@@ -45,7 +45,7 @@ public class AccountServiceImplTest {
     @BeforeEach
     void setUp() {
         //Create accounts
-        accountService = new AccountServiceImpl(accountRepository, customerRepo,1234);
+        accountService = new AccountServiceImpl(accountRepository, customerRepo, 1234);
 
         customer = new Customer("Joyceline Marealle");
 

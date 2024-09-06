@@ -2,11 +2,10 @@ package com.jaqg.banking.web.rest;
 
 
 import com.jaqg.banking.config.JacksonConfiguration;
-import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.dto.TransactionDTO;
+import com.jaqg.banking.dto.TransactionRequestDTO;
 import com.jaqg.banking.enums.TransactionType;
 import com.jaqg.banking.service.TransactionService;
-import com.jaqg.banking.web.rest.TransactionController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
