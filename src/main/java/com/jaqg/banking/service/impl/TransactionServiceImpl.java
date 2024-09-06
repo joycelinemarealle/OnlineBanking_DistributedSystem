@@ -89,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService {
             return addToLocalAccount(request.toAccount(), accountSortCode, request.amount());
         } else {
             String url = "http://localhost:" + accountSortCode + "/transaction";
-            TransactionDTO response = restTemplate.postForObject(url, request, TransactionDTO.class);
+            restTemplate.postForObject(url, request, TransactionDTO.class);
 
             return createRemoteAccount(request.toAccount(), accountSortCode);
         }
