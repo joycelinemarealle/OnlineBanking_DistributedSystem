@@ -1,26 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import Options from "@mui/icons-material/ArrowDownwardSharp";
 import TransactionForm from './TransactionForm';
 import axios from "axios";
 
-const AccountInfo = ({ accounts, onDeleteAccount }) => {
+const AccountInfo = ({ accounts, onDeleteAccount, customerId }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [accountsState, setAccountsState] = useState(accounts || []);
   const navigate = useNavigate(); 
 
-  const fetchUpdateAccountData = async() => {
-    try {
-      const response = await axios.get('http://localhost:8080/account'); 
-      setAccountsState(response.data);
-      console.log(response.data.amount);
-    } catch (error) {
-      console.error('Error fetching updated account data:', error);
-    }
-  }
+    const fetchUpdateAccountData = async () => {
+      try {
+        const customerResp = await axios.get(`http://localhost:8080/customer/${customerId}`);
+        const customerAccounts = customerResp.data.accounts;
+
+        const fetchedAccounts = await Promise.all(
+          customerAccounts.map(async (accountNumber) => {
+            const response = await axios.get(`http://localhost:8080/account/${accountNumber}`);
+            return response.data;
+          })
+        );
+
+        setAccountsState(fetchedAccounts);
+        console.log(fetchedAccounts);
+      } catch (error) {
+        console.error('Error fetching updated account data:', error);
+      }
+    };
+    useEffect(() => {
+      if (customerId) {
+        fetchUpdateAccountData();
+      }
+    }, [customerId]);
 
   const handleViewTransactions = (accountNumber) => {
     navigate(`/transactions/${accountNumber}`);
