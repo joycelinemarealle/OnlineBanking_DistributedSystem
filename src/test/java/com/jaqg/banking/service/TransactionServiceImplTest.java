@@ -51,7 +51,7 @@ class TransactionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        transactionService = new TransactionServiceImpl(accountRepository, remoteAccountRepository, transactionRepository, SORT_CODE, restTemplateBuilder);
+        transactionService = new TransactionServiceImpl(accountRepository, remoteAccountRepository, transactionRepository, SORT_CODE, "", restTemplateBuilder);
     }
 
     @Test

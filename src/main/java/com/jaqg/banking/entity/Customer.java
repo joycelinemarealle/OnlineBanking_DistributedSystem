@@ -29,6 +29,7 @@ public class Customer implements Serializable {
     private boolean isRemoved = false;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy(value = "number desc")
     private final List<LocalAccount> accounts = new ArrayList<>();
 
     public Customer(String fullName) {

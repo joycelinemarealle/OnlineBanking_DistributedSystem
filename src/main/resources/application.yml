@@ -13,3 +13,4 @@ spring:
 
 
 sortcode: 135513
+remote-bank-url: http://localhost

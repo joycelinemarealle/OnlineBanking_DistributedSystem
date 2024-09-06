@@ -26,6 +26,7 @@ import java.util.Objects;
 public class TransactionServiceImpl implements TransactionService {
 
     private final Integer sortCode;
+    private final String remoteBankUrl;
     private final LocalAccountRepository accountRepository;
     private final RemoteAccountRepository remoteAccountRepository;
     private final TransactionRepository transactionRepository;
@@ -35,11 +36,13 @@ public class TransactionServiceImpl implements TransactionService {
                                   RemoteAccountRepository remoteAccountRepository,
                                   TransactionRepository transactionRepository,
                                   @Value("${sortcode}") Integer sortCode,
+                                  @Value("${remote-bank-url}") String remoteBankUrl,
                                   RestTemplateBuilder restTemplateBuilder) {
         this.accountRepository = accountRepository;
         this.remoteAccountRepository = remoteAccountRepository;
         this.transactionRepository = transactionRepository;
         this.sortCode = sortCode;
+        this.remoteBankUrl = remoteBankUrl;
         this.restTemplate = restTemplateBuilder.build();
     }
 
@@ -88,7 +91,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (Objects.equals(accountSortCode, sortCode)) {
             return addToLocalAccount(request.toAccount(), accountSortCode, request.amount());
         } else {
-            String url = "http://localhost:" + accountSortCode + "/transaction";
+            String url = remoteBankUrl + ":" + accountSortCode + "/transaction";
             restTemplate.postForObject(url, request, TransactionDTO.class);
 
             return createRemoteAccount(request.toAccount(), accountSortCode);
