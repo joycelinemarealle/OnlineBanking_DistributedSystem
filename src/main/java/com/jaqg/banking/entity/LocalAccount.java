@@ -1,8 +1,10 @@
 package com.jaqg.banking.entity;
 
+import com.jaqg.banking.exception.NotEnoughFundsException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -111,6 +113,18 @@ public class LocalAccount extends Account implements Serializable {
 
     public void setClosed(boolean closed) {
         isClosed = closed;
+    }
+
+    public void addToBalance(@NotNull @PositiveOrZero BigDecimal amount) {
+        setBalance(getBalance().add(amount));
+    }
+
+    public void subtractFromBalance(@NotNull @PositiveOrZero BigDecimal amount) {
+        BigDecimal newBalance = getBalance().subtract(amount);
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NotEnoughFundsException(id.number);
+        }
+        setBalance(newBalance);
     }
 
     @Override

@@ -10,8 +10,8 @@ import java.util.Optional;
 @Repository
 public interface LocalAccountRepository extends JpaRepository<LocalAccount, Long> {
 
-    List<LocalAccount> findByIdSortCodeAndIsClosedFalse(int sortCode);
+    List<LocalAccount> findByIdSortCodeAndIsClosedFalse(Integer sortCode);
 
-    Optional<LocalAccount> findByIdNumberAndIdSortCodeAndIsClosedFalse(long id, int sortCode);
+    Optional<LocalAccount> findByIdNumberAndIdSortCodeAndIsClosedFalse(Long id, Integer sortCode);
 
 }

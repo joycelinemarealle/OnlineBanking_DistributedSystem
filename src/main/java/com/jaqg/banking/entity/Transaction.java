@@ -10,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Transaction implements Serializable, Comparable<Transaction> {
@@ -64,9 +65,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     }
 
     public void setSender(Account sender) {
-        if (sender != null) {
-//            sender.addCreditTransaction(this);
-        }
         this.sender = sender;
     }
 
@@ -103,9 +101,6 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     }
 
     public void setRecipient(Account recipient) {
-        if (recipient != null) {
-//            recipient.addDebitTransaction(this);
-        }
         this.recipient = recipient;
     }
 
@@ -128,5 +123,30 @@ public class Transaction implements Serializable, Comparable<Transaction> {
     @Override
     public int compareTo(Transaction o) {
         return dateTime.compareTo(o.dateTime);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaction that)) return false;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Transaction{");
+        sb.append("id=").append(id);
+        sb.append(", dateTime=").append(dateTime);
+        sb.append(", amount=").append(amount);
+        sb.append(", type=").append(type);
+        sb.append(", recipient=").append(recipient);
+        sb.append(", sender=").append(sender);
+        sb.append('}');
+        return sb.toString();
     }
 }
