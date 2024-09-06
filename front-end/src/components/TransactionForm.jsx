@@ -6,14 +6,27 @@ const TransactionForm = ({ isOpen, onClose, accountNumber, onTransactionComplete
   const [toAccount, setToAccount] = useState('');
   const [toAccountSortCode, setToAccountSortCode] = useState('');
   const [amount, setAmount] = useState('');
+  const [sortCode, setSortCode] = useState('');
+
+    const sortCodeData = async() => {
+        try {
+            const response = await axios.get('http://localhost:8080/sortCode');
+            setSortCode(response.data);
+        } catch ( error) {
+            console.error("Something went wrong", error)
+        }
+        console.log(sortCode)
+    }
+    sortCodeData();
+
 
   const handleTransaction = async () => {
     const requestObject = {
         type: transactionType,
         fromAccount: transactionType !== 'DEPOSIT' ? accountNumber : null,
-        fromAccountSortCode: transactionType !== 'DEPOSIT' ? 135513 : null,
+        fromAccountSortCode: transactionType !== 'DEPOSIT' ? setSortCode : null,
         toAccount: transactionType !== 'WITHDRAWAL' ? toAccount || accountNumber : null,
-        toAccountSortCode: transactionType !== 'WITHDRAWAL' ? toAccountSortCode || 135513 : null,
+        toAccountSortCode: transactionType !== 'WITHDRAWAL' ? toAccountSortCode || setSortCode : null,
         amount: parseFloat(amount),
     };
 

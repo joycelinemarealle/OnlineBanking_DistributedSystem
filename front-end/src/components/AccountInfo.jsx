@@ -68,9 +68,10 @@ const AccountInfo = ({ accounts, onDeleteAccount }) => {
     <div className="max-w-4xl mx-auto mt-10">
       {accountsState.length > 0 ? (
         <ul key={accountsState} className="space-y-4">
+          <>
           {accountsState.map((account) => (
             <li 
-              key={account.number}
+              key={account.id || account.number}
               className="flex justify-between relative border-b border-gray-200 p-4 m-4 w-full bg-white shadow-lg rounded-lg"
             >
               <div>
@@ -116,6 +117,7 @@ const AccountInfo = ({ accounts, onDeleteAccount }) => {
               </div>
             </li>
           ))}
+        </>
         </ul>
       ) : (
         <p className="text-center text-gray-500 text-lg">No accounts available.</p>
