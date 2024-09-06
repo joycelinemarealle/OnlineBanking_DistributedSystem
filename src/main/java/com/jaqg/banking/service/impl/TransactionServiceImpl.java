@@ -6,6 +6,7 @@ import com.jaqg.banking.entity.Account;
 import com.jaqg.banking.entity.RemoteAccount;
 import com.jaqg.banking.entity.Transaction;
 import com.jaqg.banking.exception.AccountNotFoundException;
+import com.jaqg.banking.exception.RemoteTransactionException;
 import com.jaqg.banking.mapper.TransactionsMapper;
 import com.jaqg.banking.repository.LocalAccountRepository;
 import com.jaqg.banking.repository.RemoteAccountRepository;
@@ -14,7 +15,12 @@ import com.jaqg.banking.service.TransactionService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -75,6 +81,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = transactionRepository.save(new Transaction(request.amount(), request.type(), recipient, sender));
 
+        if (isRemoteTransaction(request)) {
+            remoteTransaction(request);
+        }
+
         return TransactionsMapper.mapToDTO(transaction);
     }
 
@@ -91,9 +101,6 @@ public class TransactionServiceImpl implements TransactionService {
         if (Objects.equals(accountSortCode, sortCode)) {
             return addToLocalAccount(request.toAccount(), accountSortCode, request.amount());
         } else {
-            String url = remoteBankUrl + ":" + accountSortCode + "/transaction";
-            restTemplate.postForObject(url, request, TransactionDTO.class);
-
             return createRemoteAccount(request.toAccount(), accountSortCode);
         }
     }
@@ -115,5 +122,22 @@ public class TransactionServiceImpl implements TransactionService {
     private Account createRemoteAccount(Long number, Integer sortCode) {
         return remoteAccountRepository.findByIdNumberAndIdSortCode(number, sortCode)
                 .orElse(remoteAccountRepository.save(new RemoteAccount(number, sortCode)));
+    }
+
+    private boolean isRemoteTransaction(TransactionRequestDTO request) {
+        Integer accountSortCode = request.toAccountSortCode() == null || request.toAccountSortCode() == 0 ? sortCode : request.toAccountSortCode();
+        return  !Objects.equals(accountSortCode, sortCode);
+    }
+
+    private void remoteTransaction(TransactionRequestDTO request) {
+        String url = remoteBankUrl + ":" + request.toAccountSortCode() + "/transaction";
+        try {
+            ResponseEntity<TransactionDTO> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(request), TransactionDTO.class);
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RemoteTransactionException("Could not complete remote transaction");
+            }
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new RemoteTransactionException(e.getMessage(), e);
+        }
     }
 }
