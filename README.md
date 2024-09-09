@@ -1,8 +1,8 @@
 
-PROGRAM: Collaborated on the development of an online banking system, implementing RESTful services to support customer registration, account creation, fund transfers, transaction history, and account management; integrated PostgreSQL for database persistence, utilized Docker for local deployment, Git for version control, and followed Agile practices for efficient teamwork and progress tracking.
+ SUMMARY: Collaborated on the development of an online banking system, implementing RESTful services to support customer registration, account creation, fund transfers, transaction history, and account management; integrated PostgreSQL for database persistence, utilized Docker for local deployment, Git for version control, and followed Agile practices for efficient teamwork and progress tracking.
 This project should be completed in teams of three to four. In your teams, you will implement the systems needed to provide online banking services to customers.
 
-From a functionality and domain perspective, your system should:
+PROGRAM DETAILS: From a functionality and domain perspective, your system should:
 
 Enable a customer to register with the bank, providing at least their name. Once registered as a customer, they should be issued with a customer identification number.
 The customer should be able to login to the system with their identification number, and see a list of their bank accounts. For each account the name of the account, account number, sort code (routing number) and current balance should be displayed and available.
